@@ -180,7 +180,6 @@ window.addEventListener('load', (event) => {
 
 })
 
-
 window.addEventListener('load', (event) => {
 
 
@@ -227,7 +226,6 @@ window.addEventListener('load', (event) => {
 
 })
 
-
 function fillFieldsPage() {
 
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/company-questions' : configEnv.local_address + '/company-questions', {
@@ -239,10 +237,10 @@ function fillFieldsPage() {
   })
     .then(response => response.json())
     .then(data => {
- 
+
       if (data.message === 'no-question') {
 
-        fieldNoQuestion.innerText = 'Não há questões cadastradas.'
+        fieldNoQuestion.innerText = 'Não há perguntas cadastradas.'
 
       } else {
 
@@ -265,7 +263,7 @@ function fillFieldsPage() {
 
 // NOME DA PERGUNTA PARA TEXTO DA PERGUNTA
 
-function componentNameToText () {
+function componentNameToText() {
 
   componentNameQuestion.fadeOut(600, function () {
     componentNameQuestion.addClass('d-none')
@@ -286,22 +284,22 @@ function componentNameToText () {
 
 // TEXTO DA PERGUNTA PARA ÁRVORE DA PERGUNTA
 
-function componentTextToTree () {
+function componentTextToTree() {
 
   componentTextQuestion.fadeOut(600, function () {
     componentTextQuestion.addClass('d-none')
     componentTreeQuestion.removeClass('d-none')
     componentTreeQuestion.fadeIn(600)
 
-})
-
-buttonBackTreeQuestion.click(function () {
-  componentTreeQuestion.fadeOut(600, function () {
-    componentTreeQuestion.addClass('d-none')
-    componentTextQuestion.removeClass('d-none')
-    componentTextQuestion.fadeIn(600)
   })
-})
+
+  buttonBackTreeQuestion.click(function () {
+    componentTreeQuestion.fadeOut(600, function () {
+      componentTreeQuestion.addClass('d-none')
+      componentTextQuestion.removeClass('d-none')
+      componentTextQuestion.fadeIn(600)
+    })
+  })
 
 }
 // TREE DA PERGUNTA PARA TIPO DA PERGUNTA
@@ -371,11 +369,11 @@ $(document).ready(function () {
 function labelChangeTypeQuestion(type) {
   switch (type) {
     case 'import':
-      return 'IMPORTAR';
+      return 'IMPORTAR'
     case 'input':
-      return 'CAMPO LIVRE';
+      return 'CAMPO LIVRE'
     case 'binary':
-      return 'BINÁRIA';
+      return 'BINÁRIA'
     default:
       return 'Opção inválida'
   }
@@ -414,7 +412,7 @@ function choiceWayQuestion(typeInput) {
       componentImportQuestion.fadeIn(600)
     })
 
-    
+
     buttonAdvanceImportQuestion.click(function () {
       componentImportQuestion.fadeOut(600, function () {
         componentImportQuestion.addClass('d-none')
@@ -825,12 +823,10 @@ function managerAnchorQuestion() {
 
   if (inputAnchorQuestion.val() === '') {
 
-    buttonRegisterAnchorQuestion.on('click', registerAnchorQuestion)
     buttonCancelAnchorQuestion.hide()
 
   } else {
 
-    buttonRegisterAnchorQuestion.on('click', registerAnchorQuestion)
     buttonRegisterAnchorQuestion.hide()
     buttonCancelAnchorQuestion.hide()
     const linkEditQuestion = $("<a>", {
@@ -868,6 +864,7 @@ function registerAnchorQuestion() {
     .then(response => response.json())
     .then(data => {
 
+      console.log(data)
 
       if (data.status === 'success' & buttonRegisterAnchorQuestion[0].textContent === 'ALTERAR') {
 
@@ -963,15 +960,15 @@ function registerAnchorQuestion() {
           }, 2500)
         }
       }
+
     })
 }
-
 
 function reloadPageCancel() {
   location.reload()
 }
 
-function binaryCoponentToReview () {
+function binaryCoponentToReview() {
 
   componentBinaryQuestion.fadeOut(600, function () {
     componentBinaryQuestion.addClass('d-none')

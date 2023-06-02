@@ -194,7 +194,7 @@ window.addEventListener('load', (event) => {
     .then((response) => response.json())
     .then((data) => {
 
-      
+
       if (data.avatar) {
         menuUserOptions.setAttribute('src', data.avatar)
 
@@ -208,9 +208,9 @@ window.addEventListener('load', (event) => {
 
     }).catch(error => console.log(error))
 
-    // LISTANDO FORMULÁRIO
-    tableDepartments.querySelector('tbody').innerHTML = ''
-    fillDepartmentsTable()
+  // LISTANDO FORMULÁRIO
+  tableDepartments.querySelector('tbody').innerHTML = ''
+  fillDepartmentsTable()
 
 })
 
@@ -239,7 +239,7 @@ buttonRegisterDepartment.addEventListener('click', event => {
 // ACTIVE OR INACTIVE
 
 
-function listenClickActive () {
+function listenClickActive() {
 
   const input = document.querySelectorAll('input[type="checkbox"]')
 
@@ -249,31 +249,31 @@ function listenClickActive () {
 
       if (input.checked === true) {
 
-        const activeOrInative = { 'id': idInputClicked, 'new_status': '1'}
+        const activeOrInative = { 'id': idInputClicked, 'new_status': '1' }
 
         fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/department' : configEnv.local_address + '/department', {
           method: 'PATCH',
           headers: {
             'Authorization': `Bearer ${tokenCustomer}`,
-            'Content-Type': 'application/json' 
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(activeOrInative)
 
-      })
-        
+        })
+
       } else {
 
-        const activeOrInative = { 'id': idInputClicked, 'new_status': '0'}
+        const activeOrInative = { 'id': idInputClicked, 'new_status': '0' }
 
         fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/department' : configEnv.local_address + '/department', {
           method: 'PATCH',
           headers: {
             'Authorization': `Bearer ${tokenCustomer}`,
-            'Content-Type': 'application/json' 
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify(activeOrInative)
 
-      })
+        })
 
       }
 
@@ -307,7 +307,7 @@ function registerDepartment() {
   })
     .then(response => response.json())
     .then(data => {
-    
+
       if (data.status === 'success') {
 
         spinner.classList.add('d-flex')
@@ -342,7 +342,7 @@ function registerDepartment() {
 
 
         spinner.classList.add('d-flex')
-        
+
         setTimeout(() => {
 
           spinner.classList.remove('d-flex')
@@ -424,7 +424,7 @@ buttonModalCancelRegisterDepartment.addEventListener('click', event => {
 
 
 function fillDepartmentsTable() {
-  
+
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/company-departments' : configEnv.local_address + '/company-departments', {
     method: 'GET',
     headers: {
@@ -435,16 +435,16 @@ function fillDepartmentsTable() {
     .then(response => response.json())
     .then(data => {
 
+      console.log(data)
 
-      
       if (data.message === 'no-departments') {
 
-      fieldNoDepartments.innerText = 'Não há departamentos cadastrados.'
+        fieldNoDepartments.innerText = 'Não há departamentos cadastrados.'
 
       } else {
 
         fieldNoDepartments.innerText = ''
-        createRows(data) 
+        createRows(data)
 
       }
     })
@@ -452,7 +452,7 @@ function fillDepartmentsTable() {
 }
 
 async function createRows(data) {
- 
+
   data.map((item, index) => {
 
     const row = tableDepartments.insertRow()
@@ -515,39 +515,39 @@ async function listenClickUpdate() {
 
 function updateDepartment() {
 
-    event.preventDefault()
+  event.preventDefault()
 
-    const formData = new FormData(formRegisterDepartment)
+  const formData = new FormData(formRegisterDepartment)
 
-    const uppercaseFormData = {}
-    for (const [key, value] of formData.entries()) {
-      uppercaseFormData[key] = value.toUpperCase().trim()
-    }
+  const uppercaseFormData = {}
+  for (const [key, value] of formData.entries()) {
+    uppercaseFormData[key] = value.toUpperCase().trim()
+  }
 
-    const dataDepartment = JSON.stringify(uppercaseFormData)
+  const dataDepartment = JSON.stringify(uppercaseFormData)
 
-    fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/department' : configEnv.local_address + '/department', {
-      method: 'PUT',
-      headers: {
-        'Authorization': 'Bearer ' + tokenCustomer,
-        'Content-Type': 'application/json'
-      },
-      body: dataDepartment
-    })
-      .then(response => response.json())
-      .then(data => {
+  fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/department' : configEnv.local_address + '/department', {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'Bearer ' + tokenCustomer,
+      'Content-Type': 'application/json'
+    },
+    body: dataDepartment
+  })
+    .then(response => response.json())
+    .then(data => {
 
-        if (data.message === 'Departamento atualizado.') {
+      if (data.message === 'Departamento atualizado.') {
 
-          spinner.classList.add('d-flex')
-          setTimeout(() => {
+        spinner.classList.add('d-flex')
+        setTimeout(() => {
 
-            spinner.classList.remove('d-flex')
-            modalConfirm.show()
+          spinner.classList.remove('d-flex')
+          modalConfirm.show()
 
-            titleModalConfirm.innerText = `SUCESSO!`
-            textModalConfirm.innerText = `A alteração de tópico foi realizada com sucesso!`
-            iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-success svg-icon-5hx "><svg
+          titleModalConfirm.innerText = `SUCESSO!`
+          textModalConfirm.innerText = `A alteração de tópico foi realizada com sucesso!`
+          iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-success svg-icon-5hx "><svg
               xmlns="http://www.w3.org/2000/svg" width="24" height="24"
               viewBox="0 0 24 24" fill="none">
               <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10"
@@ -558,26 +558,26 @@ function updateDepartment() {
               </svg>
               </span>`
 
-          }, 500);
+        }, 500);
 
-          setTimeout(() => {
+        setTimeout(() => {
 
-            modalConfirm.hide()
-            location.reload()
+          modalConfirm.hide()
+          location.reload()
 
-          }, 2000)
+        }, 2000)
 
-        } else if (data.message === 'Digite um nome diferente para este departamento.') {
+      } else if (data.message === 'Digite um nome diferente para este departamento.') {
 
-          spinner.classList.add('d-flex')
-          setTimeout(() => {
+        spinner.classList.add('d-flex')
+        setTimeout(() => {
 
-            spinner.classList.remove('d-flex')
-            modalConfirm.show()
+          spinner.classList.remove('d-flex')
+          modalConfirm.show()
 
-            titleModalConfirm.innerText = `Opss, esse já existe!`
-            textModalConfirm.innerText = `Já existe este departamento. Tente um nome diferente!`
-            iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-warning svg-icon-5hx"><svg
+          titleModalConfirm.innerText = `Opss, esse já existe!`
+          textModalConfirm.innerText = `Já existe este departamento. Tente um nome diferente!`
+          iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-warning svg-icon-5hx"><svg
                             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             viewBox="0 0 24 24" fill="none">
                             <path opacity="0.3"
@@ -589,29 +589,29 @@ function updateDepartment() {
                         </svg></span>`
 
 
-          }, 500);
+        }, 500);
 
-          setTimeout(() => {
+        setTimeout(() => {
 
-            modalConfirm.hide()
-            location.reload()
+          modalConfirm.hide()
+          location.reload()
 
-          }, 2500)
-
-
+        }, 2500)
 
 
-        } else {
 
-          spinner.classList.add('d-flex')
-          setTimeout(() => {
 
-            spinner.classList.remove('d-flex')
-            modalConfirm.show()
+      } else {
 
-            titleModalConfirm.innerText = `FALHA`
-            textModalConfirm.innerText = `Algo deu errado e a alteração não foi realizada conforme sua solicitação. Tente novamente!`
-            iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-warning svg-icon-5hx"><svg
+        spinner.classList.add('d-flex')
+        setTimeout(() => {
+
+          spinner.classList.remove('d-flex')
+          modalConfirm.show()
+
+          titleModalConfirm.innerText = `FALHA`
+          textModalConfirm.innerText = `Algo deu errado e a alteração não foi realizada conforme sua solicitação. Tente novamente!`
+          iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-warning svg-icon-5hx"><svg
                             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             viewBox="0 0 24 24" fill="none">
                             <path opacity="0.3"
@@ -623,18 +623,18 @@ function updateDepartment() {
                         </svg></span>`
 
 
-          }, 500);
+        }, 500);
 
-          setTimeout(() => {
+        setTimeout(() => {
 
-            modalConfirm.hide()
-            location.reload()
+          modalConfirm.hide()
+          location.reload()
 
-          }, 2500)
+        }, 2500)
 
-        }
+      }
 
-      })
+    })
 
 }
 
@@ -653,30 +653,30 @@ async function listenClickDeleteIcon() {
 
 function deleteDepartments(id) {
 
-    const idDepartment = { 'id': id }
+  const idDepartment = { 'id': id }
 
-    fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/department' : configEnv.local_address + '/department', {
-      method: 'DELETE',
-      headers: {
-        'Authorization': 'Bearer ' + tokenCustomer,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(idDepartment)
-    })
-      .then(response => response.json())
-      .then(data => {
-       
-       if (data.status === 'success') {
+  fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/department' : configEnv.local_address + '/department', {
+    method: 'DELETE',
+    headers: {
+      'Authorization': 'Bearer ' + tokenCustomer,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(idDepartment)
+  })
+    .then(response => response.json())
+    .then(data => {
 
-          spinner.classList.add('d-flex')
-          setTimeout(() => {
+      if (data.status === 'success') {
 
-            spinner.classList.remove('d-flex')
-            modalConfirm.show()
+        spinner.classList.add('d-flex')
+        setTimeout(() => {
 
-            titleModalConfirm.innerText = `SUCESSO!`
-            textModalConfirm.innerText = `A exclusão do tópico foi realizada com sucesso!`
-            iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-success svg-icon-5hx "><svg
+          spinner.classList.remove('d-flex')
+          modalConfirm.show()
+
+          titleModalConfirm.innerText = `SUCESSO!`
+          textModalConfirm.innerText = `A exclusão do tópico foi realizada com sucesso!`
+          iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-success svg-icon-5hx "><svg
             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none">
             <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10"
@@ -687,26 +687,26 @@ function deleteDepartments(id) {
             </svg>
             </span>`
 
-          }, 500);
+        }, 500);
 
-          setTimeout(() => {
+        setTimeout(() => {
 
-            modalConfirm.hide()
-            location.reload()
+          modalConfirm.hide()
+          location.reload()
 
-          }, 2000)
+        }, 2000)
 
-        } else {
+      } else {
 
-          spinner.classList.add('d-flex')
-          setTimeout(() => {
+        spinner.classList.add('d-flex')
+        setTimeout(() => {
 
-            spinner.classList.remove('d-flex')
-            modalConfirm.show()
+          spinner.classList.remove('d-flex')
+          modalConfirm.show()
 
-            titleModalConfirm.innerText = `FALHA`
-            textModalConfirm.innerText = `Algo deu errado e a exclusão não foi realizada conforme sua solicitação. Tente novamente!`
-            iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-warning svg-icon-5hx"><svg
+          titleModalConfirm.innerText = `FALHA`
+          textModalConfirm.innerText = `Algo deu errado e a exclusão não foi realizada conforme sua solicitação. Tente novamente!`
+          iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-warning svg-icon-5hx"><svg
                           xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                           viewBox="0 0 24 24" fill="none">
                           <path opacity="0.3"
@@ -718,18 +718,18 @@ function deleteDepartments(id) {
                       </svg></span>`
 
 
-          }, 500);
+        }, 500);
 
-          setTimeout(() => {
+        setTimeout(() => {
 
-            modalConfirm.hide()
-            location.reload()
+          modalConfirm.hide()
+          location.reload()
 
-          }, 2500)
+        }, 2500)
 
-        }
+      }
 
-      })
+    })
 
 }
 
@@ -737,47 +737,47 @@ function deleteDepartments(id) {
 // ALERTA PERSONALIZADO CONFIRMAR EXCLUSÃO
 
 function confirmarExclusao(id) {
-    Swal.fire({
-      title: 'Tem certeza?',
-      text: 'Você tem certeza que deseja excluir este departamento?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#F05742',
-      cancelButtonColor: '#transparent',
-      confirmButtonText: 'Sim, excluir!',
-      cancelButtonText: 'Cancelar',
-      customClass: {
-        confirmButton: 'btn btn-primary-confirm',
-        cancelButton: 'btn btn-light btn-active-light-primary'
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
+  Swal.fire({
+    title: 'Tem certeza?',
+    text: 'Você tem certeza que deseja excluir este departamento?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#F05742',
+    cancelButtonColor: '#transparent',
+    confirmButtonText: 'Sim, excluir!',
+    cancelButtonText: 'Cancelar',
+    customClass: {
+      confirmButton: 'btn btn-primary-confirm',
+      cancelButton: 'btn btn-light btn-active-light-primary'
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
 
-        deleteDepartments(id)
+      deleteDepartments(id)
 
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        location.reload()
-      }
-    })
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      location.reload()
+    }
+  })
 }
 
 
 // CAMPO DE BUSCA DA PÁGINA
 
 searchInput.addEventListener('keyup', function (event) {
-    const searchValue = event.target.value.toLowerCase();
-    const rows = Array.from(tableDepartments.getElementsByTagName('tr'));
+  const searchValue = event.target.value.toLowerCase();
+  const rows = Array.from(tableDepartments.getElementsByTagName('tr'));
 
-    rows.forEach((row, index) => {
+  rows.forEach((row, index) => {
 
-      if (index === 0) return
+    if (index === 0) return
 
-      const found = Array.from(row.getElementsByTagName('td')).some((cell) => {
-        const text = cell.textContent.toLowerCase()
-        return text.includes(searchValue)
-      })
-
-      row.style.display = found ? '' : 'none'
+    const found = Array.from(row.getElementsByTagName('td')).some((cell) => {
+      const text = cell.textContent.toLowerCase()
+      return text.includes(searchValue)
     })
+
+    row.style.display = found ? '' : 'none'
+  })
 })
 

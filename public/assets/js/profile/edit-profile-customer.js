@@ -202,7 +202,7 @@ window.addEventListener('load', (event) => {
         .then((response) => response.json())
         .then((data) => {
             // ATUALIZA OS DADOS DO HEADER MENU
-
+            console.log(data)
             nameCustomerHeader.innerText = data.first_name;
             positionCustomerHeader.innerText = data.position;
 

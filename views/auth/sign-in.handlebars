@@ -82,6 +82,51 @@
 
   </div>
   <!--end::Authentication - Sign-in-->
+
+  	<!-- Modal de Alerta -->
+<div class="modal fade " id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body">
+				<!-- Conteúdo do alerta -->
+				<div class="alert alert-dismissible d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10">
+
+					<!--begin::Wrapper-->
+					<div class="text-center">
+
+						<!--begin::Title-->
+						<h1 id='title-modal-confirm' class="fw-bolder-especial mb-5"></h1>
+						<!--end::Title-->
+
+						<!--begin::Separator-->
+						<div class="separator separator-dashed border-danger opacity-25 mb-5"></div>
+						<!--end::Separator-->
+
+						<!--begin::Content-->
+						<div id="text-modal-confirm" class="mb-12 text-dark fs-7 mt-9"></div>
+						<!--end::Content-->
+
+						<!--begin::Buttons-->
+						<!--begin::Svg Icon | path: assets/media/icons/duotune/abstract/abs012.svg-->
+						<div id='icon-modal-confirm'>
+
+						</div>
+
+						{{!-- --}}
+						<!--end::Svg Icon-->
+
+
+						<!--end::Svg Icon-->
+						<!--end::Buttons-->
+					</div>
+					<!--end::Wrapper-->
+				</div>
+				<!--end::Alert-->
+				<!-- Código HTML do alerta -->
+			</div>
+		</div>
+	</div>
+</div>
 </div>
 
 <div id="spinner-overlay">
@@ -91,5 +136,7 @@
 </div>
 <!--end::Root-->
 <!--end::Main-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src='/assets/js/auth/sign-in.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script src="/assets/js/auth/sign-in.js"></script>

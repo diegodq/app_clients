@@ -118,6 +118,42 @@ $(document).ready(function () {
             label.remove();
         }
     })
+    $('#form-anchor-question').validate({
+        rules: {
+            inputAnchorQuestion: {
+                required: true
+            },
+        },
+        messages: {
+            inputAnchorQuestion: {
+                required: function() {
+                    var buttonText = buttonRegisterAnchorQuestion[0].textContent.trim()
+               
+                    if (buttonText === 'ALTERAR') {
+                        return "Para qual novo texto de pergunta âncora que deseja alterar?";
+                    } else {
+                        return "Qual o texto para a pergunta âncora que deseja cadastrar?";
+                    }
+                }
+            },
+        },
+        errorPlacement: function (error, element) {
+            error.insertAfter(element);
+            element.parent().addClass('error-label');
+        },
+        submitHandler: function (form) {
+            event.preventDefault();
+            registerAnchorQuestion();
+        },
+        onfocusout: function (element) {
+            this.element(element);
+            $(element).valid();
+        },
+        success: function (label, element) {
+            $(element).closest('.form-group').removeClass('error-label');
+            label.remove();
+        }
+    })
 })
 
 // Adiciona regra CSS para estilizar as mensagens de erro em vermelho
