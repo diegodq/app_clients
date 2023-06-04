@@ -307,7 +307,7 @@ function registerDepartment() {
   })
     .then(response => response.json())
     .then(data => {
-
+      console.log(data)
       if (data.status === 'success') {
 
         spinner.classList.add('d-flex')
@@ -338,7 +338,7 @@ function registerDepartment() {
 
         }, 2000)
 
-      } else if (data.message === 'Este departamento já está cadastrado.') {
+      } else if (data.message === 'Departamento já cadastrado.') {
 
 
         spinner.classList.add('d-flex')
@@ -434,8 +434,6 @@ function fillDepartmentsTable() {
   })
     .then(response => response.json())
     .then(data => {
-
-      console.log(data)
 
       if (data.message === 'no-departments') {
 

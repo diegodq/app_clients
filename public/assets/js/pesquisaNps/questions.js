@@ -31,6 +31,7 @@ const buttonRegisterQuestion = $('#button-add-question')
 const inputAnchorQuestion = $('#input-anchor-question')
 const textAreaAnchorQuestion = $('#text-area-button-anchor-question')
 const questionsTable = document.getElementById('questions_table')
+const searchInput = document.getElementById('search-input')
 
 // VALIDAÇÕES DE EMPRESA, TOKEN VÁLIDO E SE EXISTE TOKEN NO STORAGE
 
@@ -602,7 +603,7 @@ function wichInputIsSelected(inputs) {
 }
 
 function registerQuestion(data) {
-  console.log(data)
+
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/question' : configEnv.local_address + '/question', {
     method: 'POST',
     headers: {
@@ -611,7 +612,7 @@ function registerQuestion(data) {
     },
     body: data
   }).then(response => response.json()).then(data => {
-    console.log(data)
+
     notifyRegisterQuestion(data)
 
   })
@@ -620,6 +621,7 @@ function registerQuestion(data) {
 
 function notifyRegisterQuestion(data) {
 
+  console.log(data)
 
   if (data.status === 'success') {
 
@@ -651,6 +653,39 @@ function notifyRegisterQuestion(data) {
 
     }, 2000)
 
+  } else if (data.message === 'Esta pergunta já está cadastrada.') {
+
+    spinner.classList.add('d-flex')
+        
+        setTimeout(() => {
+
+          spinner.classList.remove('d-flex')
+          modalConfirm.show()
+
+          titleModalConfirm.innerText = `Ops, essa já existe!`
+          textModalConfirm.innerText = `Já existe uma pergunta com esse texto. Tente uma diferente.`
+          iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-warning svg-icon-5hx"><svg
+                          xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                          viewBox="0 0 24 24" fill="none">
+                          <path opacity="0.3"
+                              d="M6.7 19.4L5.3 18C4.9 17.6 4.9 17 5.3 16.6L16.6 5.3C17 4.9 17.6 4.9 18 5.3L19.4 6.7C19.8 7.1 19.8 7.7 19.4 8.1L8.1 19.4C7.8 19.8 7.1 19.8 6.7 19.4Z"
+                              fill="black" />
+                          <path
+                              d="M19.5 18L18.1 19.4C17.7 19.8 17.1 19.8 16.7 19.4L5.40001 8.1C5.00001 7.7 5.00001 7.1 5.40001 6.7L6.80001 5.3C7.20001 4.9 7.80001 4.9 8.20001 5.3L19.5 16.6C19.9 16.9 19.9 17.6 19.5 18Z"
+                              fill="black" />
+                      </svg></span>`
+
+
+        }, 500);
+
+        setTimeout(() => {
+
+          modalConfirm.hide()
+          location.reload()
+
+        }, 2500)
+
+
   } else {
 
     spinner.classList.add('d-flex')
@@ -662,15 +697,15 @@ function notifyRegisterQuestion(data) {
       titleModalConfirm.innerText = `FALHA`
       textModalConfirm.innerText = `Algo deu errado e o cadastro não foi realizado conforme sua solicitação. Tente novamente!`
       iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-warning svg-icon-5hx"><svg
-                      xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                      viewBox="0 0 24 24" fill="none">
-                      <path opacity="0.3"
-                          d="M6.7 19.4L5.3 18C4.9 17.6 4.9 17 5.3 16.6L16.6 5.3C17 4.9 17.6 4.9 18 5.3L19.4 6.7C19.8 7.1 19.8 7.7 19.4 8.1L8.1 19.4C7.8 19.8 7.1 19.8 6.7 19.4Z"
-                          fill="black" />
-                      <path
-                          d="M19.5 18L18.1 19.4C17.7 19.8 17.1 19.8 16.7 19.4L5.40001 8.1C5.00001 7.7 5.00001 7.1 5.40001 6.7L6.80001 5.3C7.20001 4.9 7.80001 4.9 8.20001 5.3L19.5 16.6C19.9 16.9 19.9 17.6 19.5 18Z"
-                          fill="black" />
-                  </svg></span>`
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none">
+                    <path opacity="0.3"
+                        d="M6.7 19.4L5.3 18C4.9 17.6 4.9 17 5.3 16.6L16.6 5.3C17 4.9 17.6 4.9 18 5.3L19.4 6.7C19.8 7.1 19.8 7.7 19.4 8.1L8.1 19.4C7.8 19.8 7.1 19.8 6.7 19.4Z"
+                        fill="black" />
+                    <path
+                        d="M19.5 18L18.1 19.4C17.7 19.8 17.1 19.8 16.7 19.4L5.40001 8.1C5.00001 7.7 5.00001 7.1 5.40001 6.7L6.80001 5.3C7.20001 4.9 7.80001 4.9 8.20001 5.3L19.5 16.6C19.9 16.9 19.9 17.6 19.5 18Z"
+                        fill="black" />
+                </svg></span>`
 
 
     }, 500);
@@ -681,9 +716,7 @@ function notifyRegisterQuestion(data) {
       location.reload()
 
     }, 2500)
-
   }
-
 }
 
 async function getDataAnchorQuestion() {
@@ -697,7 +730,7 @@ async function getDataAnchorQuestion() {
     .then(response => response.json())
     .then(data => {
 
-      inputAnchorQuestion.val(data.anchorQuestion)
+      inputAnchorQuestion.val(data.message)
       managerAnchorQuestion()
     })
 
@@ -924,7 +957,7 @@ function registerAnchorQuestion() {
           setTimeout(() => {
 
             modalConfirm.hide()
-            location.reload()
+            //location.reload()
 
           }, 2000)
 
@@ -955,7 +988,7 @@ function registerAnchorQuestion() {
           setTimeout(() => {
 
             modalConfirm.hide()
-            location.reload()
+            //location.reload()
 
           }, 2500)
         }
@@ -984,3 +1017,22 @@ function binaryCoponentToReview() {
   })
 
 }
+
+// CAMPO DE BUSCA DA PÁGINA
+
+searchInput.addEventListener('keyup', function (event) {
+  const searchValue = event.target.value.toLowerCase();
+  const rows = Array.from(questionsTable.getElementsByTagName('tr'));
+
+  rows.forEach((row, index) => {
+
+    if (index === 0) return
+
+    const found = Array.from(row.getElementsByTagName('td')).some((cell) => {
+      const text = cell.textContent.toLowerCase()
+      return text.includes(searchValue)
+    })
+
+    row.style.display = found ? '' : 'none'
+  })
+})

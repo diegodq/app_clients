@@ -1,4 +1,3 @@
-
 const tokenCustomer = localStorage.getItem('tokenCustomer')
 const buttonModalCancelRegisterTopic = document.getElementById('button-cancel-add-topics')
 const buttonModalRegisterTopic = document.getElementById('button-submit-register-topic')
@@ -166,7 +165,6 @@ window.addEventListener('load', (event) => {
 
 })
 
-
 window.addEventListener('load', (event) => {
 
   // PREENCHENDO DADOS DE USUÁRIO NO SUB-MENU
@@ -239,7 +237,6 @@ buttonRegisterTopic.addEventListener('click', event => {
 
 // ACTIVE OR INACTIVE
 
-
 function listenClickActive () {
   // OUVINDO CLICK EXCLUIR - INSERIR FETCH DE DELETE
   const input = document.querySelectorAll('input[type="checkbox"]')
@@ -308,7 +305,7 @@ function registerTopic() {
   })
     .then(response => response.json())
     .then(data => {
-
+  
       if (data.status === 'success') {
 
         spinner.classList.add('d-flex')
@@ -339,7 +336,7 @@ function registerTopic() {
 
         }, 2000)
 
-      } else if (data.message === 'Este tópico já está cadastrado.') {
+      } else if (data.message === 'Tópico já cadastrado.') {
 
 
         spinner.classList.add('d-flex')
@@ -412,7 +409,6 @@ function registerTopic() {
 
 
 }
-
 
 buttonModalCancelRegisterTopic.addEventListener('click', event => {
 
