@@ -302,15 +302,13 @@ menuAsideOptionsPersonalizedQuestions.addEventListener('click', (event) => {
 
 menuAsideOptionsManagerSurvey.addEventListener('click', (event) => {
 
-    // spinner.classList.add('d-flex')
+    spinner.classList.add('d-flex')
 
-    // setTimeout(() => {
-    //     spinner.classList.remove('d-flex')
-    //     window.location.href = '/manager-survey'
+    setTimeout(() => {
+        spinner.classList.remove('d-flex')
+        window.location.href = '/manager-survey'
 
-    // }, 1000)
-
-    alertNoCreatedYet ()
+    }, 1000)
 
 })
 

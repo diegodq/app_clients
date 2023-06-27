@@ -181,7 +181,6 @@ window.addEventListener('load', (event) => {
 
 })
 
-
 // BUSCAR INFORMAÇÕES DO USUÁRIO NA API
 window.addEventListener('load', (event) => {
 
@@ -202,7 +201,7 @@ window.addEventListener('load', (event) => {
         .then((response) => response.json())
         .then((data) => {
             // ATUALIZA OS DADOS DO HEADER MENU
-            console.log(data)
+     
             nameCustomerHeader.innerText = data.first_name;
             positionCustomerHeader.innerText = data.position;
 
@@ -493,8 +492,6 @@ function discardChanges() {
 
 inputAvatarCustomer.addEventListener('change', () => {
 
-
-
     const file = inputAvatarCustomer.files[0]
 
     if (file.size > 1000000) {
@@ -749,6 +746,7 @@ function newsletterPayment()
   inputNewsLetter.value = inputNewsLetter.checked == true ? 1 : 0
 
   const dataInfo = { 'accept_newsletter': inputNewsLetter.value, 'info_payment': inputPayment.value }
+  
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/info' : configEnv.local_address + '/info', {
     headers: {
       Authorization: 'Bearer ' + tokenCustomer,
@@ -806,7 +804,6 @@ function newsletterPayment()
 }
 
 // OPÇÕES DELETE
-
 // EXCLUIR AVATAR
 function deleteAvatar() {
 

@@ -239,7 +239,7 @@ function fillFieldsPage() {
     .then(response => response.json())
     .then(data => {
 
-      if (data.message === 'no-question') {
+      if (data.message === 'no-questions') {
 
         fieldNoQuestion.innerText = 'Não há perguntas cadastradas.'
 
@@ -255,7 +255,6 @@ function fillFieldsPage() {
     })
 
   getDataAnchorQuestion()
-
 
 
 }
@@ -386,11 +385,17 @@ function getDataQuestion() {
     'question_description': $('#input-question').val(),
     'tree_question': Array.from(radioTree).filter(radio => radio.checked === true).map(radio => radio.dataset.tree)[0],
     'type_question': Array.from(radioInputsType).filter(radio => radio.checked === true).map(radio => radio.dataset.radio)[0],
+    'status': 1,
+  }
+}
+
+function getDataParamsQuestion() {
+
+  return [{
     'option_one': $('#input-binary-1').val() == undefined ? '' : $('#input-binary-1').val(),
     'option_two': $('#input-binary-2').val() == undefined ? '' : $('#input-binary-2').val(),
-    'status': 1,
     'import_type': wichInputIsSelected($('input.input-radio-import'))
-  }
+  }]
 }
 
 function resetDataWhenTypeChoiced() {
@@ -427,7 +432,7 @@ function choiceWayQuestion(typeInput) {
         contentAreaReviewQuestion.empty()
         contentAreaReviewQuestion.append(`<span class="fw-bolder">Nome da Pergunta: </span> ${dataQuestion.title_question}<br>`)
         contentAreaReviewQuestion.append(`<strong>Pergunta:</strong> ${dataQuestion.question_description}<br>`)
-        contentAreaReviewQuestion.append(`<strong>Tipo da Pergunta:</strong> ${dataQuestion.type_question} | ${importTopic} <br>`)
+        contentAreaReviewQuestion.append(`<strong>Tipo da Pergunta:</strong> ${labelChangeTypeQuestion(dataQuestion.type_question)} | ${importTopic} <br>`)
 
       })
 
@@ -513,6 +518,7 @@ function choiceWayQuestion(typeInput) {
       registerQuestion(JSON.stringify(getDataQuestion()))
 
 
+
     })
 
     const dataQuestion = getDataQuestion()
@@ -520,7 +526,7 @@ function choiceWayQuestion(typeInput) {
     contentAreaReviewQuestion.empty()
     contentAreaReviewQuestion.append(`<span class="fw-bolder">Nome da Pergunta: </span> ${dataQuestion.title_question}<br>`)
     contentAreaReviewQuestion.append(`<strong>Pergunta:</strong> ${dataQuestion.question_description}<br>`)
-    contentAreaReviewQuestion.append(`<strong>Tipo da Pergunta:</strong> ${dataQuestion.type_question}<br>`)
+    contentAreaReviewQuestion.append(`<strong>Tipo da Pergunta:</strong> ${labelChangeTypeQuestion(dataQuestion.type_question)}<br>`)
 
   }
 }
@@ -602,7 +608,9 @@ function wichInputIsSelected(inputs) {
 
 }
 
-function registerQuestion(data) {
+function registerQuestion(dataForm) {
+
+  const paramsQuestion = getDataParamsQuestion()
 
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/question' : configEnv.local_address + '/question', {
     method: 'POST',
@@ -610,18 +618,46 @@ function registerQuestion(data) {
       'Authorization': 'Bearer ' + tokenCustomer,
       'Content-Type': 'application/json'
     },
-    body: data
+    body: dataForm
   }).then(response => response.json()).then(data => {
+    
+    if (data.status === 'success') {
 
-    notifyRegisterQuestion(data)
+      if (registerParamsQuestion(paramsQuestion, data.questionCreated.questionId)) {
+
+        notifyRegisterQuestion(data)
+
+      } else {
+
+        notifyRegisterQuestion({ status: 'warn' })
+
+      }
+
+
+    }
 
   })
 
 }
 
-function notifyRegisterQuestion(data) {
+async function registerParamsQuestion(dataForm, idQuestion) {
+  dataForm[0].question = idQuestion
+  const response = await fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/params/question' : configEnv.local_address + '/params/question', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + tokenCustomer,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dataForm)
+  });
 
-  console.log(data)
+  const data = await response.json()
+  const trueOrFalse = data.status === 'success' ? true : false
+  return trueOrFalse
+}
+
+
+function notifyRegisterQuestion(data) {
 
   if (data.status === 'success') {
 
@@ -656,15 +692,15 @@ function notifyRegisterQuestion(data) {
   } else if (data.message === 'Esta pergunta já está cadastrada.') {
 
     spinner.classList.add('d-flex')
-        
-        setTimeout(() => {
 
-          spinner.classList.remove('d-flex')
-          modalConfirm.show()
+    setTimeout(() => {
 
-          titleModalConfirm.innerText = `Ops, essa já existe!`
-          textModalConfirm.innerText = `Já existe uma pergunta com esse texto. Tente uma diferente.`
-          iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-warning svg-icon-5hx"><svg
+      spinner.classList.remove('d-flex')
+      modalConfirm.show()
+
+      titleModalConfirm.innerText = `Ops, essa já existe!`
+      textModalConfirm.innerText = `Já existe uma pergunta com esse texto. Tente uma diferente.`
+      iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-warning svg-icon-5hx"><svg
                           xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                           viewBox="0 0 24 24" fill="none">
                           <path opacity="0.3"
@@ -676,14 +712,14 @@ function notifyRegisterQuestion(data) {
                       </svg></span>`
 
 
-        }, 500);
+    }, 500);
 
-        setTimeout(() => {
+    setTimeout(() => {
 
-          modalConfirm.hide()
-          location.reload()
+      modalConfirm.hide()
+      location.reload()
 
-        }, 2500)
+    }, 2500)
 
 
   } else {
@@ -721,7 +757,7 @@ function notifyRegisterQuestion(data) {
 
 async function getDataAnchorQuestion() {
 
-  fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/anchor-question' : configEnv.local_address + '/anchor-question', {
+  fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/anchor-question`, {
     headers: {
       'Authorization': 'Bearer ' + tokenCustomer,
       'Content-Type': 'application/json'
@@ -730,11 +766,27 @@ async function getDataAnchorQuestion() {
     .then(response => response.json())
     .then(data => {
 
-      inputAnchorQuestion.val(data.message)
-      managerAnchorQuestion()
+      if (data.message === 'no-anchor-question') {
+        inputAnchorQuestion.val('')
+      } else {
+        inputAnchorQuestion.val(data.message)
+        managerAnchorQuestion()
+      }
+      
     })
 
+}
 
+async function getParamQuestion(IdQuestion) {
+
+  const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/params/question/${IdQuestion}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer ' + tokenCustomer,
+      'Content-Type': 'application/json'
+    }
+  }).then(response => response.json())
+  
 }
 
 async function createRows(data) {
@@ -744,17 +796,17 @@ async function createRows(data) {
     const row = questionsTable.insertRow()
     const cells = []
 
-    const idQuestion = document.createElement('td')
+    //const idQuestion = document.createElement('td')
     const nameQuestion = document.createElement('td')
     const typeQuestion = document.createElement('td')
     const treeQuestion = document.createElement('td')
     const statusQuestion = document.createElement('td')
     const optionsRow = document.createElement('td')
-    cells.push(idQuestion, nameQuestion, typeQuestion, treeQuestion, statusQuestion, optionsRow)
+    cells.push(nameQuestion, typeQuestion, treeQuestion, statusQuestion, optionsRow)
 
-    idQuestion.innerHTML = item.id
+    //idQuestion.innerHTML = item.id
     nameQuestion.innerHTML = item.title_question
-    treeQuestion.innerHTML = item.tree_question === 'positive' ? 'POSITIVA' : 'NEGATIVA'
+    treeQuestion.innerHTML = item.tree_question === 1 ? 'POSITIVA' : 'NEGATIVA'
     typeQuestion.innerHTML = labelChangeTypeQuestion(item.type_question)
     const checkedOrEmpty = item.status === 0 ? '' : 'checked'
     statusQuestion.innerHTML = `<label class="form-check form-switch form-check-custom activeReg form-check-solid">
@@ -775,7 +827,7 @@ async function createRows(data) {
 
     row.classList.add('text-gray-800', 'text-center')
 
-    // Ocultar todas as células e títulos
+
     cells.forEach((cell) => {
       cell.style.display = 'none'
     })
@@ -785,7 +837,7 @@ async function createRows(data) {
 
 
     if (windowWidth < 600) {
-      const columnsToShow = [idQuestion, nameQuestion, statusQuestion, optionsRow]
+      const columnsToShow = [nameQuestion, statusQuestion, optionsRow]
       const columnIndicesToShow = [0, 1, 4, 5];
 
       columnsToShow.forEach((cell, i) => {
@@ -897,8 +949,6 @@ function registerAnchorQuestion() {
     .then(response => response.json())
     .then(data => {
 
-      console.log(data)
-
       if (data.status === 'success' & buttonRegisterAnchorQuestion[0].textContent === 'ALTERAR') {
 
         spinner.classList.add('d-flex')
@@ -957,7 +1007,7 @@ function registerAnchorQuestion() {
           setTimeout(() => {
 
             modalConfirm.hide()
-            //location.reload()
+            location.reload()
 
           }, 2000)
 
@@ -988,7 +1038,7 @@ function registerAnchorQuestion() {
           setTimeout(() => {
 
             modalConfirm.hide()
-            //location.reload()
+            location.reload()
 
           }, 2500)
         }
@@ -1009,11 +1059,12 @@ function binaryCoponentToReview() {
     componentReviewQuestion.fadeIn(600)
 
     const dataQuestion = getDataQuestion()
+    const dataParamsQuestion = getDataParamsQuestion()
 
     contentAreaReviewQuestion.empty()
     contentAreaReviewQuestion.append(`<span class="fw-bolder">Nome da Pergunta: </span> ${dataQuestion.title_question}<br>`)
-    contentAreaReviewQuestion.append(`<strong>Pergunta:</strong> ${dataQuestion.question_description} | 01: ${dataQuestion.option_one} - 02: ${dataQuestion.option_two} <br>`)
-    contentAreaReviewQuestion.append(`<strong>Tipo da Pergunta:</strong> ${dataQuestion.type_question}`)
+    contentAreaReviewQuestion.append(`<strong>Pergunta:</strong> ${dataQuestion.question_description} | 01: ${dataParamsQuestion[0].option_one} - 02: ${dataParamsQuestion[0].option_two} <br>`)
+    contentAreaReviewQuestion.append(`<strong>Tipo da Pergunta:</strong> ${labelChangeTypeQuestion(dataQuestion.type_question)}`)
   })
 
 }
