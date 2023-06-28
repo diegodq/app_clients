@@ -239,7 +239,6 @@ async function fillFieldsPage() {
   })
   const dataParams = await responsedataParams.json()
   
-  console.log(dataParams)
   if (dataParams.message === 'no-data') {
 
     positiveQuestionsList.classList.add("text-muted", "fs-6", "text-center")
@@ -270,10 +269,8 @@ function orderByPositionAcorddionList(arr) {
   return sortedArray;
 }
 
-
 async function createRows(data) {
 
-  console.log(data)
   positiveQuestionsList.innerHTML = ""
   negativeQuestionsList.innerHTML = ""
 
@@ -347,7 +344,6 @@ function createAccordionCollapse(index) {
   return accordionCollapse;
 }
 
-
 async function getDataParams(questionID) {
   
   const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/params/question/${questionID}`, {
@@ -377,11 +373,15 @@ async function createAccordionBody(inputNames, inputLabels, checkboxNames, index
     accordionBody.appendChild(label)
   }
 
+  accordionBody.addEventListener("change", () => {
+    printQuestionList()
+  })
+
   return accordionBody
 }
 
-
 async function createLabel(inputName, inputLabel, checkboxName, index, optionIndex, allDataQuestion) {
+
   const label = document.createElement("label")
   label.classList.add("form-check", "form-check-custom", "form-check-solid", "align-items-start", "mt-8")
   label.htmlFor = `input_${index}_${optionIndex}`
@@ -419,7 +419,6 @@ async function createLabel(inputName, inputLabel, checkboxName, index, optionInd
   return label
 }
 
-
 function initializeSortable(container) {
   Sortable.create(container, {
     handle: ".accordion-header",
@@ -440,16 +439,16 @@ function updateButtonNumbers(container) {
   });
 }
 
-
 function printQuestionList() {
-  const questions = [];
+
+  const questions = []
 
   const processAccordionList = (accordionList) => {
     accordionList.forEach((accordion, index) => {
       const question = {
         question: accordion.id,
         position: index + 1,
-      };
+      }
 
       const checkboxes = accordion.querySelectorAll("input[type='checkbox']")
       checkboxes.forEach((checkbox) => {
@@ -485,7 +484,7 @@ async function registerParamsQuestion(data) {
 function requestColorPicker(route, data, prop) {
 
   const dataRequest = { [prop]: data, id_params: 4 }
-
+  console.log(dataRequest)
   fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/params/${route}`, {
     method: 'PATCH',
     headers: {
@@ -554,6 +553,7 @@ async function getInitialPassingTree() {
   return data.listParams[0].passing_tree
 
 }
+
 async function initializeColorPicker() {
   try {
     const bgColor = await getInitialBackgroundColor()
@@ -566,8 +566,7 @@ async function initializeColorPicker() {
   }
 }
 
-initializeColorPicker();
-
+initializeColorPicker()
 
 function updateBrandCustomer() {
 
@@ -668,7 +667,6 @@ function updateBrandCustomer() {
 
 }
 
-
 function managerInputFileBrand(hasOrNotHas) {
 
   if (hasOrNotHas === 'has') {
@@ -691,18 +689,19 @@ inputBrandCompany.addEventListener('change', event => {
   updateBrandCustomer()
 })
 
-
 const svgElements = document.querySelectorAll('.svg-nps')
-let selectedIndex = -1;
+let selectedIndex = -1
 
 svgElements.forEach((svg, index) => {
 
   svg.addEventListener('click', () => {
+    
     updateSelection(index)
     updatePassingTree(selectedIndex)
-  })
-})
 
+  })
+
+})
 
 function updatePassingTree(targetClick) {
 
