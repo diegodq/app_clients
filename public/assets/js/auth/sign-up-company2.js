@@ -15,6 +15,8 @@ const modalConfirm = new bootstrap.Modal(document.getElementById('alertModal'), 
 // VALIDAÇÕES DE EMPRESA, TOKEN VÁLIDO E SE EXISTE TOKEN NO STORAGE
 window.addEventListener('load', (event) => {
 
+  console.log('teste')
+
   function dropCostumer() {
     spinner.classList.add('d-flex')
 
@@ -94,7 +96,7 @@ window.addEventListener('load', (event) => {
       'Content-Type': 'application/json'
     },
   }).then(response => response.json()).then(data => {
-
+    console.log(data)
     if (data.message === 'Acesso não autorizado.') {
 
       Swal.fire({
@@ -167,8 +169,8 @@ function registerCompany() {
 
   // SUSPENDENDO REQUISIÇÕES INDESEJADAS
   formCompany.addEventListener('submit', (event) => {
-    event.preventDefault();
-  });
+    event.preventDefault()
+  })
 
   // INSTANCIANDO FORMULÁRIO
   const formData = new FormData(formCompany)
@@ -223,5 +225,25 @@ function registerCompany() {
     )
 }
 
+function registerProduct () {
+
+  return console.log(getIdCompany())
+
+}
+
+function getIdCompany () {
+
+  fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/details' : configEnv.local_address + '/details', {
+    headers: {
+      'Authorization': `Bearer ${tokenCustomer}`
+    }
+  })
+    .then((response) => response.json())
+    .then((data) => { console.log(data) })
+
+}
 
 
+registerProduct()
+
+console.log(tokenCustomer)

@@ -102,6 +102,7 @@ window.addEventListener('load', (event) => {
 
     if (data.message === 'Acesso não autorizado.') {
 
+      
       Swal.fire({
         title: 'Oopss...',
         text: 'Sua conexão excedeu o tempo limite e irá precisar fazer login novamente, ok? #voltaLogo',
@@ -168,7 +169,7 @@ window.addEventListener('load', async (event) => {
     .then((response) => response.json())
     .then((data) => {
       // ATUALIZA OS DADOS DO HEADER MENU
-
+      console.log(data)
       nameCustomerHeader.innerText = data.first_name;
       positionCustomerHeader.innerText = data.position;
 
@@ -230,7 +231,7 @@ window.addEventListener('load', async (event) => {
 })
 
 async function fillFieldsPage() {
-  const responsedataParams = await fetch( `${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/params/questions`, {
+  const responsedataParams = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/params/questions`, {
     method: 'GET',
     headers: {
       'Authorization': 'Bearer ' + tokenCustomer,
@@ -238,18 +239,18 @@ async function fillFieldsPage() {
     },
   })
   const dataParams = await responsedataParams.json()
-  
+
   if (dataParams.message === 'no-data') {
 
     positiveQuestionsList.classList.add("text-muted", "fs-6", "text-center")
     positivelabelQuestionList.innerText = 'Ainda não há perguntas cadastradas.'
     negativeQuestionsList.classList.add("text-muted", "fs-6", "text-center")
     negativelabelQuestionList.innerText = 'Ainda não há perguntas cadastradas.'
-    
+
   } else {
 
-  const dataOrderByPosition = orderByPositionAcorddionList(dataParams.list)
-  createRows(dataOrderByPosition)
+    const dataOrderByPosition = orderByPositionAcorddionList(dataParams.list)
+    createRows(dataOrderByPosition)
 
   }
 }
@@ -282,7 +283,7 @@ async function createRows(data) {
   const checkboxNames = ["mandatory_question", "finish_research"];
 
   data.forEach(async (item, index) => {
-  
+
     const accordionItem = createAccordionItem(index + 1, item.title_question);
     const accordionCollapse = createAccordionCollapse(index);
     accordionItem.id = item.id
@@ -345,7 +346,7 @@ function createAccordionCollapse(index) {
 }
 
 async function getDataParams(questionID) {
-  
+
   const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/params/question/${questionID}`, {
     method: 'GET',
     headers: {
@@ -387,7 +388,7 @@ async function createLabel(inputName, inputLabel, checkboxName, index, optionInd
   label.htmlFor = `input_${index}_${optionIndex}`
 
   const input = document.createElement("input")
-  const questionParams = await getDataParams(allDataQuestion.id) 
+  const questionParams = await getDataParams(allDataQuestion.id)
   const valueParam = Number(questionParams.listParams[0] == undefined ? '' : questionParams.listParams[0][checkboxName])
 
   input.classList.add("form-check-input", "me-3")
@@ -468,6 +469,35 @@ function printQuestionList() {
   registerParamsQuestion(questions)
 }
 
+async function getProduct() {
+
+  const response = await fetch(`https://api.automatizavarejo.com.br/product/company`, {
+    headers: {
+      'Authorization': 'Bearer ' + tokenCustomer,
+      'Content-Type': 'application/json'
+    },
+  })
+
+  const data = await response.json()
+  //console.log(data)
+  return data.products[0].id
+}
+
+async function getParamsProduct() {
+
+  const idProduct = await getProduct()
+  const response = await fetch(`https://api.automatizavarejo.com.br/params/product/${idProduct}`, {
+    headers: {
+      'Authorization': 'Bearer ' + tokenCustomer,
+      'Content-Type': 'application/json'
+    },
+  })
+
+  const data = await response.json()
+
+  return data.listParams[0].id
+}
+
 async function registerParamsQuestion(data) {
 
   fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/params/boolean/question`, {
@@ -478,13 +508,13 @@ async function registerParamsQuestion(data) {
     },
     body: JSON.stringify(data)
   })
-    .then(response => response.json()).then(data => console.log(data))
+    .then(response => response.json())//.then(data => console.log(data))
 }
 
-function requestColorPicker(route, data, prop) {
+async function requestColorPicker(route, data, prop) {
 
-  const dataRequest = { [prop]: data, id_params: 4 }
-  console.log(dataRequest)
+  const dataRequest = { [prop]: data, id_params: await getParamsProduct() }
+
   fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/params/${route}`, {
     method: 'PATCH',
     headers: {
@@ -520,7 +550,10 @@ async function createColorPicker(selector, previewId, initialColor, textArea) {
 }
 
 async function getInitialBackgroundColor() {
-  const response = await fetch(`http://localhost:3007/params/product/5`, {
+
+  const productId = await getProduct()
+
+  const response = await fetch(`https://api.automatizavarejo.com.br/params/product/${productId}`, {
     headers: {
       'Authorization': 'Bearer ' + tokenCustomer,
       'Content-Type': 'application/json'
@@ -531,7 +564,9 @@ async function getInitialBackgroundColor() {
 }
 
 async function getInitialFontColor() {
-  const response = await fetch(`http://localhost:3007/params/product/5`, {
+
+  const productId = await getProduct()
+  const response = await fetch(`https://api.automatizavarejo.com.br/params/product/${productId}`, {
     headers: {
       'Authorization': 'Bearer ' + tokenCustomer,
       'Content-Type': 'application/json'
@@ -542,8 +577,9 @@ async function getInitialFontColor() {
 }
 
 async function getInitialPassingTree() {
-  
-  const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/params/product/5`, {
+
+  const productId = await getProduct()
+  const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/params/product/${productId}`, {
     headers: {
       'Authorization': 'Bearer ' + tokenCustomer,
       'Content-Type': 'application/json'
@@ -561,6 +597,7 @@ async function initializeColorPicker() {
 
     createColorPicker("#picker", "colorPreview", bgColor === null ? '#fff' : bgColor, textAreaColorPreview)
     createColorPicker("#picker2", "colorPreview2", fontColor === null ? '#fff' : fontColor, textAreaColorPreview2)
+
   } catch (error) {
     console.error(error)
   }
@@ -695,7 +732,7 @@ let selectedIndex = -1
 svgElements.forEach((svg, index) => {
 
   svg.addEventListener('click', () => {
-    
+
     updateSelection(index)
     updatePassingTree(selectedIndex)
 
@@ -703,9 +740,9 @@ svgElements.forEach((svg, index) => {
 
 })
 
-function updatePassingTree(targetClick) {
+async function updatePassingTree(targetClick) {
 
-  const dataPassingTree = { id_params: 4, passing_tree: targetClick }
+  const dataPassingTree = { id_params: await getParamsProduct(), passing_tree: targetClick }
 
   fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/params/passing/tree`, {
     method: 'PATCH',
@@ -716,6 +753,7 @@ function updatePassingTree(targetClick) {
     body: JSON.stringify(dataPassingTree)
   })
     .then(response => response.json())
+    
 }
 
 function updateSelection(selectedIndexParam) {
