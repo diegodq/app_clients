@@ -169,7 +169,7 @@ window.addEventListener('load', async (event) => {
     .then((response) => response.json())
     .then((data) => {
       // ATUALIZA OS DADOS DO HEADER MENU
-      console.log(data)
+      // console.log(data)
       nameCustomerHeader.innerText = data.first_name;
       positionCustomerHeader.innerText = data.position;
 
@@ -222,7 +222,9 @@ window.addEventListener('load', async (event) => {
   fillFieldsPage()
 
   const initialPassingTree = await getInitialPassingTree()
+
   if (initialPassingTree === null) {
+    updatePassingTree(4)
     updateSelection(4)
   } else {
     updateSelection(initialPassingTree)
@@ -249,26 +251,48 @@ async function fillFieldsPage() {
 
   } else {
 
-    const dataOrderByPosition = orderByPositionAcorddionList(dataParams.list)
-    createRows(dataOrderByPosition)
+
+    const dataQuestionOrder = await orderAccordionList(dataParams.list)
+    createRows(dataQuestionOrder)
+
 
   }
 }
 
-function orderByPositionAcorddionList(arr) {
-  const sortedArray = arr.map(obj => {
+async function orderAccordionList(list) {
+
+  const adjustQuestionList = list.map(obj => {
     const { params_questions, company, ...rest } = obj;
-    const position = params_questions ? params_questions.position : null;
+    const position = params_questions?.position ?? null;
     return {
       position,
       ...rest
     };
   });
 
-  sortedArray.sort((a, b) => a.position - b.position);
+ 
+  const noQuestionHasPosition = adjustQuestionList.every(question => question.position === null)
 
-  return sortedArray;
+  if (noQuestionHasPosition) {
+
+    return adjustQuestionList
+
+  } else {
+    
+    const sortedArray = adjustQuestionList.sort((a, b) => {
+      if (a.position === null) return 1
+      if (b.position === null) return -1
+      return a.position - b.position;
+    })
+
+    return sortedArray
+  }
+
+
+
+
 }
+
 
 async function createRows(data) {
 
@@ -282,24 +306,23 @@ async function createRows(data) {
   };
   const checkboxNames = ["mandatory_question", "finish_research"];
 
-  data.forEach(async (item, index) => {
+  for (const [index, item] of data.entries()) {
 
-    const accordionItem = createAccordionItem(index + 1, item.title_question);
+    const accordionItem = createAccordionItem(index + 1, item.title_question)
     const accordionCollapse = createAccordionCollapse(index);
     accordionItem.id = item.id
+
     const accordionBody = await createAccordionBody(inputNames, inputLabels, checkboxNames, index, item);
 
     accordionCollapse.appendChild(accordionBody);
     accordionItem.append(accordionCollapse);
-
+ 
     if (item.status === 1) {
-
       if (item.tree_question === 1) {
         positiveQuestionsList.appendChild(accordionItem);
       } else {
         negativeQuestionsList.appendChild(accordionItem);
       }
-
     }
 
     const buttonElement = accordionItem.querySelector("button");
@@ -310,13 +333,14 @@ async function createRows(data) {
     });
     updateButtonNumbers(negativeQuestionsList)
     updateButtonNumbers(positiveQuestionsList)
-  });
+  }
 
   initializeSortable(positiveQuestionsList);
   initializeSortable(negativeQuestionsList);
   updateButtonNumbers(positiveQuestionsList);
   updateButtonNumbers(negativeQuestionsList);
 }
+
 
 function createAccordionItem(id, title) {
   const accordionItem = document.createElement("div")
@@ -440,7 +464,7 @@ function updateButtonNumbers(container) {
   });
 }
 
-function printQuestionList() {
+async function printQuestionList() {
 
   const questions = []
 
@@ -466,6 +490,7 @@ function printQuestionList() {
   const negativeAccordions = negativeQuestionsList.querySelectorAll(".accordion-item");
   processAccordionList(Array.from(negativeAccordions));
 
+  console.log(questions)
   registerParamsQuestion(questions)
 }
 
@@ -731,11 +756,22 @@ let selectedIndex = -1
 
 svgElements.forEach((svg, index) => {
 
-  svg.addEventListener('click', () => {
+  svg.addEventListener('click', (event) => {
+ 
+    if (event.target.id === 'svg-1') {
 
-    updateSelection(index)
-    updatePassingTree(selectedIndex)
+      setJustOneTreeMessage() 
+      updateSelection(index)
+      updatePassingTree(selectedIndex)
+      
+    } else {
 
+      updateSelection(index)
+      updatePassingTree(selectedIndex)
+
+
+    }
+ 
   })
 
 })
@@ -757,6 +793,7 @@ async function updatePassingTree(targetClick) {
 }
 
 function updateSelection(selectedIndexParam) {
+
   if (selectedIndexParam !== undefined) {
     selectedIndex = selectedIndexParam
   }
@@ -785,5 +822,22 @@ function updateSelection(selectedIndexParam) {
       svg.classList.add('selected-group')
       svg.classList.remove('unselected-group')
     }
+  })
+}
+
+
+function setJustOneTreeMessage() {
+  Swal.fire({
+    title: 'Tem certeza?',
+    text: 'O princípio da pesquisa é que tenha 2 árvore de perguntas. Da forma com que selecionou a Pergunta Âncora, haverá apenas UMA árvore.',
+    icon: 'warning',
+    confirmButtonColor: '#F05742',
+    confirmButtonText: 'Ok, entendi.',
+    customClass: {
+      confirmButton: 'btn btn-primary-confirm',
+    }
+  }).then((result) => {
+   
+     location.reload()
   })
 }

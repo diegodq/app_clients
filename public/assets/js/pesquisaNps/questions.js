@@ -394,7 +394,7 @@ function getDataParamsQuestion() {
   return [{
     'option_one': $('#input-binary-1').val() == undefined ? '' : $('#input-binary-1').val(),
     'option_two': $('#input-binary-2').val() == undefined ? '' : $('#input-binary-2').val(),
-    'import_type': wichInputIsSelected($('input.input-radio-import'))
+    'import_type': wichInputIsSelected($('input.input-checkbox-import'))
   }]
 }
 
@@ -755,9 +755,25 @@ function notifyRegisterQuestion(data) {
   }
 }
 
+async function getProduct() {
+
+  const response = await fetch(`https://api.automatizavarejo.com.br/product/company`, {
+    headers: {
+      'Authorization': 'Bearer ' + tokenCustomer,
+      'Content-Type': 'application/json'
+    },
+  })
+
+  const data = await response.json()
+
+  return await data.products[0].id
+}
+
 async function getDataAnchorQuestion() {
 
-  fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/anchor-question`, {
+  const customerProduct = await getProduct()
+
+  fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/anchor-question/${customerProduct}`, {
     headers: {
       'Authorization': 'Bearer ' + tokenCustomer,
       'Content-Type': 'application/json'
@@ -765,7 +781,7 @@ async function getDataAnchorQuestion() {
   })
     .then(response => response.json())
     .then(data => {
-
+  
       if (data.message === 'no-anchor-question') {
         inputAnchorQuestion.val('')
       } else {
@@ -934,9 +950,10 @@ function managerAnchorQuestion() {
 
 }
 
-function registerAnchorQuestion() {
+async function registerAnchorQuestion() { 
 
-  const dataAnchorQuestion = { anchor_question: inputAnchorQuestion.val() }
+  const idProduct = await getProduct()
+  const dataAnchorQuestion = { anchor_question: inputAnchorQuestion.val(), "id_product": idProduct}
 
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/anchor-question' : configEnv.local_address + '/anchor-question', {
     method: 'PATCH',
@@ -948,7 +965,7 @@ function registerAnchorQuestion() {
   })
     .then(response => response.json())
     .then(data => {
-
+    
       if (data.status === 'success' & buttonRegisterAnchorQuestion[0].textContent === 'ALTERAR') {
 
         spinner.classList.add('d-flex')
@@ -975,7 +992,7 @@ function registerAnchorQuestion() {
         setTimeout(() => {
 
           modalConfirm.hide()
-          location.reload()
+          //location.reload()
 
         }, 2000)
 
@@ -1007,7 +1024,7 @@ function registerAnchorQuestion() {
           setTimeout(() => {
 
             modalConfirm.hide()
-            location.reload()
+            //location.reload()
 
           }, 2000)
 
@@ -1038,7 +1055,7 @@ function registerAnchorQuestion() {
           setTimeout(() => {
 
             modalConfirm.hide()
-            location.reload()
+            //location.reload()
 
           }, 2500)
         }

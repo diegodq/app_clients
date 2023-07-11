@@ -43,7 +43,6 @@ const modalDeleteAccount = new bootstrap.Modal(document.getElementById('cancelAc
 // VALIDAÇÕES DE EMPRESA, TOKEN VÁLIDO E SE EXISTE TOKEN NO STORAGE
 window.addEventListener('load', (event) => {
 
-
   function dropCostumer() {
     spinner.classList.add('d-flex')
 

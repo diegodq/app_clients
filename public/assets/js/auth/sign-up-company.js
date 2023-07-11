@@ -195,9 +195,10 @@ function registerCompany() {
   })
     .then((response) =>
       response.json().then((data) => {
-
+    
         if (data.status == 'success') {
 
+          registerProduct()
           setTimeout(() => {
 
             modalConfirm.show()
@@ -225,25 +226,36 @@ function registerCompany() {
     )
 }
 
-function registerProduct () {
+async function registerProduct () {
 
-  return console.log(getIdCompany())
+  const idCompany = await getIdCompany()
+  const dataProduct = { "name": "NPS", "description": "Pesquisa de Satisfação NPS", "company": idCompany}
 
-}
-
-function getIdCompany () {
-
-  fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/details' : configEnv.local_address + '/details', {
+  const response = await fetch(`https://api.automatizavarejo.com.br/add/product`, {
+    method: 'POST',
     headers: {
-      'Authorization': `Bearer ${tokenCustomer}`
-    }
+			Authorization: 'Bearer ' + tokenCustomer,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dataProduct)
   })
-    .then((response) => response.json())
-    .then((data) => { console.log(data) })
+
+  const data = await response.json()
 
 }
 
 
-registerProduct()
+async function getIdCompany () {
 
-console.log(tokenCustomer)
+  const response = await fetch(`https://api.automatizavarejo.com.br/details`, {
+      headers: {
+          'Authorization': 'Bearer ' + tokenCustomer,
+          'Content-Type': 'application/json',
+      }
+  })
+
+  const data = await response.json()
+
+  return data.id
+
+}

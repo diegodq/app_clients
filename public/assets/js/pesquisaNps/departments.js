@@ -435,6 +435,7 @@ function fillDepartmentsTable() {
     .then(response => response.json())
     .then(data => {
 
+      
       if (data.message === 'no-departments') {
 
         fieldNoDepartments.innerText = 'Não há departamentos cadastrados.'
