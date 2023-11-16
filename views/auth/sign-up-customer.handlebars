@@ -1,0 +1,327 @@
+<!--begin::Main-->
+<!--begin::Root-->
+<div class='d-flex flex-column flex-root'>
+  <!--begin::Authentication - Sign-up -->
+  <div
+    class='d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed'>
+    <!--begin::Content-->
+    <div class='d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20'>
+      <!--begin::Logo-->
+      <a href='/' class='mb-12'>
+        <img alt='Logo' src='/assets/media/logos/logo.png' class='h-75px' />
+      </a>
+      <!--end::Logo-->
+      <!--begin::Wrapper-->
+      <div class='w-lg-600px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto'>
+        <!--begin::Form-->
+        <form class='form w-100' id='customer_form'>
+          <!--begin::Heading-->
+          <div class='mb-10 text-center'>
+            <!--begin::Title-->
+            <h1 class='text-dark mb-3'>Cadastre-se!</h1>
+            <!--end::Title-->
+            <!--begin::Link-->
+            <div class='text-gray-400 fw-bold fs-4'>Já tem uma conta?
+              <a id="link-make-login" class='fw-bolder cursor-pointer'>Acesse aqui</a>
+            </div>
+            <!--end::Link-->
+          </div>
+          <!--end::Heading-->
+          <!--begin::Separator-->
+          <div id="error-area" class="text-center text-danger mb-4"></div>
+          <div class='d-flex align-items-center mb-10'>
+            <div class='border-bottom border-gray-300 mw-50 w-100'></div>
+            <div class='border-bottom border-gray-300 mw-50 w-100'></div>
+          </div>
+          <div class='text-gray-400 fw-bold fs-4 mb-5 text-center'>Dados Pessoais</div>
+          <!--end::Separator-->
+          <!--begin::Input group-->
+          <div class='row fv-row'>
+            <!--begin::Col-->
+            <div class='col-xl-6 mb-2'>
+              <label class='form-label fw-bolder text-dark fs-6 required'>Seu
+                nome
+              </label>
+              <input class='form-control form-control-lg form-control-solid' type='text' placeholder=''
+                name='first_name' autocomplete='off' />
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class='col-xl-6'>
+              <label class='form-label fw-bolder text-dark fs-6 required'>Sobrenome </label>
+              <input class='form-control form-control-lg form-control-solid' type='text' placeholder='' name='surname'
+                autocomplete='off' />
+            </div>
+            <!--end::Col-->
+          </div>
+          <div class='row fv-row mb-2'>
+            <!--begin::Col-->
+            <div class='col-xl-6'>
+              <label class='form-label fw-bolder text-dark fs-6 required'>Cargo
+                / Profissão</label>
+              <input class='form-control form-control-lg form-control-solid' type='text' placeholder='' name='position'
+                autocomplete='off' />
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class='col-xl-6'>
+              <label class='form-label fw-bolder text-dark fs-6'>Celular
+              </label>
+              <input class='form-control form-control-lg form-control-solid' type='text' placeholder='(00) 00000-0000'
+                name='phone' autocomplete='off' />
+            </div>
+            <!--end::Col-->
+          </div>
+          <!--end::Input group-->
+          <!--begin::Input group-->
+          <div class='fv-row mb-7'>
+            <label class='form-label fw-bolder text-dark fs-6 required'>E-mail</label>
+            <input class='form-control form-control-lg form-control-solid' type='email' placeholder='nome@email.com.br'
+              name='email' autocomplete='off' />
+          </div>
+          <!--end::Input group-->
+          <!--begin::Input group-->
+          <div class='mb-10 fv-row' data-kt-password-meter='true'>
+            <!--begin::Wrapper-->
+            <div class='mb-1'>
+              <!--begin::Label-->
+              <label class='form-label fw-bolder text-dark fs-6 required'>Crie
+                sua senha
+              </label>
+              <!--end::Label-->
+              <!--begin::Input wrapper-->
+              <div class='position-relative mb-3'>
+                <input class='form-control form-control-lg form-control-solid' type='password' id="password"
+                  name='password' autocomplete='off' />
+                <span class='btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2'
+                  data-kt-password-meter-control='visibility'>
+                  <i id="icon-eye-open" class='bi bi-eye-slash fs-2'></i>
+                  <i id="icon-eye-closed" class='bi bi-eye fs-2 d-none'></i>
+                </span>
+              </div>
+              <div class="password-error-label error-label"></div>
+              <!--end::Input wrapper-->
+            </div>
+            <!--end::Wrapper-->
+            <!--begin::Hint-->
+            <div class='text-muted'>A senha deve conter 8 ou mais caracteres e
+              composta por ao menos uma letra maiúscula, números e símbolos.</div>
+            <!--end::Hint-->
+          </div>
+          <!--end::Input group=-->
+          <!--begin::Input group-->
+          <div class='fv-row mb-5'>
+
+            <label class='form-label fw-bolder text-dark fs-6 required'>Confirme
+              sua senha
+            </label>
+
+            <div class='position-relative mb-3'>
+
+              <input class='form-control form-control-lg form-control-solid' type='password' placeholder=''
+                name='confirm_password' autocomplete='off' />
+              <span class='btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2'
+                data-kt-password-meter-control='visibility'>
+                <i id="icon-eye-open2" class='bi bi-eye-slash fs-2'></i>
+                <i id="icon-eye-closed2" class='bi bi-eye fs-2 d-none'></i>
+              </span>
+
+            </div>
+
+          </div>
+          <!--end::Input group-->
+          <div class="fv-row mb-10">
+            <label class="form-check-solid form-check-inline text-center">
+              <input class="form-check-input d-none" type="checkbox" name="accept_terms" value="1" />
+              <span class="form-check-label fw-bold text-gray-700 fs-6">Ao criar uma conta, você concorda com nossos<a
+                  data-bs-toggle="modal" data-bs-target="#useTermsAndPrivacy" class="ms-1 cursor-pointer">Termos de Uso
+                  e Política de Privacidade</a></span>
+              <div id="accept-terms-error" class="text-danger"></div>
+            </label>
+          </div>
+          <!--end::Input group-->
+          <!--begin::Actions-->
+          <div class='text-center'>
+            <button type='submit' id='button_sign_up_customer' class='btn btn-lg btn-primary'>
+              <span class='indicator-label'> CADASTRAR </span>
+              <span class='indicator-progress'>
+                <span class='spinner-border spinner-border-sm align-middle ms-2'></span></span>
+            </button>
+          </div>
+          <!--end::Actions-->
+        </form>
+        <!--end::Form-->
+      </div>
+      <!--end::Wrapper-->
+    </div>
+    <!--end::Content-->
+  </div>
+  <!--end::Authentication - Sign-up-->
+</div>
+
+<div class="modal fade" id="useTermsAndPrivacy">
+  <div class="modal-dialog modal-dialog-scrollable align-items-center justify-content-center">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title">TERMOS DE USO E PRIVACIDADE</h4>
+      </div>
+      <div class="modal-body">
+
+        <h5>BEM-VINDO A AUTOMATIZA VAREJO!</h5>
+        <p class="justified-text m-2">Agradecemos por usar nossos produtos e serviços. Os Serviços serão fornecidos pela
+          Automatiza Varejo
+          localizada à R. das Pitangueiras, 5/6 Ed. Easy, portaria B – Águas Claras, Brasília – DF, CEP: 71.908-720.
+          Ao usar nossos Serviços, você está concordando com estes termos e com a LGPD. Leia-os com atenção.
+          Trabalhamos oferecendo diversos produtos, portanto, às vezes, podem aplicar-se termos adicionais ou exigências
+          de produtos quanto á sua disponibilidade. Os termos adicionais estarão disponíveis atrelados a cada produto ou
+          serviço contratado e esses novos termos se tornarão parte de nosso contrato. </p>
+
+        <h5>COMO USAR NOSSOS SERVIÇOS</h5>
+        <p class="justified-text m-2">É preciso que você siga as políticas disponibilizadas a você dentro do nosso site.
+          Não faça uso indevido dos
+          nosso produtos tentando burlar as regras de contratação e utilização. Podemos suspender, deixar de fornecer
+          nossos Serviços se você descumprir os termos/políticas ou se estivermos investigando casos de suspeita de má
+          conduta.
+          O uso de nossos Produtos e Serviços não lhe confere a propriedade sobre direitos de propriedade intelectual ou
+          sobre o conteúdo acessado. Os conteúdos dos nossos produtos e serviços não poderão ser utilizados sem a devida
+          contratação e permissão legal.
+          A interação com nossos produtos e serviços pressupõe o interesse comum das partes possibilitado a interação da
+          Automatiza Varejo com o cliente, enviar-lhe anúncios, mensagens administrativas e outras informações. Você
+          poderá desativar algumas dessas comunicações.
+          Alguns dos nossos produtos e serviços estão disponíveis em dispositivos móveis. O usuário não deve utilizar
+          tais produtos ou serviços de forma que venha a descumprir leis de trânsito ou de segurança. </p>
+
+        <h5>SEU ACESSO A AUTOMATIZA VAREJO</h5>
+        <p class="justified-text m-2">É necessário criar um usuário com endereço de e-mail e senha para utilizar nossos
+          serviços. A plataforma irá
+          de forma automática, enviar um e-mail contendo um link para confirmação de cadastro. O link de confirmação
+          será enviado para o “e-mail usuário cadastrado” e o acesso só será possível após confirmação. Após a
+          confirmação você será redirecionado automaticamente para a nossa tela de login.
+          Para proteger sua Conta da Automatiza Varejo, o usuário deve manter a senha em sigilo. Qualquer atividade
+          realizada na Conta da Automatiza Varejo é de responsabilidade do usuário. Não recomendamos a reutilização da
+          senha utilizada em nossa plataforma em outros aplicativos. Caso tome conhecimento de uso não autorizado da sua
+          senha realize a alteração de senha na nossa plataforma. Caso não consiga realizar a alteração de senha, o
+          usuário deverá entrar em contato conosco para que sejam realizadas as devidas tratativas. </p>
+
+        <h5> PROTEÇÃO À PRIVACIDADE E AOS DIREITOS AUTORAIS</h5>
+        <p class="justified-text m-2">As Políticas de Privacidade da Automatiza Varejo explicam o modo como tratamos
+          seus dados pessoais e
+          protegemos sua privacidade quando você usa nossos produtos e serviços. Ao utilizar nossos produtos e serviços,
+          você concorda que a Automatiza Varejo poderá usar os seus dados de acordo com nossas políticas de privacidade
+          que são regidas de acordo com a Lei Geral de Proteção de Dados Pessoais (LGPD), lei nº 13.709/2018. A lei
+          estabelece uma estrutura legal de direitos dos(as) titulares dos dados pessoais. Esses direitos são garantidos
+          durante toda a existência do tratamento de dados pessoais em nossa plataforma. A qualquer momento, se for de
+          sua vontade, o usuário poderá excluir sua conta o que resultará na exclusão automática dos dados pessoais do
+          usuário em nossa plataforma.
+          A Automatiza Varejo é detentora dos direitos autorais de todos os produtos e serviços disponibilizados na
+          plataforma mesmo que ocorra na evolução dos produtos e serviços, participação de clientes ou quaisquer
+          terceiros. Para demais esclarecimentos sobre os direitos autorais reservados à Automatiza Varejo, entre em
+          contato conosco através do e-mail contato@automatizavarejo.com.br incluindo no assunto PROPRIEDADE
+          INTELECTUAL. </p>
+
+        <h5>SEU CONTEÚDO EM NOSSOS SERVIÇOS</h5>
+        <p class="justified-text m-2">Alguns de nossos produtos e serviços permitem armazenamento de dados. Você mantém
+          a propriedade de quaisquer
+          direitos de propriedade sobre os dados históricos. Em resumo, os dados pertencem a você. Em caso de rescisão
+          de contrato, uma vez que o uso do produto e serviço será suspenso, os dados serão disponibilizados através de
+          backup de dados. Será enviado um link temporário com todos os dados armazenados para o e-mail informado pelo
+          cliente. O link com o backup de dados ficará disponível por 7 (sete) dias.
+          A Automatiza Varejo não permitirá acesso ao seu banco de dados para integração de terceiros via leitura,
+          gravação, ou qualquer comando direto no banco de dados. Qualquer integração deverá ser feita via API com
+          tratativa comercial prévia. </p>
+
+        <h5>SOBRE O SOFTWARE E NOSSOS SERVIÇOS</h5>
+        <p class="justified-text m-2">Quando um Serviço exige ou inclui software disponível para download, tal software
+          poderá atualizar-se
+          automaticamente em seu dispositivo se uma nova versão ou recurso estiver disponível. Alguns Serviços podem
+          permitir que você ajuste suas configurações de atualizações automáticas.
+          A Automatiza Varejo, concede a você uma licença pessoal, intransferível para uso dos nossos produtos e
+          serviços. Essa licença tem como único objetivo permitir que o uso dos produtos e serviços contratados tendo
+          como contra partida recorrência mensal previamente acordada em contrato formalizado. Não é permitido copiar,
+          modificar, distribuir, vender ou alugar qualquer parte de nossos produtos e serviços, tentativa de engenharia
+          reversa ou extração do código fonte dos nossos softwares, exceto nos casos em que a legislação proibir tais
+          restrições, ou quando ocorra autorização previamente e legalmente documentada. </p>
+
+        <h5>COMO MODIFICAR E CANCELAR NOSSOS SERVIÇOS</h5>
+        <p class="justified-text m-2">Estamos constantemente em evolução melhorando nossos produtos e serviços. Podemos
+          incluir, remover
+          funcionalidades ou recursos e podemos também suspender ou encerrar um produto ou serviço por completo.
+          Você pode deixar de usar nossos produtos e serviços a qualquer momento embora nosso objetivo seja uma parceria
+          de longa data. A Automatiza Varejo também poderá descontinuar a qualquer momento o produto ou serviço prestado
+          com aviso prévio de 30 dias corridos. </p>
+
+        <h5>NOSSAS GARANTIAS E INSENÇÕES DE RESPONSABILIDADE</h5>
+        <p class="justified-text m-2">Fornecemos nossos Serviços usando critérios éticos e uma ótima tecnologia
+          relativamente proporcional ao custo
+          beneficio. Esperamos que você aproveite e gere diferenciais com a utilização dos nossos produtos e serviços.
+          Nossa responsabilidade se limita à entrega do produto ou serviço ao contratante. Nenhuma informação cadastrada
+          pelo contratante e exibida para o usuário é de responsabilidade da Automatiza Varejo. </p>
+
+        <h5>SOBRE ESTES TERMOS</h5>
+        <p class="justified-text m-2">Com aviso prévio e em conformidade com as leis em vigor, podemos modificar estes
+          termos ou quaisquer termos
+          adicionais que sejam aplicáveis a um produto ou serviço para, por exemplo, refletir alterações da lei ou
+          mudanças em nossos produtos e serviços. Entretanto, alterações a respeito de novas funcionalidades de um
+          produto ou serviço ou alterações feitas por razões legais entrarão em vigor imediatamente. Em caso de conflito
+          entre estes termos e os termos adicionais, os termos adicionais prevalecerão com relação a esse conflito.
+          Estes termos regem a relação entre a JPL e você. Eles não criam quaisquer direitos para terceiros.
+          Caso você não cumpra estes termos e nós não tomemos providências imediatas, isso não significa que estamos
+          renunciando a quaisquer direitos que possamos ter (como tomar providências futuras).
+          Caso uma condição específica destes termos não seja executável, isso não prejudicará quaisquer outros termos.
+          Por fim, aceito todos os termos e condições de uso, ciente da observância no cumprimento das leis nacionais
+          (Brasil) e principalmente a LGPD, aceito e assumo total responsabilidade civil e criminal por todas as
+          informações recebidas e compartilhadas. Declaro ainda, ciência de que os dados transitados pela internet pelos
+          produtos e serviços da Automatiza Varejo são criptografados de ponta a ponta garantindo a integridade e
+          segurança dos dados. </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="useTermsAndPrivacy">
+  <div class="modal-dialog align-items-center justify-content-center">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title">TERMOS DE USO E PRIVACIDADE</h4>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">ENTENDI</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--end::Root-->
+<!--end::Main-->
+<div id="spinner-overlay">
+  <div class="spinner-border text-danger text-f05742" role="status">
+    <span class="visually-hidden">Carregando...</span>
+  </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{{!--
+<script src="/assets/js/plugins/jquery-mask/jquery.mask.js"></script>
+<script src="/assets/js/plugins/jquery-mask/jquery.mask.min.js"></script> --}}
+<script
+  src="https://cdn.jsdelivr.net/gh/diegodq/app_clients@master/public/assets/js/plugins/jquery-mask/jquery.mask.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src='/assets/js/validationFields/auth/validationCustomer.js'></script>
+{{!--
+<script
+  src="https://cdn.jsdelivr.net/gh/diegodq/app_clients@master/public/assets/js/validationFields/auth/validationCustomer.min.js"></script>
+--}}
+<script src='/assets/js/auth/sign-up-customer.js'></script>
+{{!--
+<script
+  src="https://cdn.jsdelivr.net/gh/diegodq/app_clients@master/public/assets/js/auth/sign-up-customer.min.js"></script>
+--}}

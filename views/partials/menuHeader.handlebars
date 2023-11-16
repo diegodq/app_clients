@@ -1,0 +1,71 @@
+<div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+  <!-- begin menu header -->
+  <div class="newHeader">
+    <div class="menuLeft">
+			<svg id="menu-aside-mobile-start" xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="#F05742" class="bi bi-list" viewBox="0 0 16 16">
+				<path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+			</svg>
+      <img src="/assets/media/logos/favicon.png" height="37">
+    </div>
+
+    <div class="changeApp" id="change-product-menu">
+      <i class="fonticon-repeat svg-icon-warning"></i>
+      <span>Trocar Aplicativo</span>
+    </div>
+
+    <div class="menuRight">
+      <div class="userInfo">
+        <span id="userName" class="userName"></span>
+        <span id="position_customer_head" class="position"></span>
+      </div>
+      <img id="menu-user" src="assets/media/avatars/blank.png" height="48">
+
+      <div class="menuHidden">
+        <ul>
+          <li><a id="submenu-overview">Meu Perfil</a></li>
+          <li><a id="submenu-billing">Pagamentos</a></li>
+          <li><a id="submenu-settings">Configurações</a></li>
+          <hr>
+          <li><a id="submenu-logout">Sair</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- end menu header -->
+
+  <div id="spinner-overlay">
+    <div class="spinner-border text-danger text-f05742" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+  </div>
+
+  <div class="modal fade " id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="alert alert-dismissible d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10">
+
+            <div class="text-center">
+
+              <h1 id='title-modal-confirm' class="fw-bolder-especial mb-5"></h1>
+
+              <div class="separator separator-dashed border-danger opacity-25 mb-5"></div>
+
+              <div id="text-modal-confirm" class="mb-12 text-dark fs-7 mt-9"></div>
+
+              <div id='icon-modal-confirm'>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/js/partials/menuHeader.js"></script>

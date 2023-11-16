@@ -1,0 +1,141 @@
+{{> menuHeader}}
+{{> asideMenu}}
+
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="post flex-column-fluid" id="kt_post">
+        <div id="kt_content_container" class="container-xxl mt-6">
+            <div class="card">
+                <div class="card-header border-0 pt-6">
+                    <!--begin::Card title-->
+                    <h1 class="text-center text-muted fw-bolder m-5">Pesquisas Respondidas</h1>
+                    <h3 class="text-center text-muted m-5">Aqui você verá na íntegra cada pesquisa respondida
+                        individualmente, e poderá obter algumas informações e um arquivo editável para que tenha
+                        liberdade em também fazer suas próprias análises e obter mais informações através dos dados.
+                    </h3>
+
+                    <!--begin::Card toolbar-->
+                    {{!-- <div class="card-toolbar">
+                        <!--begin::Toolbar-->
+                        <div class="d-flex justify-content-end" data-kt-subscription-table-toolbar="base">
+                            <button class="btn btn-primary me-2" onclick="printTable()">
+                                <i class="bi bi-printer-fill me-1"></i> Imprimir
+                            </button>
+                            <button class="btn btn-primary" onclick="exportTable()">
+                                <i class="bi bi-file-earmark-arrow-up-fill me-1"></i> Exportar
+                            </button>
+                        </div>
+                        <!--end::Toolbar-->
+                    </div> --}}
+                    <!--end::Card toolbar-->
+                    
+                    <div class="container mt-4">
+                        <div class="custom-border">
+                            <div class="btn-group" role="group" aria-label="Opções de período">
+                                <button id="todayButton" class="btn btn-primary btn-sm mb-0">Hoje</button>
+                                <button id="last7Days" class="btn btn-primary btn-sm active mb-0">7 dias</button>
+                                <button id="last14Days" class="btn btn-primary btn-sm mb-0">14 dias</button>
+                                <button id="last30Days" class="btn btn-primary btn-sm mb-0">30 dias</button>
+                            </div>
+                            <div class="row align-items-end mt-2">
+                                <div class="col-4">
+                                    <label for="startDate" class="form-label text-center text-muted fw-bolder">Data
+                                        Inicial:</label>
+                                    <input type="text" id="startDate" class="form-control datepicker">
+                                </div>
+                                <div class="col-4">
+                                    <label for="endDate" class="form-label text-center text-muted fw-bolder">Data
+                                        Final:</label>
+                                    <input type="text" id="endDate" class="form-control datepicker">
+                                </div>
+                                <div class="col-4">
+                                    <button id="filterButton" class="btn btn-primary">Filtrar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <!--end::Card header-->
+                <!--begin::Card body-->
+                <!-- O HTML deve conter o código da tabela e um ID para o <tbody> onde os dados serão populados -->
+                <div class="card m-5 pt-0 mt-10">
+                    <table id="table_researchs" class="ui celled table align-middle">
+                        <thead>
+                            <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                                <th class="w-10px pe-2">
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                                        <input class="form-check-input" type="checkbox" data-kt-check="true"
+                                            data-kt-check-target="#kt_datatable_example_1 .form-check-input"
+                                            value="1" />
+                                    </div>
+                                </th>
+                                <th class="text-center">DATA/HORA</th>
+                                <th class="text-center research-column">PESQUISA</th>
+                                <th class="text-center">AVALIAÇÃO</th>
+                                <th class="text-center">LOJA</th>
+                                <th class="text-center">OPÇÕES</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-600 fw-bold text-center pointer" id="table_body">
+                            <!-- Adicione a classe "text-center" para centralizar o conteúdo nas células -->
+                        </tbody>
+                    </table>
+
+                    <div class="overlay-container-answerTable" id="spinner-overlay-answerTable">
+							<div class="spinner-border text-danger text-f05742" role="status">
+								<span class="visually-hidden">Carregando...</span>
+							</div>
+					</div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modal-view-researchs" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-static modal-dialog-centered" data-backdrop="static">
+            <div class="modal-content">
+                <h1 id="modal-title" class="modal-title text-center m-4"></h1>
+                <h3 id="modal-time" class="modal-time text-center m-4"></h3>
+                <h3 id="modal-result" class="modal-result text-center m-4"></h3>
+                <h3 id="modal-employee" class="modal-employee text-center m-4"></h3>
+                <hr class="my-4 bg-primary">
+                <div class="modal-body">
+                    <div class="container m-3">
+                        <div class="modal-text"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{{> menu-footer}}
+<!--end::Content-->
+
+<!--begin::Scrolltop-->
+<!--end::Scrolltop-->
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.semanticui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.9.2/semantic.min.js"></script>
+<script src="https://cdn.datatables.net/datetime/1.1.1/js/dataTables.dateTime.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/locale/pt-br.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+<script src="assets/js/pesquisaNps/answers.js"></script>

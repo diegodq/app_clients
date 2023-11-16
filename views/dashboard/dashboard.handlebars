@@ -1,0 +1,452 @@
+{{> menuHeader}}
+{{> asideMenu}}
+
+
+{{!-- <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+	<div class="post flex-column-fluid" id="kt_post">
+		<div id="kt_content_container" class="container-xxl mt-6">
+			<div class="card">
+				<div class="card-header border-0 pt-6">
+
+					<div class="d-flex justify-content-center align-items-center m-7">
+						<h3 class="text-muted fw-bolder" for="storeSelect">Selecione a loja:</h3>
+						<div class="form-group">
+
+							<div class="d-flex align-items-center">
+
+								<select id="storeSelect" class="custom-select-store m-3">
+								</select>
+
+								<div class="btn-group m-2">
+									<button type="button" class="btn btn-primary backOrNext" id="backButton">
+										<i class="fas fa-chevron-left"></i>
+									</button>
+									<button type="button" class="btn btn-primary backOrNext" id="nextButton">
+										<i class="fas fa-chevron-right"></i>
+									</button>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+
+					<div class="container m-5">
+						<div class="custom-border">
+							<div class="btn-group" role="group" aria-label="Opções de período">
+								<button id="todayButton" class="btn btn-primary btn-sm mb-0">Hoje</button>
+								<button id="last7Days" class="btn btn-primary btn-sm active mb-0">7 dias</button>
+								<button id="last14Days" class="btn btn-primary btn-sm mb-0">14 dias</button>
+								<button id="last30Days" class="btn btn-primary btn-sm mb-0">30 dias</button>
+							</div>
+							<div class="row align-items-end mt-2">
+								<div class="col-4">
+									<label for="startDate" class="form-label text-center text-muted fw-bolder">Data
+										Inicial:</label>
+									<input type="text" id="startDate" class="form-control datepicker">
+								</div>
+								<div class="col-4">
+									<label for="endDate" class="form-label text-center text-muted fw-bolder">Data
+										Final:</label>
+									<input type="text" id="endDate" class="form-control datepicker">
+								</div>
+								<div class="col-4">
+									<button id="filterButton" class="btn btn-primary">Filtrar</button>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div> --}}
+
+<div id="kt_content">
+
+	<div class="container-xxl">
+		<div class="pinChangeApp">
+			<i class="bi bi-arrow-left-right"></i>
+			<span>Trocar de aplicativo</span>
+		</div>
+
+		<div id="kt_post">
+
+			<div class="d-flex justify-content-center align-items-center m-7">
+				<h3 class="text-muted fw-bolder" for="storeSelect">Selecione a loja:</h3>
+				<div class="form-group">
+
+					<div class="d-flex align-items-center">
+
+						<select id="storeSelect" class="custom-select-store m-3">
+						</select>
+
+						<div class="btn-group m-2">
+							<button type="button" class="btn btn-primary backOrNext" id="backButton">
+								<i class="fas fa-chevron-left"></i>
+							</button>
+							<button type="button" class="btn btn-primary backOrNext" id="nextButton">
+								<i class="fas fa-chevron-right"></i>
+							</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="container m-5 d-flex justify-content-center align-items-center" >
+				<div class="custom-border">
+					<div class="btn-group" role="group" aria-label="Opções de período">
+						<button id="todayButton" class="btn btn-primary btn-sm mb-0">Hoje</button>
+						<button id="last7Days" class="btn btn-primary btn-sm active mb-0">7 dias</button>
+						<button id="last14Days" class="btn btn-primary btn-sm mb-0">14 dias</button>
+						<button id="last30Days" class="btn btn-primary btn-sm mb-0">30 dias</button>
+					</div>
+					<div class="row align-items-end mt-2">
+						<div class="col-4">
+							<label for="startDate" class="form-label text-center text-muted fw-bolder">Data
+								Inicial:</label>
+							<input type="text" id="startDate" class="form-control datepicker">
+						</div>
+						<div class="col-4">
+							<label for="endDate" class="form-label text-center text-muted fw-bolder">Data
+								Final:</label>
+							<input type="text" id="endDate" class="form-control datepicker">
+						</div>
+						<div class="col-4">
+							<button id="filterButton" class="btn btn-primary">Filtrar</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+
+			<div class="dashboard-container m-3">
+
+				<div class="card" id="card-nps-chart">
+					<div class="text-center text-muted fw-bolder m-5 d-flex align-items-center"
+						style="font-size: 24px;">
+						<div class="mx-auto">
+							Indicador NPS
+						</div>
+					</div>
+					{{!-- <div class="card-header text-center text-muted fw-bolder m-2" style="font-size: 24px;">
+					</div> --}}
+					<div class="card-body">
+
+						<div class="col-lg-12 d-flex justify-content-center align-items-center"
+							style="position: relative;">
+							<span class="text-center no-data-field-chart text-muted fw-bolder"
+								id="no-data-field-nps-chart"></span>
+							<canvas id="canvas-id"></canvas>
+							<div id="custom-text-div" class="position-absolute top-0 start-50 translate-middle"></div>
+						</div>
+						<div id="more-information-nps-chart-field"
+							class="d-flex justify-content-between align-items-center">
+
+							<div class="col-lg-4 mt-lg-0 text-center">
+								<!-- SVG para Detratores -->
+								<img src="\assets\media\svg\new-nps\very-bad.svg" alt="Descrição do SVG" width="40"
+									height="40">
+								<label><strong>Detrator:</strong> <span id="npsDetractorNumber">0</span> - <span
+										id="npsDetractorPerc">0%</span></label>
+							</div>
+
+							<div class="col-lg-4 mt-lg-0 text-center">
+								<!-- SVG para Passivos -->
+								<img src="\assets\media\svg\new-nps\indifferent.svg" alt="Descrição do SVG" width="40"
+									height="40">
+								<label><strong>Passivo:</strong> <span id="npsPasiveNumber">0</span> - <span
+										id="npsPasivePerc">0%</span></label>
+							</div>
+
+							<div class="col-lg-4 mt-lg-0 text-center">
+								<!-- SVG para Promotores -->
+								<img src="\assets\media\svg\new-nps\great.svg" alt="Descrição do SVG" width="40"
+									height="40">
+								<label><strong>Promotor:</strong> <span id="npsPromoterNumber">0</span> - <span
+										id="npsPromoterPerc">0%</span></label>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="overlay-container" id="spinner-overlay-nps">
+						<div class="spinner-border text-danger text-f05742" role="status">
+							<span class="visually-hidden">Carregando...</span>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="card" id="card-positivenegative-chart">
+
+					<div class="text-center text-muted fw-bolder m-5 d-flex align-items-center"
+						style="font-size: 24px;">
+						<div class="mx-auto">
+							Pesquisas Positivas & Negativas
+						</div>
+					</div>
+					<div class="card-header text-center text-muted fw-bolder m-2" style="font-size: 24px;">
+
+						<div class="mx-auto">
+							Nota Média:
+							<span class="average-rating-number" id="rating-research"></span>
+							<span class="info-icon d-flex align-items-center justify-content-center"
+								data-toggle="tooltip" data-placement="top"
+								title="Nota média obtida no total de pesquisas carregadas. MUITO RUIM = 2 | RUIM = 4 | INDIFERENTE = 6 | BOM = 8 | MUITO BOM = 10 ">
+								<i class="bi bi-info-circle"></i>
+							</span>
+
+						</div>
+
+					</div>
+					<div class="card-body d-flex flex-wrap align-items-center justify-content-center">
+						<div class="col-lg-8">
+							<span class="text-center no-data-field-chart text-muted fw-bolder"
+								id="no-data-field-amount-chart"></span>
+							<canvas id="donutChart" style="width: 100%; height: 250px;"></canvas>
+						</div>
+						<div id="more-information-amount-chart-field" class="col-lg-4 mt-3 mt-lg-0 text-center">
+							<p><strong>Positivas: <i class="bi bi-hand-thumbs-up text-success"></i></strong> <span
+									id="positiveCount">0</span> - <span id="positivePercentage"></span></p>
+							<p><strong>Negativas: <i class="bi bi-hand-thumbs-down text-danger"></i> </strong> <span
+									id="negativeCount">0</span> - <span id="negativePercentage"></span></p>
+							<p><strong>Total:</strong> <span id="totalCount">0</span><i
+									class="bi bi-plus-circle-dotted"></i></p>
+						</div>
+					</div>
+
+					<div class="overlay-container" id="spinner-overlay-positiveAndNegative">
+						<div class="spinner-border text-danger text-f05742" role="status">
+							<span class="visually-hidden">Carregando...</span>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="card" id="card-volumMonth-chart">
+
+					<div class="text-center text-muted fw-bolder m-5 d-flex align-items-center"
+						style="font-size: 24px;">
+						<div class="mx-auto">
+							Volume de Avaliações Recebidas
+						</div>
+					</div>
+					<div class="card-header text-center align-items-center text-muted fw-bolder m-2"
+						style="font-size: 24px;">
+						<div class="mx-auto">
+							Avaliações Mensais - 6 Meses
+						</div>
+					</div>
+					<div class="card-body d-flex flex-wrap align-items-center justify-content-center">
+						<div class="col-lg-8">
+							<span class="text-center no-data-field-chart text-muted fw-bolder"
+								id="no-data-field-month-chart"></span>
+							<canvas id="barChart" style="height: 200px; max-width: 100%;"></canvas>
+						</div>
+						<div id="more-information-month-chart-field" class="col-lg-4 mt-3 mt-lg-0 text-center">
+							<p><strong>Média Mês: </strong> <span id="medMonthVolumResearchs"></span>
+							</p>
+							<p><strong>Maior Mês:</strong> <span id="bestMonthVolumeResearch"></span></p>
+							<p><strong>1º <span class"text-danger">X</span> 2º Trim:</strong> <span
+									id="compareTriMonthVolumResearchs"></span></p>
+						</div>
+					</div>
+					<div class="overlay-container" id="spinner-overlay-month">
+						<div class="spinner-border text-danger text-f05742" role="status">
+							<span class="visually-hidden">Carregando...</span>
+						</div>
+					</div>
+					<p class="text-center m-3 text-muted">Este gráfico possui período fixo. Os dados carregados serão sempre os últimos 6 meses.</p>
+
+				</div>
+
+				<div class="card" id="card-topic-chart">
+					<div class="text-center text-muted fw-bolder m-5 d-flex align-items-center"
+						style="font-size: 24px;">
+						<div class="mx-auto">
+							Tópicos em Destaque
+						</div>
+					</div>
+
+					<div class="card-body">
+						<div class="row">
+							<!-- Indicações Negativas -->
+							<div class="col-lg-12">
+								<div class="mx-auto text-center text-muted fw-bolder m-2">
+									Indicações Negativas <i class="bi bi-hand-thumbs-down text-danger"></i>
+								</div>
+								<span class="text-center no-data-field-chart text-muted fw-bolder"
+									id="no-data-field-topicBarChartNegative-chart"></span>
+								<div id="topicBarChartNegative" style="height: 250px;"></div>
+							</div>
+
+							<!-- Indicações Positivas -->
+							<div class="col-lg-12">
+								<div class="mx-auto text-center text-muted fw-bolder m-2">
+									Indicações Positivas <i class="bi bi-hand-thumbs-up text-success"></i>
+								</div>
+								<div id="topicBarChartPositive" style="height: 250px;"></div>
+							</div>
+						</div>
+						<span class="text-center no-data-field-chart text-muted fw-bolder"
+							id="no-data-field-employeeBarChartPositive-chart"></span>
+					</div>
+
+					<div class="overlay-container" id="spinner-overlay-topic">
+						<div class="spinner-border text-danger text-f05742" role="status">
+							<span class="visually-hidden">Carregando...</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="card" id="card-department-chart">
+					<div class="text-center text-muted fw-bolder m-5 d-flex align-items-center"
+						style="font-size: 24px;">
+						<div class="mx-auto">
+							Departamentos em Destaque
+						</div>
+					</div>
+
+					<div class="card-body">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="mx-auto text-center text-muted fw-bolder m-2">
+									Indicações Negativas <i class="bi bi-hand-thumbs-down text-danger"></i>
+								</div>
+								<span class="text-center no-data-field-chart text-muted fw-bolder"
+									id="no-data-field-departmentBarChartNegative-chart"></span>
+								<div id="departmentBarChartNegative" style="height: 250px;"></div>
+							</div>
+							<div class="col-lg-12">
+								<div class="mx-auto text-center text-muted fw-bolder m-2">
+									Indicações Positivas <i class="bi bi-hand-thumbs-up text-success"></i>
+								</div>
+								<div id="departmentBarChartPositive" style="height: 250px;"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="overlay-container" id="spinner-overlay-department">
+						<div class="spinner-border text-danger text-f05742" role="status">
+							<span class="visually-hidden">Carregando...</span>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="card" id="card-employee-chart">
+					<div class="text-center text-muted fw-bolder m-5 d-flex align-items-center"
+						style="font-size: 24px;">
+						<div class="mx-auto">
+							Colaboradores em Destaque
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="row" id="chart-bars-employeeBarChart">
+							<div class="col-lg-12">
+								<div class="mx-auto text-center text-muted fw-bolder m-2">
+									Indicações Negativas <i class="bi bi-hand-thumbs-down text-danger"></i>
+								</div>
+								<div id="employeeBarChartNegative" style="height: 250px;"></div>
+							</div>
+							<div class="col-lg-12">
+								<div class="mx-auto text-center text-muted fw-bolder m-2">
+									Indicações Positivas <i class="bi bi-hand-thumbs-up text-success"></i>
+								</div>
+								<div id="employeeBarChartPositive" style="height: 250px;"></div>
+							</div>
+
+						</div>
+						<span class="text-center no-data-field-chart text-muted fw-bolder"
+							id="no-data-field-employeeBarChartPositive-chart"></span>
+					</div>
+					<div class="overlay-container" id="spinner-overlay-employee">
+						<div class="spinner-border text-danger text-f05742" role="status">
+							<span class="visually-hidden">Carregando...</span>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="card" id="card-volumDays-chart">
+
+					<div class="text-center text-muted fw-bolder m-5 d-flex align-items-center"
+						style="font-size: 24px;">
+						<div class="mx-auto">
+							Volume de Avaliações Recebidas
+						</div>
+					</div>
+					<div class="card-header text-center text-muted fw-bolder m-2" style="font-size: 24px;">
+						<div class="mx-auto">
+							Avaliações Diárias - 7 Dias
+						</div>
+					</div>
+
+					<div class="card-body d-flex flex-wrap align-items-center justify-content-center">
+						<div class="col-lg-8">
+
+							<span class="text-center no-data-field-chart text-muted fw-bolder"
+								id="no-data-field-days-chart"></span>
+							<canvas id="lineChart" style="width: 100%; height: 300px;"></canvas>
+						</div>
+
+						<div id="more-information-days-chart-field" class="col-lg-4 mt-3 mt-lg-0 text-center">
+							<p><strong>Média Dia:</strong> <span id="medADayVolumResearchs"></span>
+							</p>
+							<p><strong>Últimos 7 dias:</strong> <span id="7daysVolumResearchs"></span>
+							</p>
+							<p><strong>Semana Atual x Anterior</strong> <span id="compareVolumResearchs"></span>
+							</p>
+						</div>
+
+					</div>
+					<div class="overlay-container" id="spinner-overlay-days">
+						<div class="spinner-border text-danger text-f05742" role="status">
+							<span class="visually-hidden">Carregando...</span>
+						</div>
+					</div>
+					<p class="text-center m-3 text-muted">Este gráfico possui período fixo. Os dados carregados serão sempre os últimos 7 dias.</p>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+</div>
+
+
+
+
+
+
+{{> menu-footer}}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/locale/pt-br.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.min.js"></script>
+<script src="//cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="/assets/js/dashboard/dashboard.js"></script>
+{{!--
+<script
+	src="https://cdn.jsdelivr.net/gh/diegodq/app_clients@master/public/assets/js/dashboard/dashboard.min.js"></script>
+--}}

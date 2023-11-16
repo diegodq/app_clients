@@ -1,0 +1,396 @@
+{{> menuHeader}}
+{{> asideMenu}}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Post-->
+    <div class="post flex-column-fluid" id="kt_post">
+
+        <div id="kt_content_container" class="container-xxl mt-6">
+            <div class="card">
+
+                <div class="card-header border-0 pt-6">
+                    <!--begin::Card title-->
+                    <h1 class="text-center text-muted fw-bolder m-5">Cadastro de Ferramentas
+                    </h1>
+                    <h3 class="text-center text-muted m-5"> As ferramentas serão algumas perguntas já
+                        pré definidas que poderão ser utilizadas durante a configuração da sua pesquisa. Aqui você
+                        cadastra algumas opções como
+                        possibilidade de <strong>encerrar pesquisa</strong> e <strong>informe de contato</strong> por
+                        exemplo.</h3>
+                    <div class="card-title">
+                        <!--begin::Search-->
+                        <div class="d-flex align-items-center position-relative my-1">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                            <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none">
+                                    <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1"
+                                        transform="rotate(45 17.0365 15.1223)" fill="black" />
+                                    <path
+                                        d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
+                                        fill="black" />
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->
+                            <input type="text" data-kt-subscription-table-filter="search" id="search-input"
+                                class="form-control form-control-solid w-250px ps-14" placeholder="Procurar" />
+                        </div>
+                        <!--end::Search-->
+                    </div>
+                    <!--begin::Card title-->
+                    <!--begin::Card toolbar-->
+                    <div class="card-toolbar">
+                        <!--begin::Toolbar-->
+                        <div class="d-flex justify-content-end" data-kt-subscription-table-toolbar="base">
+                            <!--end::Filter-->
+                            <!--begin::Add subscription-->
+                            <a id="button-add-question" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#modal-register-tools">
+                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
+                                <span class="svg-icon svg-icon-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none">
+                                        <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1"
+                                            transform="rotate(-90 11.364 20.364)" fill="black" />
+                                        <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="black" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->Ferramenta</a>
+                            <!--end::Add subscription-->
+                        </div>
+                        <!--end::Toolbar-->
+                    </div>
+                    <!--end::Card toolbar-->
+
+                </div>
+                <!--end::Card header-->
+                <!--begin::Card body-->
+                <div class="card-body pt-0 mt-10">
+
+                    <table class="table table-striped table-bordered table-hover align-middle fs-6 gy-5"
+                        id="questions_table">
+                        <thead>
+                            <tr class="text-center text-muted  fw-bolder fs-7 text-uppercase gs-0">
+                                <!--<th class="w-15">ID</th> -->
+                                <th class="w-20">FERRAMENTA</th>
+                                <th class="w-20">ÁRVORE</th>
+                                <th class="w-20">STATUS</th>
+                                <th class="w-15">OPÇÕES</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="text-gray-600 fw-bold" id="table-body">
+
+                        </tbody>
+
+                    </table>
+                    <div class="d-flex justify-content-center text-gray-500 align-items-center m-5"
+                        id="field-no-questions"></div>
+                </div>
+                <!--end::Card body-->
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!--end::Modal content-->
+    <div class="modal fade" id="modal-register-tools" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-static modal-dialog-centered" data-backdrop="static">
+
+            <div class="modal-content">
+
+                <div class="card">
+
+                    <div id="tools-type-component" name="components-view" class="d-none">
+
+                        <h1 class="text-center text-muted fw-bolder m-5">Qual ferramenta deseja incluir?
+                        </h1>
+
+                        <div class="p-5">
+
+                            <input type="radio" class="btn-check" data-radio="input" id="radio_finish_survey"
+                                name="type-tools" value="apps" />
+                            <label
+                                class="btn btn-outline btn-outline-dashed btn-outline-default p-7 d-flex align-items-center mb-5"
+                                for="radio_finish_survey">
+                                <!--begin::Svg Icon | path: icons/duotune/coding/cod001.svg-->
+                                <span class="svg-icon svg-icon-muted svg-icon-4hx"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-calendar2-x" viewBox="0 0 16 16">
+                                        <path
+                                            d="M6.146 8.146a.5.5 0 0 1 .708 0L8 9.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 10l1.147 1.146a.5.5 0 0 1-.708.708L8 10.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 10 6.146 8.854a.5.5 0 0 1 0-.708z" />
+                                        <path
+                                            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
+                                        <path
+                                            d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
+                                    </svg></span>
+                                <!--end::Svg Icon-->
+
+                                <span class="d-block fw-bold text-start">
+                                    <span class="text-dark fw-bolder d-block fs-3">Encerrar Pesquisa
+                                    </span>
+                                    <span class="text-muted fw-bold fs-6">
+                                        Esta opção irá sugerir continuidade na
+                                        pesquisa e ficará a critério do cliente continuar ou não.
+                                    </span>
+                                </span>
+                            </label>
+                            <!--end::Option-->
+
+                            <!--begin::Option-->
+                            <input type="radio" class="btn-check" data-radio="import" id="radio_contact_survey"
+                                name="type-tools" value="apps" />
+                            <label
+                                class="btn btn-outline btn-outline-dashed btn-outline-default p-7 d-flex align-items-center mb-5"
+                                for="radio_contact_survey">
+                                <!--begin::Svg Icon | path: icons/duotune/coding/cod001.svg-->
+                                <span class="svg-icon svg-icon-muted svg-icon-4hx"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-telephone" viewBox="0 0 16 16">
+                                        <path
+                                            d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z" />
+                                    </svg></span>
+                                <!--end::Svg Icon-->
+
+                                <span class="d-block fw-bold text-start">
+                                    <span class="text-dark fw-bolder d-block fs-3">Formulário de Contato</span>
+                                    <span class="text-muted fw-bold fs-6">Inserir em sua pesquisa um formulário para
+                                        que o cliente deixe seu contato.</span>
+                                </span>
+                            </label>
+                            <!--end::Option-->
+
+                            <!--begin::Option-->
+                            <input type="radio" class="btn-check" data-radio="binary" id="radio_alert_survey"
+                                name="type-tools" value="apps" />
+                            <label
+                                class="btn btn-outline btn-outline-dashed btn-outline-default p-7 d-flex align-items-center mb-5"
+                                for="radio_alert_survey">
+                                <!--begin::Svg Icon | path: icons/duotune/coding/cod001.svg-->
+                                <span class="svg-icon svg-icon-muted svg-icon-4hx"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="feather feather-alert-triangle">
+                                        <path
+                                            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                                        </path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                    </svg></span>
+                                <!--end::Svg Icon-->
+
+                                <span class="d-block fw-bold text-start">
+                                    <span class="text-dark fw-bolder d-block fs-3">Alerta</span>
+                                    <span class="text-muted fw-bold fs-6">Inserir em sua pesquisa um formulário para
+                                        que o cliente deixe seu contato</span>
+                                </span>
+                            </label>
+                            <!--end::Option-->
+                        </div>
+                        <div class="text-center mt-2">
+                            <a class="btn cursor-pointer btn-light mb-5 btn-active-light-primary align-self-center"
+                                id="button-back-tree">VOLTAR</a>
+
+                        </div>
+
+                    </div>
+
+                    <div id="tree-tools-component" name="components-view">
+
+                        <h1 class="text-center text-muted fw-bolder m-5">A qual Árvore de Perguntas essa ferramenta
+                            pertencerá?
+                        </h1>
+                        <h4 class="text-center text-muted fw-bolder m-5"> Selecione a árvore no qual essa ferramenta
+                            fará parte. (Positiva = Clientes Satisfeitos | Negativa = Não Satisfeitos) </h4>
+
+                        <div class="p-5">
+
+                            <!--begin::Option-->
+                            <input type="radio" class="btn-check" data-tree="1" id="radio_tree_positive"
+                                name="tree_choice" value="apps" />
+                            <label
+                                class="btn btn-outline btn-outline-dashed btn-outline-default p-7 d-flex align-items-center mb-5"
+                                for="radio_tree_positive">
+                                <!--begin::Svg Icon | path: icons/duotune/coding/cod001.svg-->
+                                <span class="svg-icon svg-icon-muted svg-icon-4hx">
+                                    <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink" width="200px" height="200px"
+                                        viewBox="0 0 24 24" xml:space="preserve">
+                                        <g transform="scale(0.04)">
+                                            <path class="st0" d="M462.938,198.933c-9.688,0-43.437,0-92.562,0c-39.5,0-47.094-6.656-47.094-17.297
+        c0-12.156,19.75-33.406,24.313-41.016c4.563-7.594,33.422-33.406,39.5-71.391s-39.5-65.328-54.688-39.5
+        c-9.016,15.328-31.906,60.766-59.25,80.516c-50.719,36.641-92.672,116.391-145.516,116.391v199.281
+        c43.547,0,142.203,48.406,177.156,55.406c39.578,7.922,91.297,25.406,118.75-11.875c16.921-22.984,43.437-112.219,63.343-175.5
+        C537.376,245.448,502.517,198.933,462.938,198.933z" fill="red" />
+                                            <path class="st0" d="M0.001,265.401v173.203c0,21.406,17.344,38.766,38.75,38.766h22.031c14.266,0,25.844-11.563,25.844-25.844
+        V226.636H38.751C17.345,226.636,0.001,243.995,0.001,265.401z" fill="red" />
+                                        </g>
+                                    </svg>
+                                </span>
+
+                                <!--end::Svg Icon-->
+
+                                <span class="d-block fw-bold text-start m-3">
+                                    <span class="text-dark fw-bolder d-block fs-3">Árvore Positiva</span>
+                                    <span class="text-muted fw-bold fs-6">Será agrupada com as perguntas que
+                                        aparecem para os clientes que previamente disseram estar
+                                        <strong>SATISFEITOS</strong> com a
+                                        experiência.</span>
+                                </span>
+                            </label>
+                            <!--end::Option-->
+
+                            <input type="radio" class="btn-check" data-tree="0" id="radio_tree_negative"
+                                name="tree_choice" value="apps" />
+                            <label
+                                class="btn btn-outline btn-outline-dashed btn-outline-default p-7 d-flex align-items-center mb-5"
+                                for="radio_tree_negative">
+                                <!--begin::Svg Icon | path: icons/duotune/coding/cod001.svg-->
+                                <span class="svg-icon svg-icon-muted svg-icon-4hx">
+
+
+                                    <span class="svg-icon svg-icon-muted svg-icon-4hx">
+                                        <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" width="200px" height="200px"
+                                            viewBox="0 0 24 24" xml:space="preserve">
+                                            <g transform="scale(0.04) rotate(180 256 256)">
+                                                <path class="st0" d="M462.938,198.933c-9.688,0-43.437,0-92.562,0c-39.5,0-47.094-6.656-47.094-17.297
+        c0-12.156,19.75-33.406,24.313-41.016c4.563-7.594,33.422-33.406,39.5-71.391s-39.5-65.328-54.688-39.5
+        c-9.016,15.328-31.906,60.766-59.25,80.516c-50.719,36.641-92.672,116.391-145.516,116.391v199.281
+        c43.547,0,142.203,48.406,177.156,55.406c39.578,7.922,91.297,25.406,118.75-11.875c16.921-22.984,43.437-112.219,63.343-175.5
+        C537.376,245.448,502.517,198.933,462.938,198.933z" fill="red" />
+                                                <path class="st0" d="M0.001,265.401v173.203c0,21.406,17.344,38.766,38.75,38.766h22.031c14.266,0,25.844-11.563,25.844-25.844
+        V226.636H38.751C17.345,226.636,0.001,243.995,0.001,265.401z" fill="red" />
+                                            </g>
+                                        </svg>
+                                    </span>
+
+
+                                </span>
+                                <!--end::Svg Icon-->
+
+                                <span class="d-block fw-bold text-start m-3">
+                                    <span class="text-dark fw-bolder d-block fs-3">Árvore Negativa</span>
+                                    <span class="text-muted fw-bold fs-6">Será agrupada com as perguntas que
+                                        aparecem para os clientes que previamente disseram estar
+                                        <strong>INSATISFEITOS</strong> com a
+                                        experiência.</span>
+                                </span>
+                            </label>
+                            <!--end::Option-->
+
+
+
+                        </div>
+
+                        <div class="text-center mt-8">
+                            <a class="cursor-pointer btn btn-light mb-5 btn-active-light-primary align-self-center"
+                                id="button-cancel-tree">CANCELAR</a>
+                        </div>
+
+                    </div>
+
+                    <div id="alert-tools-component" name="components-view" class="d-none">
+                        <h1 class="text-center text-muted fw-bolder m-5">Qual texto deseja no alerta?</h1>
+                        <form id="form-alert-tools-component">
+                            <div class="input-group col-md-12 mx-auto p-4 m-4">
+                                <textarea class="form-control rounded" name="inputTextAlert" id="input-alert-text"
+                                    cols="30" rows="5"></textarea>
+                            </div>
+                            <div class="text-center mt-2">
+                                <label id="inputTextAlert-error" class="error" for="input-alert-text"></label>
+                            </div>
+                            <div class="text-center mt-8">
+                                <a class="cursor-pointer btn btn-light mb-5 btn-active-light-primary align-self-center"
+                                    id="button-back-save-alert">VOLTAR</a>
+                                <button type="submit" id="button-save-alert"
+                                    class="btn cursor-pointer mb-5 btn-primary align-self-center">GRAVAR</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="finish-survey-component" name="components-view" class="d-none">
+                        <h1 class="text-center text-muted fw-bolder mt-5 mb-5 ml-2">Insira os textos que serão
+                            apresentados ao cliente ao sugerir finalização da pesquisa.</h1>
+                        <form id="form-binary-question-componente">
+                            <h4 class="text-center text-muted fw-bolder mt-5 mb-5 ml-2"> Qual o texto principal da
+                                finalização da pesquisa? </h4>
+                            <div class="input-group col-md-6 mx-auto p-4 m-4">
+                                <textarea class="form-control rounded" name="inputTextFinishResearch"
+                                    id="input-finish-text" cols="30" rows="5"></textarea>
+                            </div>
+                            <h4 class="text-center text-muted fw-bolder mt-5 mb-5 ml-2"> Qual o texto a ser exibido nos
+                                botões? </h4>
+                            <div class="input-group col-md-6 mx-auto p-4 m-4">
+                                <span class="input-group-text" id="basic-addon1">Botão 01</span>
+                                <input type="text" class="form-control" id="input-binary-1" name="inputButton1" maxlength="20"/>
+                                <span class="text-muted text-center"> <i class="bi bi-arrow-up-circle-fill"></i> Este
+                                    será o botão que, ao ser clicado, <span class="fw-bold">CONTINUARÁ</span> com a
+                                    pesquisa.</span>
+                            </div>
+                            <div>
+                                <div class="text-center text-muted fw-bolder mt-5 mb-5 ml-2"> # </div>
+                            </div>
+                            <div class="input-group col-md-6 mx-auto p-4 m-4">
+                                <span class="input-group-text" id="basic-addon1">Botão 02</span>
+                                <input type="text" class="form-control" id="input-binary-2" name="inputButton2" maxlength="20"/>
+                                <span class="text-muted text-center"> <i class="bi bi-arrow-up-circle-fill"></i> Este
+                                    será o botão que, ao ser clicado, <span class="fw-bold">ENCERRARÁ</span> a
+                                    pesquisa.</span>
+                            </div>
+                            <div class="text-center mt-2">
+                                <a class="btn btn-light mb-5 btn-active-light-primary align-self-center"
+                                    id="button-back-finish">VOLTAR</a>
+                                <button id="button-save-finish" type="submit"
+                                    class="btn cursor-pointer mb-5 btn-primary align-self-center">SALVAR</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <!--end::Modal dialog-->
+
+    <div class="modal fade" id="modal-view-tools" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-static modal-dialog-centered" data-backdrop="static">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mx-auto m-4" id="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container m- d-flex">
+                        <div class="modal-text"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+{{> menu-footer}}
+<!--end::Content-->
+
+<!--begin::Scrolltop-->
+<!--end::Scrolltop-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+{{!-- <script src="/assets/js/validationFields/pesquisaNPS/validationTools.js"></script> --}}
+<script src="https://cdn.jsdelivr.net/gh/diegodq/app_clients/public/assets/js/validationFields/pesquisaNps/validationTools.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/diegodq/app_clients/public/assets/js/pesquisaNps/tools-survey.min.js"></script>
+{{!-- <script src="assets/js/pesquisaNps/tools-survey.js"></script> --}}

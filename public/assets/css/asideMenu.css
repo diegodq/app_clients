@@ -1,0 +1,204 @@
+@charset "UTF-8";
+
+.asideMenu 
+{
+  background-color: white;
+  position: fixed;
+  box-shadow:0 0 2px black;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  height: 100vh;
+  transition: .2s;
+  width: 66px;
+  overflow: hidden;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 991px) {
+  .asideMenu
+  {
+    display: none;
+  }
+}
+
+.showAsideMenu
+{
+	display: block;
+}
+
+.asideMenu:hover
+{
+  width: 270px;
+}
+
+.disabled-option {
+  color: #999; /* Cor de texto cinza claro */
+  cursor: not-allowed; /* Cursor não permitido */
+  font-style: italic; /* Texto em itálico */
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5); /* Adiciona uma sombra de texto para criar a sensação de profundidade */
+}
+
+.disabled-option:hover {
+  color: #999 !important; /* Mantém a mesma cor de texto quando passa o mouse (não muda a cor) */
+  cursor: not-allowed; /* Mantém o mesmo cursor quando passa o mouse (não muda o cursor) */
+  font-style: italic; /* Mantém o texto em itálico ao passar o mouse (não muda o estilo) */
+  text-shadow: none; /* Remove a sombra de texto ao passar o mouse */
+}
+
+.asideMenu ul .subLi li span
+{
+  margin-left: 6px;
+}
+
+.titleLinks
+{
+  display: none;
+  margin-left: 10px;
+}
+
+.asideMenu:hover .titleLinks
+{
+  display: inline-block;
+  margin-left: 10px;
+}
+
+/* in place */
+.rotate
+{
+  transform: rotate(180deg);
+  transition: .2s;
+}
+
+.placeAsideMenu
+{
+  width: 270px;
+}
+
+/* in place */
+
+.logo
+{
+  display: none;
+}
+
+.asideMenu:hover .logo
+{
+  display: inline;
+}
+
+.titleDiv
+{
+  height: 60px;
+}
+
+.asideMenu .imgIconLockMenu
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.asideMenu .imgIconLockMenu img
+{
+  margin-right: 20px;
+}
+
+.asideMenu .imgIconLockMenu svg
+{
+  fill: #F05742;
+  cursor: pointer;
+  transition: .2s;
+}
+
+
+.asideMenu .titleProduct 
+{
+  font-size: 0.85rem;
+  color: #F05742;
+  margin: 30px 0 10px 0;
+  display: none;
+  text-align: center;
+}
+
+.asideMenu:hover .titleProduct 
+{
+  display: block;
+}
+
+.asideMenu ul 
+{
+  position: absolute;
+  left: 0;
+  top: 140px;
+  padding: 0;
+  width: 100%;
+}
+
+.asideMenu ul .bi-chevron-right
+{
+  font-size: 16px;
+  display: inline-block;
+  margin-left: 25px;
+  color: gray;
+  display: none;
+}
+
+.asideMenu:hover .bi-chevron-right
+{
+  display: inline-block;
+}
+
+.asideMenu ul li .leftMargin
+{
+  margin-left: 20px;
+}
+
+.asideMenu ul li .spacingLeft
+{
+  fill: #F05742;
+  height: 10px;
+  margin-left: 35px;
+  font-size: 5px;
+  margin-top: 4px;
+}
+
+.asideMenu ul li i
+{
+  font-size: 21px;
+  margin-right: 12px;
+}
+
+.asideMenu ul li span 
+{
+  color:#9899ac;
+  font-size: 1rem;
+}
+
+.asideMenu ul li
+{
+  padding: 10px 0;
+  cursor: pointer;
+  display: flex;
+}
+
+.asideMenu ul li:hover
+{
+  background-color: #C0C0C0;
+  transition: color .2s ease, background-color .2s ease;
+  color: white;
+}
+
+.asideMenu ul li:hover .bi-chevron-right
+{
+  color: white;
+}
+
+.asideMenu ul li:hover > span {
+  color: white;
+}
+
+#sub-menu-setData {
+  display: none;
+}

@@ -1,0 +1,150 @@
+@charset "UTF-8";
+
+.newHeader
+{
+  background-color: #FFFFFF;
+  height: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px;
+  box-shadow: 0 0 1px #9c9c9c;
+}
+
+@media (min-width: 992px)
+{
+  .newHeader .menuLeft
+  {
+    visibility: hidden;
+  }
+}
+
+@media (max-width: 992px) {
+  .changeApp {
+    display: none;
+  }
+}
+
+.newHeader .menuLeft
+{
+  width: 95px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.newHeader .menuLeft svg
+{
+  font-size: 35px;
+  cursor: pointer;
+}
+
+.newHeader .changeApp
+{
+  cursor: pointer;
+  align-items: center;
+  padding: 0 5px;
+  justify-content: center;
+  width: 170px;
+}
+
+.newHeader .changeApp i
+{
+  display: block;
+  margin-left: 50px;
+  margin-top: 4px;
+  font-size: 29px;
+}
+
+.newHeader .changeApp span
+{
+  font-size: 1.2rem;
+  display: block;
+}
+
+.newHeader .menuRight
+{
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0 5px;
+  position: relative;
+}
+
+.newHeader .menuRight .menuHidden li a:hover
+{
+  color: #F05742;
+}
+
+.newHeader .menuRight:hover .menuHidden
+{
+  display: block;
+}
+
+.newHeader .menuRight img
+{
+  margin-left: 15px;
+  border-radius: 6px;
+}
+
+.newHeader .menuRight .userInfo
+{
+  display: flex;
+  flex-direction: column;
+  color: black;
+}
+
+.newHeader .menuRight .userInfo .userName
+{
+  text-align: right;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.newHeader .menuRight .userInfo .position
+{
+  text-align: right;
+  font-weight: bold;
+  color: gray;
+}
+
+.newHeader .menuRight .menuHidden
+{
+  position: absolute;
+  background-color: white;
+  border-radius: 6px;
+  padding: 15px 25px;
+  top: 60px;
+  left: 29px;
+  box-shadow: 0 0 2px rgb(83, 83, 83);
+  display: none;
+}
+
+.newHeader .menuRight .menuHidden ul
+{
+  list-style-position: outside;
+  padding-left: 0;
+  margin: 0 auto;
+}
+
+
+.newHeader .menuRight .menuHidden ul li
+{
+  list-style: none;
+}
+
+.newHeader .menuRight .menuHidden ul li a
+{
+  color: black;
+  font-size: 1.1rem;
+}
+
+.newHeader .menuRight .menuHidden ul li + li
+{
+  margin-top: 14px;
+}
+

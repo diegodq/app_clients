@@ -1,0 +1,792 @@
+{{> menuHeader}}
+{{> asideMenu}}
+
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+
+	<!--begin::Post-->
+	<div class="post d-flex flex-column-fluid" id="kt_post">
+		<!--begin::Container-->
+		<div id="kt_content_container" class="container-xxl">
+
+			<div class="card mb-5 mb-xl-10">
+				<!--begin::Navbar-->
+
+				<div class="card-body pt-9 pb-0">
+					<!--begin::Details-->
+					<div class="d-flex flex-wrap flex-sm-nowrap mb-3">
+						<!--begin: Pic-->
+						<div class="me-7 mb-4">
+							<div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
+								<img id="avatar-customer" src="assets/media/avatars/blank.png" alt="image" />
+								<div
+									class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px">
+								</div>
+							</div>
+						</div>
+						<!--end::Pic-->
+						<!--begin::Info-->
+						<div class="flex-grow-1">
+							<!--begin::Title-->
+							<div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+								<!--begin::User-->
+								<div class="d-flex flex-column">
+									<!--begin::Name-->
+									<div class="d-flex align-items-center mb-2">
+										<span class="text-gray-900 text-hover-primary fs-2 fw-bolder me-1"
+											id="name-surname-profile-overview"></span>
+									</div>
+
+									<!--begin::Info-->
+									<div class="d-flex flex-wrap fw-bold fs-6 mb-1 pe-2">
+										<span
+											class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
+											<!--begin::Svg Icon | path: icons/duotune/communication/com006.svg-->
+											<span class="svg-icon svg-icon-4 me-1">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none">
+													<path opacity="0.3"
+														d="M22 12C22 17.5 17.5 22 12 22C6.5 22 2 17.5 2 12C2 6.5 6.5 2 12 2C17.5 2 22 6.5 22 12ZM12 7C10.3 7 9 8.3 9 10C9 11.7 10.3 13 12 13C13.7 13 15 11.7 15 10C15 8.3 13.7 7 12 7Z"
+														fill="black" />
+													<path
+														d="M12 22C14.6 22 17 21 18.7 19.4C17.9 16.9 15.2 15 12 15C8.8 15 6.09999 16.9 5.29999 19.4C6.99999 21 9.4 22 12 22Z"
+														fill="black" />
+												</svg>
+											</span>
+											<span id="position-profile-overview"></span>
+										</span>
+										<!--end::Svg Icon-->
+										<span class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
+											<!--begin::Svg Icon | path: icons/duotune/communication/com011.svg-->
+											<span class="svg-icon svg-icon-4 me-1">
+												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none">
+													<path opacity="0.3"
+														d="M21 19H3C2.4 19 2 18.6 2 18V6C2 5.4 2.4 5 3 5H21C21.6 5 22 5.4 22 6V18C22 18.6 21.6 19 21 19Z"
+														fill="black" />
+													<path
+														d="M21 5H2.99999C2.69999 5 2.49999 5.10005 2.29999 5.30005L11.2 13.3C11.7 13.7 12.4 13.7 12.8 13.3L21.7 5.30005C21.5 5.10005 21.3 5 21 5Z"
+														fill="black" />
+												</svg>
+											</span>
+											<span id="email-profile-overview"></span>
+										</span>
+
+										<!--end::Svg Icon-->
+									</div>
+									<div class="d-flex align-items-center mb-2">
+
+										<span class="text-gray-900 text-hover-primary fs-4 me-5"
+											id="company-name-profile-overview"></span>
+
+									</div>
+									<!--end::Info-->
+									<div class="d-flex align-items-center mb-2">
+										<span href="#"
+											class="text-gray-900 text-hover-primary fs-7 fw-bolder me-1">#PesquisaNPS</span>
+										{{!-- <span href="#"
+											class="text-gray-900 text-hover-primary fs-7 fw-bolder me-1">#ColetorDados</span> --}}
+									</div>
+									<!--end::Name-->
+								</div>
+								<!--end::User-->
+							</div>
+							<!--end::Title-->
+							<!--begin::Stats-->
+							<div class="d-flex flex-wrap flex-stack">
+								<!--begin::Wrapper-->
+								<div class="d-flex flex-column flex-grow-1 pe-8">
+
+								</div>
+								<!--end::Wrapper-->
+							</div>
+							<!--end::Stats-->
+						</div>
+						<!--end::Info-->
+					</div>
+					<!--end::Details-->
+					<!--begin::Navs-->
+					<ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder">
+						<!--begin::Nav item-->
+						<li class="nav-item mt-2">
+							<a class="nav-link text-active-primary ms-0 me-10 py-5 cursor-pointer"
+								id="overview-menu">Resumo</a>
+						</li>
+						<!--end::Nav item-->
+						<!--begin::Nav item-->
+						<li class="nav-item mt-2">
+							<a class="nav-link text-active-primary ms-0 me-10 py-5 cursor-pointer"
+								id="edit-profile-menu">Conta</a>
+						</li>
+						<!--end::Nav item-->
+						<!--begin::Nav item-->
+						<li class="nav-item mt-2">
+							<a class="nav-link text-active-primary ms-0 me-10 py-5 cursor-pointer active"
+								id="billing-menu">Pagamentos</a>
+						</li>
+						<!--end::Nav item-->
+						<!--begin::Nav item-->
+						<li class="nav-item mt-2">
+							<a class="nav-link text-active-primary ms-0 me-10 py-5 cursor-pointer"
+								id="choice-product">Serviços</a>
+						</li>
+						<!--end::Nav item-->
+					</ul>
+					<!--begin::Navs-->
+				</div>
+			</div>
+			<!--end::Navbar-->
+			<!--begin::Billing Summary-->
+			<div class="card mb-5 mb-xl-10">
+				<!--begin::Card body-->
+				<div class="card-body">
+					<!--begin::Notice-->
+					<div class="notice d-flex bg-light-warning rounded border-warning border border-dashed mb-12 p-6">
+						<!--begin::Icon-->
+						<!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
+						<span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+								fill="none">
+								<rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="black" />
+								<rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)"
+									fill="black" />
+								<rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)"
+									fill="black" />
+							</svg>
+						</span>
+						<!--end::Svg Icon-->
+						<!--end::Icon-->
+						<!--begin::Wrapper-->
+						<div class="d-flex flex-stack flex-grow-1">
+							<!--begin::Content-->
+							<div class="fw-bold">
+								<h4 class="text-gray-900 fw-bolder">Requer sua atenção:</h4>
+								<div class="fs-6 text-gray-700">Existem pagamentos em aberto e vencidos. Para
+									continuar usando nossas ferramentas
+									<a href="#" class="fw-bolder" data-bs-toggle="modal"
+										data-bs-target="#kt_modal_new_card">alterar dados do cartão</a>.
+								</div>
+							</div>
+							<!--end::Content-->
+						</div>
+						<!--end::Wrapper-->
+					</div>
+					<!--end::Notice-->
+					<!--begin::Row-->
+					<div class="row">
+						<!--begin::Col-->
+						<div class="col-lg-7">
+							<!--begin::Heading-->
+							<h3 class="mb-2">Ativo desde Dez 01, 2022</h3>
+							<p class="fs-6 text-gray-600 fw-bold mb-6 mb-lg-15">Nós enviaremos um e-mail à você
+								quando sua assinatura expirar.</p>
+							<!--end::Heading-->
+							<!--begin::Info-->
+							<div class="fs-5 mb-2">
+								<span class="text-gray-800 fw-bolder me-1">R$ 150,00</span>
+								<span class="text-gray-600 fw-bold">Por mês</span>
+							</div>
+							<!--end::Info-->
+							<!--begin::Notice-->
+							<div class="fs-6 text-gray-600 fw-bold">Total de serviços contratados. Valor de fatura
+								mensal. (Plano anual contratado)</div>
+							<!--end::Notice-->
+						</div>
+						<!--end::Col-->
+						<!--begin::Col-->
+						<div class="col-lg-5">
+							<!--begin::Action-->
+							<div class="d-flex justify-content-end pb-0 px-0">
+								<a href="#" class="swal2-cancel btn btn-active-light me-2">Cancelar Assinatura</a>
+								<button class="btn btn-primary" data-bs-toggle="modal"
+									data-bs-target="#kt_modal_upgrade_plan">Contratar + Serviços</button>
+							</div>
+							<!--end::Action-->
+						</div>
+						<!--end::Col-->
+					</div>
+					<!--end::Row-->
+				</div>
+				<!--end::Card body-->
+			</div>
+			<!--end::Billing Summary-->
+			<!--begin::Payment methods-->
+			<div class="card mb-5 mb-xl-10">
+				<!--begin::Card header-->
+				<div class="card-header card-header-stretch pb-0">
+					<!--begin::Title-->
+					<div class="card-title">
+						<h3 class="m-0">Métodos de Pagamento</h3>
+					</div>
+					<!--end::Title-->
+					<!--begin::Toolbar-->
+					<div class="card-toolbar m-0">
+						<!--begin::Tab nav-->
+						<ul class="nav nav-stretch nav-line-tabs border-transparent" role="tablist">
+							<!--begin::Tab item-->
+							<li class="nav-item" role="presentation">
+								<span id="kt_billing_creditcard_tab" class="nav-link fs-5 fw-bolder me-5 active"
+									data-bs-toggle="tab" role="tab" href="#kt_billing_creditcard">Cartão de
+									Crédito</span>
+							</li>
+							<!--end::Tab item-->
+						</ul>
+						<!--end::Tab nav-->
+					</div>
+					<!--end::Toolbar-->
+				</div>
+				<!--end::Card header-->
+				<!--begin::Tab content-->
+				<div id="kt_billing_payment_tab_content" class="card-body tab-content">
+					<!--begin::Tab panel-->
+					<div id="kt_billing_creditcard" class="tab-pane fade show active" role="tabpanel">
+						<!--begin::Title-->
+						<h3 class="mb-5">Meu Cartão</h3>
+						<!--end::Title-->
+						<!--begin::Row-->
+						<div class="row gx-9 gy-6">
+							<!--begin::Col-->
+							<div class="col-xl-6">
+								<!--begin::Card-->
+								<div class="card card-dashed h-xl-100 flex-row flex-stack flex-wrap p-6">
+									<!--begin::Info-->
+									<div class="d-flex flex-column py-2">
+										<!--begin::Owner-->
+										<div class="d-flex align-items-center fs-4 fw-bolder mb-5">{apelido cartão}
+										</div>
+										<!--end::Owner-->
+										<!--begin::Wrapper-->
+										<div class="d-flex align-items-center">
+											<!--begin::Icon-->
+											<img src="assets/media/svg/card-logos/visa.svg" alt="" class="me-4" />
+											<!--end::Icon-->
+											<!--begin::Details-->
+											<div>
+												<div class="fs-4 fw-bolder">Visa **** 1679</div>
+												<div class="fs-6 fw-bold text-gray-400">Cartão expira em 09/24</div>
+											</div>
+											<!--end::Details-->
+										</div>
+										<!--end::Wrapper-->
+									</div>
+									<!--end::Info-->
+									<!--begin::Actions-->
+									<div class="d-flex align-items-center py-2">
+										<button type="reset" class="btn btn-sm btn-light btn-primary me-3"
+											data-bs-toggle="modal" data-bs-target="#kt_modal_new_card">Alterar</button>
+										<!-- Incluir um botão que só aparecerá se não houver cartão cadastrado -->
+									</div>
+									<!--end::Actions-->
+								</div>
+								<!--end::Card-->
+							</div>
+							<!--end::Col-->
+						</div>
+						<!--end::Row-->
+					</div>
+					<!--end::Tab panel-->
+				</div>
+				<!--end::Tab content-->
+			</div>
+			<!--end::Payment methods-->
+			<!--begin::Billing Address-->
+			<div class="card mb-5 mb-xl-10">
+				<!--begin::Card header-->
+				<div class="card-header">
+					<!--begin::Title-->
+					<div class="card-title">
+						<h3>Endereço de Cobrança</h3>
+					</div>
+					<!--end::Title-->
+				</div>
+				<!--end::Card header-->
+				<!--begin::Card body-->
+				<div class="card-body">
+					<!--begin::Addresses-->
+					<div class="row gx-9 gy-6">
+
+						<!--begin::Col-->
+						<div class="col-xl-6">
+							<!--begin::Address-->
+							<div class="card card-dashed h-xl-100 flex-row flex-stack flex-wrap p-6">
+								<!--begin::Details-->
+								<div class="d-flex flex-column py-2">
+									<div class="d-flex align-items-center fs-5 fw-bolder mb-3">Nome Endereço</div>
+									<div class="fs-6 fw-bold text-gray-600">demais endereços
+										<br />Bairro - Cidade
+										<br />DF
+									</div>
+								</div>
+								<!--end::Details-->
+								<!--begin::Actions-->
+								<div class="d-flex align-items-center py-2">
+									<button class="btn btn-sm btn-primary" data-bs-toggle="modal"
+										data-bs-target="#kt_modal_new_address">Alterar</button>
+								</div>
+								<!--end::Actions-->
+							</div>
+							<!--end::Address-->
+						</div>
+						<!--end::Col-->
+						<!--begin::Col-->
+						<div class="col-xl-6">
+							<!--begin::Notice-->
+							<div
+								class="notice d-flex bg-light-primary rounded border-secondary border border-dashed flex-stack h-xl-100 mb-10 p-6">
+								<!--begin::Wrapper-->
+								<div class="d-flex flex-stack flex-grow-1 flex-wrap flex-md-nowrap">
+									<!--begin::Content-->
+									<div class="mb-3 mb-md-0 fw-bold">
+										<h4 class="text-gray-900 fw-bolder">Importante!</h4>
+										<div class="fs-6 text-gray-700 pe-7">Seus dados estão protegidos conosco, e
+											é importante que estejam todos digitados corretamente
+											para evitar interrupções dos serviços.
+										</div>
+									</div>
+									<!--end::Content-->
+
+								</div>
+								<!--end::Wrapper-->
+							</div>
+							<!--end::Notice-->
+						</div>
+						<!--end::Col-->
+					</div>
+					<!--end::Addresses-->
+				</div>
+				<!--end::Card body-->
+			</div>
+			<!--end::Billing Address-->
+			<!--begin::Billing History-->
+			<div class="card">
+				<!--begin::Card header-->
+				<div class="card-header card-header-stretch border-bottom border-gray-200">
+					<!--begin::Title-->
+					<div class="card-title">
+						<h3 class="fw-bolder m-0">Histórico de Pagamentos</h3>
+					</div>
+					<!--end::Title-->
+				</div>
+				<!--end::Card header-->
+				<!--begin::Tab Content-->
+				<div class="tab-content">
+					<!--begin::Tab panel-->
+					<div id="kt_billing_months" class="card-body p-0 tab-pane fade show active" role="tabpanel"
+						aria-labelledby="kt_billing_months">
+						<!--begin::Table container-->
+						<div class="table-responsive">
+							<!--begin::Table-->
+							<table class="table table-row-bordered align-middle gy-4 gs-9">
+								<thead
+									class="border-bottom border-gray-200 fs-6 text-gray-600 fw-bolder bg-light bg-opacity-75">
+									<tr>
+										<td class="min-w-150px">Data</td>
+										<td class="min-w-250px">Descrição</td>
+										<td class="min-w-150px">Valor</td>
+										<td class="min-w-150px">Status</td>
+										<td></td>
+									</tr>
+								</thead>
+								<tbody class="fw-bold text-gray-600">
+									<!--begin::Table row-->
+									<tr>
+										<td>Fevereiro 01, 2023</td>
+										<td>Pesquisa Satisfação - NPS</td>
+										<td>R$ 150,00</td>
+										<td> Pendente</td>
+										</td>
+									</tr>
+									<!--end::Table row-->
+									<!--begin::Table row-->
+									<tr>
+										<td>Janeiro 01, 2023</td>
+										<td>Pesquisa Satisfação - NPS</td>
+										<td>R$ 150,00</td>
+										<td> Pago</td>
+										</td>
+									</tr>
+									<!--end::Table row-->
+
+									<!--end::Table row-->
+								</tbody>
+							</table>
+							<!--end::Table-->
+						</div>
+						<!--end::Table container-->
+					</div>
+					<!--end::Tab panel-->
+				</div>
+				<!--end::Tab Content-->
+			</div>
+			<!--end::Billing Address-->
+			<!--begin::Modals-->
+			<!--begin::Modal - New Card-->
+			<div class="modal fade" id="kt_modal_new_card" tabindex="-1" aria-hidden="true">
+				<!--begin::Modal dialog-->
+				<div class="modal-dialog modal-dialog-centered mw-650px">
+					<!--begin::Modal content-->
+					<div class="modal-content">
+						<!--begin::Modal header-->
+						<div class="modal-header">
+							<!--begin::Modal title-->
+							<h2>Alterar Cartão</h2>
+							<!--end::Modal title-->
+							<!--begin::Close-->
+							<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+								<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+								<span class="svg-icon svg-icon-1">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+										fill="none">
+										<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+											transform="rotate(-45 6 17.3137)" fill="black" />
+										<rect x="7.41422" y="6" width="16" height="2" rx="1"
+											transform="rotate(45 7.41422 6)" fill="black" />
+									</svg>
+								</span>
+								<!--end::Svg Icon-->
+							</div>
+							<!--end::Close-->
+						</div>
+						<!--end::Modal header-->
+						<!--begin::Modal body-->
+						<div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+							<!--begin::Form-->
+							<form id="kt_modal_new_card_form" class="form" action="#">
+								<!--begin::Input group-->
+								<div class="d-flex flex-column mb-7 fv-row">
+									<!--begin::Label-->
+									<label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+										<span class="required">Nome impresso no Cartão</span>
+									</label>
+									<!--end::Label-->
+									<input type="text" class="form-control form-control-solid" placeholder=""
+										name="card_name" />
+								</div>
+								<!--end::Input group-->
+								<!--begin::Input group-->
+								<div class="d-flex flex-column mb-7 fv-row">
+									<!--begin::Label-->
+									<label class="required fs-6 fw-bold form-label mb-2">Número do Cartão</label>
+									<!--end::Label-->
+									<!--begin::Input wrapper-->
+									<div class="position-relative">
+										<!--begin::Input-->
+										<input type="text" class="form-control form-control-solid" name="card_number" />
+										<!--end::Input-->
+										<!--begin::Card logos-->
+										<div class="position-absolute translate-middle-y top-50 end-0 me-5">
+											<img src="/assets/media/svg/card-logos/visa.svg" alt="" class="h-25px" />
+											<img src="/assets/media/svg/card-logos/mastercard.svg" alt=""
+												class="h-25px" />
+											<img src="/assets/media/svg/card-logos/american-express.svg" alt=""
+												class="h-25px" />
+										</div>
+										<!--end::Card logos-->
+									</div>
+									<!--end::Input wrapper-->
+								</div>
+								<!--end::Input group-->
+								<!--begin::Input group-->
+								<div class="row mb-10">
+									<!--begin::Col-->
+									<div class="col-md-8 fv-row">
+										<!--begin::Label-->
+										<label class="required fs-6 fw-bold form-label mb-2">Data de
+											Vencimento</label>
+										<!--end::Label-->
+										<!--begin::Row-->
+										<div class="row fv-row">
+											<!--begin::Col-->
+											<div class="col-6">
+												<select name="card_expiry_month" class="form-select form-select-solid"
+													data-control="select2" data-hide-search="true"
+													data-placeholder="Mês">
+													<option></option>
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+													<option value="7">7</option>
+													<option value="8">8</option>
+													<option value="9">9</option>
+													<option value="10">10</option>
+													<option value="11">11</option>
+													<option value="12">12</option>
+												</select>
+											</div>
+											<!--end::Col-->
+											<!--begin::Col-->
+											<div class="col-6">
+												<select name="card_expiry_year" class="form-select form-select-solid"
+													data-control="select2" data-hide-search="true"
+													data-placeholder="Ano">
+													<option></option>
+													<option value="2022">2022</option>
+													<option value="2023">2023</option>
+													<option value="2024">2024</option>
+													<option value="2025">2025</option>
+													<option value="2026">2026</option>
+													<option value="2027">2027</option>
+													<option value="2028">2028</option>
+													<option value="2029">2029</option>
+													<option value="2030">2030</option>
+													<option value="2031">2031</option>
+													<option value="2032">2032</option>
+												</select>
+											</div>
+											<!--end::Col-->
+										</div>
+										<!--end::Row-->
+									</div>
+									<!--end::Col-->
+									<!--begin::Col-->
+									<div class="col-md-4 fv-row">
+										<!--begin::Label-->
+										<label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+											<span class="required">CVV</span>
+											<i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip"
+												title="Código de segurança impresso no cartão."></i>
+										</label>
+										<!--end::Label-->
+										<!--begin::Input wrapper-->
+										<div class="position-relative">
+											<!--begin::Input-->
+											<input type="text" class="form-control form-control-solid" minlength="3"
+												maxlength="4" placeholder="CVV" name="card_cvv" />
+											<!--end::Input-->
+											<!--begin::CVV icon-->
+											<div class="position-absolute translate-middle-y top-50 end-0 me-3">
+												<!--begin::Svg Icon | path: icons/duotune/finance/fin002.svg-->
+												<span class="svg-icon svg-icon-2hx">
+													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+														viewBox="0 0 24 24" fill="none">
+														<path d="M22 7H2V11H22V7Z" fill="black" />
+														<path opacity="0.3"
+															d="M21 19H3C2.4 19 2 18.6 2 18V6C2 5.4 2.4 5 3 5H21C21.6 5 22 5.4 22 6V18C22 18.6 21.6 19 21 19ZM14 14C14 13.4 13.6 13 13 13H5C4.4 13 4 13.4 4 14C4 14.6 4.4 15 5 15H13C13.6 15 14 14.6 14 14ZM16 15.5C16 16.3 16.7 17 17.5 17H18.5C19.3 17 20 16.3 20 15.5C20 14.7 19.3 14 18.5 14H17.5C16.7 14 16 14.7 16 15.5Z"
+															fill="black" />
+													</svg>
+												</span>
+												<!--end::Svg Icon-->
+											</div>
+											<!--end::CVV icon-->
+										</div>
+										<!--end::Input wrapper-->
+									</div>
+									<!--end::Col-->
+								</div>
+								<!--end::Input group-->
+								<!--begin::Input group-->
+								<div class="d-flex flex-stack">
+									<!--begin::Label-->
+									<div class="me-5">
+										<label class="fs-6 fw-bold form-label">Salvar o cartão para transações
+											futuras?</label>
+										<div class="fs-7 fw-bold text-muted">Essa informação é importante para
+											contratação de serviços com cobrança recorrentes.</div>
+									</div>
+									<!--end::Label-->
+									<!--begin::Switch-->
+									<label class="form-check form-switch form-check-custom form-check-solid">
+										<input class="form-check-input" type="checkbox" value="1" checked="checked" />
+										<span class="form-check-label fw-bold text-muted">Salvar</span>
+									</label>
+									<!--end::Switch-->
+								</div>
+								<!--end::Input group-->
+								<!--begin::Actions-->
+								<div class="text-center pt-15">
+									<button type="reset" id="kt_modal_new_card_cancel"
+										class="btn btn-light me-3">Cancelar</button>
+									<button type="submit" id="kt_modal_new_card_submit" class="btn btn-primary">
+										<span class="indicator-label">Cadastrar</span>
+										<span class="indicator-progress">Aguarde...
+											<span
+												class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+									</button>
+								</div>
+								<!--end::Actions-->
+							</form>
+							<!--end::Form-->
+						</div>
+						<!--end::Modal body-->
+					</div>
+					<!--end::Modal content-->
+				</div>
+				<!--end::Modal dialog-->
+			</div>
+			<!--end::Modal - New Card-->
+			<!--begin::Modal - New Address-->
+			<div class="modal fade" id="kt_modal_new_address" tabindex="-1" aria-hidden="true">
+				<!--begin::Modal dialog-->
+				<div class="modal-dialog modal-dialog-centered mw-650px">
+					<!--begin::Modal content-->
+					<div class="modal-content">
+						<!--begin::Form-->
+						<form class="form" action="#" id="kt_modal_new_address_form">
+							<!--begin::Modal header-->
+							<div class="modal-header" id="kt_modal_new_address_header">
+								<!--begin::Modal title-->
+								<h2>Mudar Endereço</h2>
+								<!--end::Modal title-->
+								<!--begin::Close-->
+								<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+									<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+									<span class="svg-icon svg-icon-1">
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+											viewBox="0 0 24 24" fill="none">
+											<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+												transform="rotate(-45 6 17.3137)" fill="black" />
+											<rect x="7.41422" y="6" width="16" height="2" rx="1"
+												transform="rotate(45 7.41422 6)" fill="black" />
+										</svg>
+									</span>
+									<!--end::Svg Icon-->
+								</div>
+								<!--end::Close-->
+							</div>
+							<!--end::Modal header-->
+							<!--begin::Modal body-->
+							<div class="modal-body py-10 px-lg-17">
+								<!--begin::Scroll-->
+								<div class="scroll-y me-n7 pe-7" id="kt_modal_new_address_scroll" data-kt-scroll="true"
+									data-kt-scroll-activate="{default: false, lg: true}"
+									data-kt-scroll-max-height="auto"
+									data-kt-scroll-dependencies="#kt_modal_new_address_header"
+									data-kt-scroll-wrappers="#kt_modal_new_address_scroll"
+									data-kt-scroll-offset="300px">
+									<!--begin::Notice-->
+									<!--begin::Notice-->
+
+									<!--end::Notice-->
+									<!--end::Notice-->
+									<!--begin::Input group-->
+									<div class="row mb-12">
+										<!--begin::Col-->
+
+										<!--begin::Label-->
+										<label class="required fs-5 fw-bold mb-2">Nome Endereço</label>
+										<input type="text" class="form-control form-control-solid" placeholder=""
+											name="adress-name" />
+										<!--end::Input-->
+
+										<!--end::Col-->
+
+									</div>
+									<!--end::Input group-->
+									<!--begin::Input group-->
+									<div class="d-flex col-md-6 flex-column mb-5 fv-row">
+										<!--begin::Label-->
+										<label class="d-flex align-items-center fs-5 fw-bold mb-2">
+											<span class="required">CEP</span>
+											<input type="text" class="form-control form-control-solid" placeholder=""
+												name="adress-cep" />
+
+										</label>
+										<!--end::Label-->
+
+									</div>
+									<!--end::Input group-->
+									<!--begin::Input group-->
+									<div class="d-flex flex-column mb-5 fv-row">
+										<!--begin::Label-->
+										<label class="required fs-5 fw-bold mb-2">Endereço</label>
+										<!--end::Label-->
+										<!--begin::Input-->
+										<input class="form-control form-control-solid" placeholder="" name="address1" />
+										<!--end::Input-->
+									</div>
+									<!--end::Input group-->
+									<!--begin::Input group-->
+									<div class="d-flex flex-column mb-5 fv-row">
+										<!--begin::Label-->
+										<label class="required fs-5 fw-bold mb-2">Número</label>
+										<!--end::Label-->
+										<!--begin::Input-->
+										<input class="form-control form-control-solid" placeholder="" name="address2" />
+										<!--end::Input-->
+									</div>
+									<!--end::Input group-->
+									<!--begin::Input group-->
+									<div class="d-flex flex-column mb-5 fv-row">
+										<!--begin::Label-->
+										<label class="fs-5 fw-bold mb-2">Cidade</label>
+										<!--end::Label-->
+										<!--begin::Input-->
+										<input class="form-control form-control-solid" placeholder="" name="city" />
+										<!--end::Input-->
+									</div>
+									<!--end::Input group-->
+									<!--begin::Input group-->
+									<div class="row g-9 mb-5">
+										<!--begin::Col-->
+										<div class="col-md-6 fv-row">
+											<!--begin::Label-->
+											<label class="fs-5 fw-bold mb-2">UF</label>
+											<!--end::Label-->
+											<!--begin::Input-->
+											<input class="form-control form-control-solid" placeholder=""
+												name="state" />
+											<!--end::Input-->
+										</div>
+										<!--end::Col-->
+										<!--begin::Col-->
+										<div class="col-md-6 fv-row">
+											<!--begin::Label-->
+											<label class="fs-5 fw-bold mb-2">Bairro</label>
+											<!--end::Label-->
+											<!--begin::Input-->
+											<input class="form-control form-control-solid" placeholder=""
+												name="postcode" />
+											<!--end::Input-->
+										</div>
+										<!--end::Col-->
+									</div>
+									<!--end::Input group-->
+								</div>
+								<!--end::Scroll-->
+							</div>
+							<!--end::Modal body-->
+							<!--begin::Modal footer-->
+							<div class="modal-footer flex-center">
+								<!--begin::Button-->
+								<button type="reset" id="kt_modal_new_address_cancel"
+									class="btn btn-light me-3">Cancelar</button>
+								<!--end::Button-->
+								<!--begin::Button-->
+								<button type="submit" id="kt_modal_new_address_submit" class="btn btn-primary">
+									<span class="indicator-label">Alterar</span>
+									<span class="indicator-progress">Aguarde...
+										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+								</button>
+								<!--end::Button-->
+							</div>
+							<!--end::Modal footer-->
+						</form>
+						<!--end::Form-->
+					</div>
+				</div>
+			</div>
+			<!--end::Modal - New Address-->
+			<!--end::Modals-->
+		</div>
+		<!--end::Container-->
+	</div>
+	<!--end::Post-->
+</div>
+<!--end::Content-->
+<!--end::Wrapper-->
+<!--end::Root-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{{!-- <script src="/assets/js/plugins/jquery-mask/jquery.mask.js"></script> --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/diegodq/app_clients@master/public/assets/js/plugins/jquery-mask/jquery.mask.min.js"></script>
+{{!-- <script src="/assets/js/plugins/jquery-mask/jquery.mask.min.js"></script> --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/assets/js/profile/billing.js"></script>
+{{!-- <script src="https://cdn.jsdelivr.net/gh/diegodq/app_clients@master/public/assets/js/profile/billing.min.js"></script> --}}
+{{> menu-footer}}
