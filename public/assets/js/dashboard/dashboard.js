@@ -19,9 +19,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     selectStore.disabled = true
     changeSelectButtonState('disabled')
+
+    const detailsCompany = await getDetailsCompany()
+
     const option = document.createElement("option")
     option.value = 0
-    option.textContent = 'OPÇÃO MULTILOJA DESABILITADA'
+    option.textContent = `${detailsCompany.corporate_name}`
     selectStore.appendChild(option)
 
     reloadStaticCharts()
@@ -33,7 +36,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   
 });
 
+async function getDetailsCompany () {
 
+  const response = await fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/details' : configEnv.local_address + '/details', {
+    headers: {
+      'Authorization': `Bearer ${tokenCustomer}`
+    }
+  })
+
+  const data = await response.json()
+
+  return data
+
+
+}
 
 async function fillStoresSelect() {
 

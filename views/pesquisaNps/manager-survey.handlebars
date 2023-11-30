@@ -240,7 +240,7 @@
 						</div>
 					</div>
 
-					<div class="col-lg-8 mt-3">
+					<div class="col-lg-8 mt-3" id="qrCode-div">
 
 						<div class="d-flex justify-content-center align-items-center">
 							<h3 class="text-muted fw-bolder" for="storeSelect">Selecione a loja:</h3>
@@ -263,38 +263,85 @@
 							</div>
 						</div>
 
-						<div class="d-flex justify-content-center align-items-center">
-
-							<div class="col-lg-3 mt-3">
+						<div class="d-flex justify-content-center align-items-center flex-wrap">
+							<div class="col-lg-3 col-md-6 col-sm-10 mt-3 text-center">
 								<div class="border p-3">
 									<div id="qr-code-field">
-
+										<!-- Conteúdo -->
 									</div>
-
 								</div>
 							</div>
 
-							<div class="col-lg-1 text-center my-2 mt-3">
+							<div class="col-lg-1 col-md-1 col-sm-1 text-center my-2">
 								<i class="bi bi-arrow-right fs-4"></i>
 							</div>
 
-							<div class="col-lg-4 my-2 mt-3">
-								<div class="border p-3 m-2 text-center">
-									<p class="text-muted">BAIXE SEU QR CODE</p>
-									<a id="params-download-qrCode" href="#">
-										<button class="btn btn-primary" id="download-qrCode"
-											type="button">BAIXAR</button>
-									</a>
-								</div>
+							<div class="col-lg-3 col-md-5 col-sm-10 my-2">
 								<div class="border p-3">
-									<p class="text-muted"> Este é o seu QR Code, que será usado para seu cliente acessar
-										sua
-										pesquisa. Basta apontar a câmera do celular e responder.</p>
-
+									<p class="text-muted text-center">Este é o seu QR Code, que será usado para seu cliente acessar
+										sua pesquisa. Basta apontar a câmera do celular e responder.</p>
+									<div class="border p-3 m-2 text-center">
+										<p class="text-muted">BAIXE SEU QR CODE</p>
+										<a id="params-download-qrCode" href="#">
+											<button class="btn btn-primary" id="download-qrCode"
+												type="button">BAIXAR</button>
+										</a>
+									</div>
 								</div>
 							</div>
 
+							<div class="col-lg-4 col-md-5 col-sm-10 my-2 m-2">
+								<div class="border">
+									<p class="text-muted m-5 text-center">Use nosso modelo! Escolha o tamanho, e leve na gráfica rápida o arquivo pronto para imprimir!<span
+									class="info-icon d-flex align-items-center justify-content-center"
+									data-toggle="tooltip2" data-placement="top"
+									title="O cartaz utiliza a pergunta Âncora cadastrada e a logo (sua marca) inserida em sua pesquisa.">
+									<i class="bi bi-info-circle m-1"></i>
+								</span></p>
+									<div class="container mt-5">
+										<div class="row">
+											<div class="col-md-6">
+												<label class="d-block">
+													<input type="radio" value="A2" name="optionsFolder" checked>
+													<span class="text-muted fw-bolder">A2</span>  <span class="small d-inline-block text-muted" style="font-size: 10px">
+														<p>(420mm x 594mm)</p>
+													</span>
+												</label>
 
+												<label class="d-block">
+													<input type="radio" value="A3" name="optionsFolder">
+													<span class="text-muted fw-bolder">A3</span> <span class="small d-inline-block text-muted" style="font-size: 10px">
+														<p>(297mm x 420mm)</p>
+													</span>
+												</label>
+											</div>
+
+											<div class="col-md-6">
+												<label class="d-block">
+													<input type="radio" value="A4" name="optionsFolder">
+													<span class="text-muted fw-bolder">A4</span> <span class="small d-inline-block text-muted" style="font-size: 10px">
+														<p>(210mm x 297mm)</p>
+													</span>
+												</label>
+
+												<label class="d-block ">
+													<input type="radio" value="BANNER" name="optionsFolder">
+													<span class="text-muted fw-bolder">BANNER</span> <span class="small d-inline-block text-muted" style="font-size: 10px">
+														<p>(1200mm x 800mm)</p>
+													</span>
+												</label>
+											</div>
+										</div>
+									</div>
+									<div class="border p-3 m-2 text-center">
+										<p class="text-muted">BAIXAR CARTAZ</p>
+										<a id="params-download-qrCode">
+											<button class="btn btn-primary" id="download-Folder"
+												type="button">BAIXAR</button>
+										</a>
+									</div>
+								</div>
+							</div>
 						</div>
 
 						<div class="overlay-container-qrCodeSection" id="spinner-overlay-qrCodeSection">
@@ -320,7 +367,6 @@
 			</div>
 
 		</div>
-
 
 
 	</div>

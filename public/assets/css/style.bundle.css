@@ -40570,6 +40570,22 @@ a:hover {
 }
 
 
+input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 13px;
+    height: 13px;
+    border: 1px solid #7E8299;
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+}
+
+input[type="radio"]:checked {
+    background-color: #F05742;
+}
+
 .custom-border {
     border: 2px solid #f5f8fa; /* Cor e largura da borda */
     border-radius: 5px; /* Raio das bordas */

@@ -103,6 +103,7 @@ window.addEventListener('load', (event) => {
     .then((response) => response.json())
     .then((data) => {
 
+      console.log(data)
       if (data.avatar) {
 
         deleteAvatarIcon.style.display = 'block'
@@ -117,7 +118,9 @@ window.addEventListener('load', (event) => {
 
       }
 
-    }).catch(error => console.log(error))
+    
+  }).catch(error => console.log(error))
+
 })
 
 // EVENTO SE HOUVER ALTERAÇÃO NOS DADOS DO FORMULÁRIO HABILITAR BOTÃO
@@ -354,12 +357,8 @@ inputAvatarCustomer.addEventListener('change', () => {
 
   } else {
 
-    const fileExtension = file.name.split('.').pop()
-    const hash = CryptoJS.lib.WordArray.random(10).toString(CryptoJS.enc.Hex)
-    const fileName = `${hash}.${fileExtension}`
-
     const formData = new FormData();
-    formData.append('file', file, fileName)
+    formData.append('file', file)
 
     fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/avatar' : configEnv.local_address + '/avatar', {
       method: 'PATCH',

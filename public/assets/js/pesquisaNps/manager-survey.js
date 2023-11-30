@@ -17,32 +17,26 @@ const positivelabelQuestionList = document.getElementById('positive-questions-li
 const negativelabelQuestionList = document.getElementById('negative-questions-list-label')
 const areaQrCodeCustomer = document.getElementById('qr-code-field')
 const buttonDownloadQrCode = document.getElementById('download-qrCode')
+const buttonDownloadFolder = document.getElementById('download-Folder')
 const paramsDownloadQrCode = document.getElementById('params-download-qrCode')
 
 window.addEventListener('load', async (event) => {
 
-  fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/logo-company' : configEnv.local_address + '/logo-company', {
-    headers: {
-      'Authorization': `Bearer ${tokenCustomer}`
-    }
-  })
-    .then((response) => response.json())
-    .then(async (data) => {
+  const logoClient = await getLogoClient()
 
-      if (data.logo) {
+  if (logoClient.logo) {
 
-        brandCompany.setAttribute('src', data.logo)
-        const hasOrNotLogo = data.logo ? 'has' : 'no-has'
-        await managerInputFileBrand('has')
+    brandCompany.setAttribute('src', logoClient.logo)
+    const hasOrNotLogo = logoClient.logo ? 'has' : 'no-has'
+    await managerInputFileBrand(hasOrNotLogo)
 
-      } else {
+  } else {
 
-        await managerInputFileBrand()
-        brandCompany.setAttribute('src', '/assets/media/avatars/no-brand.png')
+    await managerInputFileBrand()
+    brandCompany.setAttribute('src', '/assets/media/avatars/no-brand.png')
 
-      }
+  }
 
-    }).catch(error => console.log(error))
 
   const paramsProductNps = await getProductNps()
 
@@ -70,9 +64,18 @@ window.addEventListener('load', async (event) => {
     await fillStoresSelect()
     const allStores = await getStoreList()
 
+    if (allStores === 'no-store') {
+
+      let qrCodeDiv = document.getElementById('qrCode-div')
+      qrCodeDiv.classList.add("text-muted", "fs-6", "text-center")
+      qrCodeDiv.innerHTML = 'Módulo Multiloja ativo. É necessário cadastrar lojas em "Cadastros -> Lojas / Unidades" para acessar os QrCodes correspondentes.'
+      return
+
+    }
+
     const initialQrCodeAddress = await setQrCode(allStores[0].id)
 
-    buttonDownloadQrCode.addEventListener('click', function(event) {
+    buttonDownloadQrCode.addEventListener('click', function (event) {
       downloadQrCode(event, initialQrCodeAddress);
     })
 
@@ -80,15 +83,32 @@ window.addEventListener('load', async (event) => {
 
     selectStore.disabled = true
     changeSelectButtonState('disabled')
+
+    const detailsCompany = await getDetailsCompany()
+
     const option = document.createElement("option")
     option.value = 0
-    option.textContent = 'OPÇÃO MULTILOJA DESABILITADA'; 
+    option.textContent = `${detailsCompany.corporate_name}`
     selectStore.appendChild(option)
-    await setQrCode(0)
+    await setQrCode()
 
   }
 
 })
+
+async function getLogoClient() {
+
+  const response = await fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/logo-company' : configEnv.local_address + '/logo-company', {
+    headers: {
+      'Authorization': `Bearer ${tokenCustomer}`
+    }
+  })
+
+  const data = await response.json()
+
+  return data
+
+}
 
 async function fillFieldsPage() {
 
@@ -114,6 +134,7 @@ async function fillFieldsPage() {
     await createRows(dataQuestionOrder)
 
   }
+
 }
 
 async function orderAccordionList(list) {
@@ -144,6 +165,20 @@ async function orderAccordionList(list) {
 
     return sortedArray
   }
+
+}
+
+async function getDetailsCompany() {
+
+  const response = await fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/details' : configEnv.local_address + '/details', {
+    headers: {
+      'Authorization': `Bearer ${tokenCustomer}`
+    }
+  })
+
+  const data = await response.json()
+
+  return data
 
 }
 
@@ -474,6 +509,21 @@ async function initializeColorPicker() {
   }
 }
 
+
+async function getDataAnchorQuestion() {
+
+  const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/anchor-question`, {
+    headers: {
+      'Authorization': 'Bearer ' + tokenCustomer,
+      'Content-Type': 'application/json'
+    },
+  })
+  const data = await response.json()
+  console.log(data)
+  return data
+
+}
+
 async function updateBrandCustomer() {
 
   const file = inputBrandCompany.files[0]
@@ -484,12 +534,8 @@ async function updateBrandCustomer() {
 
   } else {
 
-    const fileExtension = file.name.split('.').pop()
-    const hash = CryptoJS.lib.WordArray.random(10).toString(CryptoJS.enc.Hex)
-    const fileName = `${hash}.${fileExtension}`
-
     const formData = new FormData();
-    formData.append('file', file, fileName)
+    formData.append('file', file)
 
     fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/logo-company' : configEnv.local_address + '/logo-company', {
       method: 'PATCH',
@@ -693,11 +739,26 @@ async function setJustOneTreeMessage() {
 }
 
 async function setQrCode(storeID) {
-  const qrCodeAddress = await getQrCode(storeID);
-  const htmlIMG = `<img src="${qrCodeAddress}" alt="QR Code" style="max-width: 100%; max-height: 100%; display: block; margin: 0 auto;">`;
-  areaQrCodeCustomer.innerHTML = htmlIMG;
 
-  return qrCodeAddress
+  if (storeID) {
+    console.log('entrou no if')
+    const qrCodeAddress = await getQrCode(storeID);
+    const htmlIMG = `<img src="${qrCodeAddress}" alt="QR Code" style="max-width: 100%; max-height: 100%; display: block; margin: 0 auto;">`;
+    areaQrCodeCustomer.innerHTML = htmlIMG;
+
+    return qrCodeAddress
+
+  } else {
+
+    const qrCodeAddress = await getQrCode();
+    console.log('else setando o qrcode', qrCodeAddress)
+    const htmlIMG = `<img src="${qrCodeAddress}" alt="QR Code" style="max-width: 100%; max-height: 100%; display: block; margin: 0 auto;">`;
+    areaQrCodeCustomer.innerHTML = htmlIMG;
+
+    return qrCodeAddress
+  }
+
+
 }
 
 async function getStoreList() {
@@ -716,9 +777,30 @@ async function getStoreList() {
 
 }
 
+async function registerStore() {
+
+  const dataForm = { name: "MATRIZ", address: "Q1" }
+
+  fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/create/store' : configEnv.local_address + '/create/store', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + tokenCustomer,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dataForm)
+  })
+    .then(response => response.json())
+    .then(data => {
+
+      console.log('console do register', data)
+
+    })
+
+}
+
 async function getQrCode(storeID) {
 
-  if (storeID === 0) {
+  if (storeID === 0 || storeID === undefined) {
 
     const response = await fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/qrcode' : configEnv.local_address + `/qrcode`, {
       method: 'GET',
@@ -727,14 +809,25 @@ async function getQrCode(storeID) {
         'Content-Type': 'application/json'
       }
     })
-  
+
     const data = await response.json()
 
-    buttonDownloadQrCode.addEventListener('click', function(event) {
+    buttonDownloadQrCode.addEventListener('click', function (event) {
       downloadQrCode(event, data.address);
     })
 
-    return data.address
+    console.log('console do get', data)
+
+    if (data.message === 'directory-empty') {
+
+      registerStore()
+      location.reload()
+
+    } else {
+
+      return data.address
+
+    }
 
   } else {
 
@@ -745,7 +838,7 @@ async function getQrCode(storeID) {
         'Content-Type': 'application/json'
       }
     })
-  
+
     const data = await response.json()
 
     return data.address
@@ -758,9 +851,9 @@ async function getQrCode(storeID) {
 async function downloadQrCode(event, qrCodeAdress) {
 
   event.preventDefault()
-  
+
   const qrCodeAddress = qrCodeAdress
-  
+
   const archiveName = qrCodeAddress.split(/qrcode\/|\.png/)
 
   const response = await fetch(qrCodeAddress)
@@ -778,6 +871,7 @@ async function downloadQrCode(event, qrCodeAdress) {
 
 buttonPreviewSurvey.addEventListener('click', openPreviewWindow)
 
+
 async function getCNPJCompany() {
 
   const response = await fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/details' : configEnv.local_address + '/details', {
@@ -794,14 +888,50 @@ async function getCNPJCompany() {
 
 async function openPreviewWindow() {
 
-  const CNPJ = await getCNPJCompany();
-  const cleanCNPJ = CNPJ.replace(/[^\d]/g, '');
+  const allowMultiStore = await multiStoreAvailable()
 
-  const url = `${configEnv.app_mode == 'production' ? npsConfigEnv.web_address : npsConfigEnv.local_address}?cnpj=${cleanCNPJ}`;
+  console.log(allowMultiStore)
 
-  const previewWindow = window.open(url, "_blank", "width=800,height=600");
+  if (allowMultiStore) {
 
-  return previewWindow
+    const CNPJ = await getCNPJCompany();
+    const cleanCNPJ = CNPJ.replace(/[^\d]/g, '');
+
+    const allStores = await getStoreList()
+    console.log(allStores)
+
+    if (allStores === 'no-store') {
+
+      const textToDisplay = "ALERTA: Não há loja cadastrada.";
+
+      const previewWindow = window.open("", "_blank", "width=800,height=600");
+      previewWindow.document.write(`<html><head><title>Texto na nova janela</title></head><body><h1>${textToDisplay}</h1></body></html>`);
+
+    } else {
+
+      const url = `${configEnv.app_mode == 'production' ? npsConfigEnv.web_address : npsConfigEnv.local_address}?cnpj=${cleanCNPJ}/${allStores[0].id}`;
+
+      const previewWindow = window.open(url, "_blank", "width=800,height=600");
+
+      return previewWindow
+
+    }
+
+
+
+
+  } else {
+
+    const CNPJ = await getCNPJCompany();
+    const cleanCNPJ = CNPJ.replace(/[^\d]/g, '');
+
+    const url = `${configEnv.app_mode == 'production' ? npsConfigEnv.web_address : npsConfigEnv.local_address}?cnpj=${cleanCNPJ}`;
+
+    const previewWindow = window.open(url, "_blank", "width=800,height=600");
+
+    return previewWindow
+
+  }
 
 }
 
@@ -896,6 +1026,12 @@ $(document).ready(function () {
   });
 })
 
+$(document).ready(function () {
+  $('[data-toggle="tooltip2"]').tooltip({
+    trigger: 'hover'
+  });
+})
+
 const inputIpAllow = document.getElementById('input-allow-ip')
 
 async function requestForAllowIpProtection(allowOrNot) {
@@ -970,11 +1106,9 @@ async function choiceSelectStoreButtons(wichButtonClicked) {
 
       const qrCodeAdress = await setQrCode(selectStore.options[selectStore.selectedIndex].value)
 
-      buttonDownloadQrCode.addEventListener('click', function(event) {
+      buttonDownloadQrCode.addEventListener('click', function (event) {
         downloadQrCode(event, qrCodeAdress);
       })
-
-
 
     }
 
@@ -989,7 +1123,7 @@ async function choiceSelectStoreButtons(wichButtonClicked) {
 
       const qrCodeAdress = await setQrCode(selectStore.options[selectStore.selectedIndex].value)
 
-      buttonDownloadQrCode.addEventListener('click', function(event) {
+      buttonDownloadQrCode.addEventListener('click', function (event) {
         downloadQrCode(event, qrCodeAdress);
       })
 
@@ -1055,17 +1189,80 @@ selectStore.addEventListener('change', (event) => {
     //console.log(event.target.options[event.target.selectedIndex].text)
     //console.log('ID do item selecionado:', event.target.value)
     changeSelectButtonState(selectStore.selectedIndex)
-    
+
     const qrCodeAdress = await setQrCode(event.target.value)
 
-    buttonDownloadQrCode.addEventListener('click', function(event) {
+
+    buttonDownloadQrCode.addEventListener('click', function (event) {
       downloadQrCode(event, qrCodeAdress);
+
     })
 
-  }, 1000);
-
+  }, 1000)
 
 })
+
+buttonDownloadFolder.addEventListener('click', async function (event) {
+
+  const radios = document.getElementsByName('optionsFolder')
+  const logoClient = await getLogoClient()
+  const anchorQuestion = await getDataAnchorQuestion()
+  const qrCodeField = document.querySelector('#qr-code-field img')
+  const qrCodeAddress = qrCodeField.getAttribute('src')
+
+  let selectedValue = null;
+
+  for (let i = 0; i < radios.length; i++) {
+    if (radios[i].checked) {
+      selectedValue = radios[i].value;
+      break;
+    }
+  }
+
+  if (selectedValue === 'A2') {
+    spinnerQrCodeSection.style.display = "flex"
+
+    setTimeout(async () => {
+
+      spinnerQrCodeSection.style.display = "none"
+      createAndDownloadFolderA2(qrCodeAddress, logoClient.logo, anchorQuestion.message);
+    }, 1000)
+    return
+  } else if (selectedValue === 'A3') {
+    spinnerQrCodeSection.style.display = "flex"
+
+    setTimeout(async () => {
+
+      spinnerQrCodeSection.style.display = "none"
+      createAndDownloadFolderA3(qrCodeAddress, logoClient.logo, anchorQuestion.message);
+    }, 1000)
+    return
+  } else if (selectedValue === 'A4') {
+    spinnerQrCodeSection.style.display = "flex"
+
+    setTimeout(async () => {
+
+      spinnerQrCodeSection.style.display = "none"
+      createAndDownloadFolderA4(qrCodeAddress, logoClient.logo, anchorQuestion.message);
+    }, 1000)
+    return
+  } else {
+
+    spinnerQrCodeSection.style.display = "flex"
+
+    setTimeout(async () => {
+
+      await createAndDownloadFolderBanner(qrCodeAddress, logoClient.logo, anchorQuestion.message);
+      spinnerQrCodeSection.style.display = "none"
+    }, 6000)
+    return
+
+  }
+
+});
+
+
+
 
 async function createOptionsSelect(dataSelect) {
 
@@ -1086,8 +1283,6 @@ async function createOptionsSelect(dataSelect) {
 
 }
 
-
-
 async function fillStoresSelect() {
 
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/list/store' : configEnv.local_address + '/list/store', {
@@ -1098,14 +1293,600 @@ async function fillStoresSelect() {
     },
   })
     .then(response => response.json())
-    .then(async data => { 
+    .then(async data => {
 
       if (data.message != 'no-store') {
-   
+
         createOptionsSelect(data.message)
 
       }
 
     })
 
+}
+
+// function criarImagemComposta(qrCodePath, logoClient, anchorQuestion) {
+//   const canvas = document.createElement('canvas');
+//   const ctx = canvas.getContext('2d');
+
+//   const images = [
+//     'assets/media/bg/a3.png',
+//     qrCodePath,
+//     logoClient
+//   ];
+
+//   const loadImages = images.map(function (url) {
+//     return new Promise(function (resolve) {
+//       const img = new Image();
+//       img.crossOrigin = 'Anonymous';
+//       img.onload = function () {
+//         resolve(img);
+//       };
+//       img.src = url;
+//     });
+//   });
+
+//   Promise.all(loadImages).then(function (imagensCarregadas) {
+//     const larguraImagemFundo = imagensCarregadas[0].width;
+//     const alturaImagemFundo = imagensCarregadas[0].height;
+
+//     const proporcaoImagemFundo = larguraImagemFundo / alturaImagemFundo;
+
+//     const maxWidth = 800;
+//     const maxHeight = 600;
+
+//     let larguraJanela = maxWidth;
+//     let alturaJanela = larguraJanela / proporcaoImagemFundo;
+
+//     if (alturaJanela > maxHeight) {
+//       alturaJanela = maxHeight;
+//       larguraJanela = alturaJanela * proporcaoImagemFundo;
+//     }
+
+//     const newWindow = window.open('', '_blank', 'width=' + larguraImagemFundo + ',height=' + alturaImagemFundo);
+
+//     canvas.width = larguraImagemFundo;
+//     canvas.height = alturaImagemFundo;
+//     ctx.drawImage(imagensCarregadas[0], 0, 0, larguraImagemFundo, alturaImagemFundo);
+//     ctx.drawImage(imagensCarregadas[1], 120, 330, 600, 600);
+
+//     const xTexto = 460;
+//     const yTexto = 1060;
+//     const tamanhoFonteTexto = 32;
+//     const comprimentoMaximoLinha = 17;
+
+//     ctx.fillStyle = 'black';
+//     ctx.font = tamanhoFonteTexto + 'px Arial Black';
+
+//     const palavras = anchorQuestion.toUpperCase().split(' ');
+//     let linhaAtual = '';
+//     let linhas = [];
+
+//     palavras.forEach(function (palavra) {
+//       const textoTeste = linhaAtual + palavra + ' ';
+//       const larguraTexto = ctx.measureText(textoTeste).width;
+
+//       if (larguraTexto < comprimentoMaximoLinha * tamanhoFonteTexto) {
+//         linhaAtual += palavra + ' ';
+//       } else {
+//         linhas.push(linhaAtual);
+//         linhaAtual = palavra + ' ';
+//       }
+//     });
+
+//     if (linhaAtual !== '') {
+//       linhas.push(linhaAtual);
+//     }
+
+//     const alturaTotalTexto = linhas.length * tamanhoFonteTexto;
+//     const yInicial = yTexto - alturaTotalTexto / 2;
+
+//     linhas.forEach(function (linha, indice) {
+//       const alturaLinha = yInicial + indice * tamanhoFonteTexto;
+//       const larguraLinha = ctx.measureText(linha).width;
+//       const xLinha = xTexto - larguraLinha / 2;
+
+//       ctx.fillText(linha, xLinha, alturaLinha);
+//     });
+
+//     const maxWidthImage = 250;
+//     const maxHeightImage = 250;
+
+//     const proporcaoImagem = Math.min(maxWidthImage / imagensCarregadas[2].width, maxHeightImage / imagensCarregadas[2].height);
+//     const novaLargura = imagensCarregadas[2].width * proporcaoImagem;
+//     const novaAltura = imagensCarregadas[2].height * proporcaoImagem;
+
+//     const pontoInicialX = 525;
+//     const pontoInicialY = 40;
+
+//     const x = pontoInicialX + (maxWidthImage - novaLargura) / 2;
+//     const y = pontoInicialY + (maxHeightImage - novaAltura) / 2;
+
+//     ctx.drawImage(imagensCarregadas[2], x, y, novaLargura, novaAltura);
+
+//     try {
+//       const multiImage = canvas.toDataURL('image/png');
+
+//       const downloadButton = document.createElement('a');
+//       downloadButton.textContent = 'Download Cartaz';
+//       downloadButton.style.fontSize = '30px';
+//       downloadButton.href = multiImage;
+//       downloadButton.download = 'Cartaz_Automatiza_A3.png';
+//       downloadButton.style.position = 'absolute';
+//       downloadButton.style.top = '20px'; // Ajuste a posição superior do botão conforme necessário
+//       downloadButton.style.left = '50%';
+//       downloadButton.style.transform = 'translateX(-50%)';
+
+//       const containerDiv = document.createElement('div');
+//       containerDiv.style.position = 'relative';
+//       containerDiv.appendChild(downloadButton);
+//       containerDiv.appendChild(document.createElement('br'));
+//       containerDiv.appendChild(canvas);
+
+//       newWindow.document.write('<html><head><title>CARTAZ AUTOMATIZA A3</title></head><body style="margin: 0; display: flex; flex-direction: column; align-items: center;"></body></html>');
+//       newWindow.document.body.appendChild(containerDiv);
+//     } catch (err) {
+//       console.error('Erro ao criar a imagem:', err);
+//     }
+//   }).catch(function (err) {
+//     console.error('Erro ao carregar as imagens:', err);
+//   });
+// }
+
+function displayPreview(imageURL, width, height, windowName) {
+  const previewWindow = window.open('', '_blank', `width=${width},height=${height}`);
+  previewWindow.document.write(`<html><head><title>${windowName}</title></head><body style="margin: 0;"></body></html>`);
+
+  const previewImage = new Image();
+  previewImage.onload = function () {
+    previewWindow.document.body.style.margin = '0';
+    previewWindow.document.body.appendChild(previewImage);
+  };
+  previewImage.src = imageURL;
+}
+
+function createAndDownloadFolderA3(qrCodePath, logoClient, anchorQuestion) {
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+
+  const imagePaths = [
+    'assets/media/bg/a3.png',
+    qrCodePath,
+    logoClient === undefined ? 'assets/media/bg/no-logo.png' : logoClient
+  ];
+  console.log(logoClient)
+
+  const loadImagePromises = imagePaths.map(function (url) {
+    return new Promise(function (resolve) {
+      const image = new Image();
+      image.crossOrigin = 'Anonymous';
+      image.onload = function () {
+        resolve(image);
+      };
+      image.src = url;
+    });
+  });
+
+  Promise.all(loadImagePromises)
+    .then(function (loadedImages) {
+      const backgroundWidth = loadedImages[0].width;
+      const backgroundHeight = loadedImages[0].height;
+
+      canvas.width = backgroundWidth;
+      canvas.height = backgroundHeight;
+      context.drawImage(loadedImages[0], 0, 0, backgroundWidth, backgroundHeight);
+      context.drawImage(loadedImages[1], 120, 330, 600, 600);
+
+      const textX = 460;
+      const textY = 1060;
+      const textSize = 32;
+      const maxLineLength = 17;
+
+      context.fillStyle = 'black';
+      context.font = textSize + 'px Arial Black';
+
+      const words = anchorQuestion === '' ? '[NÃO HÁ PERGUNTA ÂNCORA CADASTRADA]'.split(' ') : anchorQuestion.toUpperCase().split(' ');
+
+      let currentLine = '';
+      let lines = [];
+
+      words.forEach(function (word) {
+        const testText = currentLine + word + ' ';
+        const textWidth = context.measureText(testText).width;
+
+        if (textWidth < maxLineLength * textSize) {
+          currentLine += word + ' ';
+        } else {
+          lines.push(currentLine);
+          currentLine = word + ' ';
+        }
+      });
+
+      if (currentLine !== '') {
+        lines.push(currentLine);
+      }
+
+      const totalTextHeight = lines.length * textSize;
+      const initialY = textY - totalTextHeight / 2;
+
+      lines.forEach(function (line, index) {
+        const lineHeight = initialY + index * textSize;
+        const lineWidth = context.measureText(line).width;
+        const xLine = textX - lineWidth / 2;
+
+        context.fillText(line, xLine, lineHeight);
+      });
+
+      const maxWidthImage = 250;
+      const maxHeightImage = 250;
+
+      const imageRatio = Math.min(maxWidthImage / loadedImages[2].width, maxHeightImage / loadedImages[2].height);
+      const newWidth = loadedImages[2].width * imageRatio;
+      const newHeight = loadedImages[2].height * imageRatio;
+
+      const startX = 525;
+      const startY = 40;
+
+      const imageX = startX + (maxWidthImage - newWidth) / 2;
+      const imageY = startY + (maxHeightImage - newHeight) / 2;
+
+      context.drawImage(loadedImages[2], imageX, imageY, newWidth, newHeight);
+
+      try {
+        const compositeImage = canvas.toDataURL('image/png');
+
+        const downloadLink = document.createElement('a');
+        downloadLink.href = compositeImage;
+        downloadLink.download = 'Automatiza_Cartaz_A3.png';
+        downloadLink.style.display = 'none';
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        const windowName = 'Cartaz A3'
+
+        // Após o download, chame a função para exibir o preview
+        displayPreview(compositeImage, backgroundWidth, backgroundHeight, windowName);
+
+      } catch (error) {
+        console.error('Error creating the image:', error);
+      }
+    })
+    .catch(function (error) {
+      console.error('Error loading images:', error);
+    });
+}
+
+function createAndDownloadFolderA2(qrCodePath, logoClient, anchorQuestion) {
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+
+  const imagePaths = [
+    'assets/media/bg/a2.png',
+    qrCodePath,
+    logoClient === undefined ? 'assets/media/bg/no-logo.png' : logoClient
+  ];
+
+  const loadImagePromises = imagePaths.map(function (url) {
+    return new Promise(function (resolve) {
+      const image = new Image();
+      image.crossOrigin = 'Anonymous';
+      image.onload = function () {
+        resolve(image);
+      };
+      image.src = url;
+    });
+  });
+
+  Promise.all(loadImagePromises)
+    .then(function (loadedImages) {
+      const backgroundWidth = loadedImages[0].width;
+      const backgroundHeight = loadedImages[0].height;
+
+      canvas.width = backgroundWidth;
+      canvas.height = backgroundHeight;
+      context.drawImage(loadedImages[0], 0, 0, backgroundWidth, backgroundHeight);
+      context.drawImage(loadedImages[1], 150, 450, 900, 900);
+
+      const textX = 630;
+      const textY = 1520;
+      const textSize = 45;
+      const maxLineLength = 18;
+
+      context.fillStyle = 'black';
+      context.font = textSize + 'px Arial Black';
+
+      const words = anchorQuestion === '' ? '[NÃO HÁ PERGUNTA ÂNCORA CADASTRADA]'.split(' ') : anchorQuestion.toUpperCase().split(' ');
+
+      let currentLine = '';
+      let lines = [];
+
+      words.forEach(function (word) {
+        const testText = currentLine + word + ' ';
+        const textWidth = context.measureText(testText).width;
+
+        if (textWidth < maxLineLength * textSize) {
+          currentLine += word + ' ';
+        } else {
+          lines.push(currentLine);
+          currentLine = word + ' ';
+        }
+      });
+
+      if (currentLine !== '') {
+        lines.push(currentLine);
+      }
+
+      const totalTextHeight = lines.length * textSize;
+      const initialY = textY - totalTextHeight / 2;
+
+      lines.forEach(function (line, index) {
+        const lineHeight = initialY + index * textSize;
+        const lineWidth = context.measureText(line).width;
+        const xLine = textX - lineWidth / 2;
+
+        context.fillText(line, xLine, lineHeight);
+      });
+
+      const maxWidthImage = 380;
+      const maxHeightImage = 380;
+
+      const imageRatio = Math.min(maxWidthImage / loadedImages[2].width, maxHeightImage / loadedImages[2].height);
+      const newWidth = loadedImages[2].width * imageRatio;
+      const newHeight = loadedImages[2].height * imageRatio;
+
+      const startX = 745;
+      const startY = -15;
+
+      const imageX = startX + (maxWidthImage - newWidth) / 2;
+      const imageY = startY + (maxHeightImage - newHeight) / 2;
+
+      context.drawImage(loadedImages[2], imageX, imageY, newWidth, newHeight);
+
+      try {
+        const compositeImage = canvas.toDataURL('image/png');
+
+        const downloadLink = document.createElement('a');
+        downloadLink.href = compositeImage;
+        downloadLink.download = 'Automatiza_Cartaz_A2.png';
+        downloadLink.style.display = 'none';
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        const windowName = 'Cartaz A2'
+        // Após o download, chame a função para exibir o preview
+        displayPreview(compositeImage, backgroundWidth, backgroundHeight, windowName);
+
+      } catch (error) {
+        console.error('Error creating the image:', error);
+      }
+    })
+    .catch(function (error) {
+      console.error('Error loading images:', error);
+    });
+}
+
+function createAndDownloadFolderA4(qrCodePath, logoClient, anchorQuestion) {
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+
+  const imagePaths = [
+    'assets/media/bg/a4.png',
+    qrCodePath,
+    logoClient === undefined ? 'assets/media/bg/no-logo.png' : logoClient
+  ];
+
+  const loadImagePromises = imagePaths.map(function (url) {
+    return new Promise(function (resolve) {
+      const image = new Image();
+      image.crossOrigin = 'Anonymous';
+      image.onload = function () {
+        resolve(image);
+      };
+      image.src = url;
+    });
+  });
+
+  Promise.all(loadImagePromises)
+    .then(function (loadedImages) {
+      const backgroundWidth = loadedImages[0].width;
+      const backgroundHeight = loadedImages[0].height;
+
+      canvas.width = backgroundWidth;
+      canvas.height = backgroundHeight;
+      context.drawImage(loadedImages[0], 0, 0, backgroundWidth, backgroundHeight);
+      context.drawImage(loadedImages[1], 100, 235, 400, 400);
+
+      const textX = 320;
+      const textY = 720;
+      const textSize = 22;
+      const maxLineLength = 18;
+
+      context.fillStyle = 'black';
+      context.font = textSize + 'px Arial Black';
+
+      const words = anchorQuestion === '' ? '[NÃO HÁ PERGUNTA ÂNCORA CADASTRADA]'.split(' ') : anchorQuestion.toUpperCase().split(' ');
+
+      let currentLine = '';
+      let lines = [];
+
+      words.forEach(function (word) {
+        const testText = currentLine + word + ' ';
+        const textWidth = context.measureText(testText).width;
+
+        if (textWidth < maxLineLength * textSize) {
+          currentLine += word + ' ';
+        } else {
+          lines.push(currentLine);
+          currentLine = word + ' ';
+        }
+      });
+
+      if (currentLine !== '') {
+        lines.push(currentLine);
+      }
+
+      const totalTextHeight = lines.length * textSize;
+      const initialY = textY - totalTextHeight / 2;
+
+      lines.forEach(function (line, index) {
+        const lineHeight = initialY + index * textSize;
+        const lineWidth = context.measureText(line).width;
+        const xLine = textX - lineWidth / 2;
+
+        context.fillText(line, xLine, lineHeight);
+      });
+
+      const maxWidthImage = 170;
+      const maxHeightImage = 170;
+
+      const imageRatio = Math.min(maxWidthImage / loadedImages[2].width, maxHeightImage / loadedImages[2].height);
+      const newWidth = loadedImages[2].width * imageRatio;
+      const newHeight = loadedImages[2].height * imageRatio;
+
+      const startX = 364;
+      const startY = 40;
+
+      const imageX = startX + (maxWidthImage - newWidth) / 2;
+      const imageY = startY + (maxHeightImage - newHeight) / 2;
+
+      context.drawImage(loadedImages[2], imageX, imageY, newWidth, newHeight);
+
+      try {
+        const compositeImage = canvas.toDataURL('image/png');
+
+        const downloadLink = document.createElement('a');
+        downloadLink.href = compositeImage;
+        downloadLink.download = 'Automatiza_Cartaz_A4.png';
+        downloadLink.style.display = 'none';
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        const windowName = 'Cartaz A4'
+        // Após o download, chame a função para exibir o preview
+        displayPreview(compositeImage, backgroundWidth, backgroundHeight, windowName);
+
+      } catch (error) {
+        console.error('Error creating the image:', error);
+      }
+    })
+    .catch(function (error) {
+      console.error('Error loading images:', error);
+    });
+}
+
+async function createAndDownloadFolderBanner(qrCodePath, logoClient, anchorQuestion) {
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+
+  const imagePaths = [
+    'assets/media/bg/banner.png',
+    qrCodePath,
+    logoClient === undefined ? 'assets/media/bg/no-logo.png' : logoClient
+  ];
+
+  const loadImagePromises = imagePaths.map(function (url) {
+    return new Promise(function (resolve) {
+      const image = new Image();
+      image.crossOrigin = 'Anonymous';
+      image.onload = function () {
+        resolve(image);
+      };
+      image.src = url;
+    });
+  });
+
+  Promise.all(loadImagePromises)
+    .then(function (loadedImages) {
+      const backgroundWidth = loadedImages[0].width;
+      const backgroundHeight = loadedImages[0].height;
+
+      canvas.width = backgroundWidth;
+      canvas.height = backgroundHeight;
+      context.drawImage(loadedImages[0], 0, 0, backgroundWidth, backgroundHeight);
+      context.drawImage(loadedImages[1], 1380, 3700, 6650, 6650);
+
+      const textX = 5000;
+      const textY = 12100;
+      const textSize = 450;
+      const maxLineLength = 15;
+
+      context.fillStyle = 'black';
+      context.font = textSize + 'px Arial Black';
+
+      const words = anchorQuestion === '' ? '[NÃO HÁ PERGUNTA ÂNCORA CADASTRADA]'.split(' ') : anchorQuestion.toUpperCase().split(' ');
+
+      let currentLine = '';
+      let lines = [];
+
+      words.forEach(function (word) {
+        const testText = currentLine + word + ' ';
+        const textWidth = context.measureText(testText).width;
+
+        if (textWidth < maxLineLength * textSize) {
+          currentLine += word + ' ';
+        } else {
+          lines.push(currentLine);
+          currentLine = word + ' ';
+        }
+      });
+
+      if (currentLine !== '') {
+        lines.push(currentLine);
+      }
+
+      const totalTextHeight = lines.length * textSize;
+      const initialY = textY - totalTextHeight / 2;
+
+      lines.forEach(function (line, index) {
+        const lineHeight = initialY + index * textSize;
+        const lineWidth = context.measureText(line).width;
+        const xLine = textX - lineWidth / 2;
+
+        context.fillText(line, xLine, lineHeight);
+      });
+
+      const maxWidthImage = 2850;
+      const maxHeightImage = 2850;
+
+      const imageRatio = Math.min(maxWidthImage / loadedImages[2].width, maxHeightImage / loadedImages[2].height);
+      const newWidth = loadedImages[2].width * imageRatio;
+      const newHeight = loadedImages[2].height * imageRatio;
+
+      const startX = 5850;
+      const startY = 450;
+
+      const imageX = startX + (maxWidthImage - newWidth) / 2;
+      const imageY = startY + (maxHeightImage - newHeight) / 2;
+
+      context.drawImage(loadedImages[2], imageX, imageY, newWidth, newHeight);
+
+      try {
+        const compositeImage = canvas.toDataURL('image/png');
+
+        const downloadLink = document.createElement('a');
+        downloadLink.href = compositeImage;
+        downloadLink.download = 'Automatiza_Banner.png';
+        downloadLink.style.display = 'none';
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        const windowName = 'BANNER'
+        // Após o download, chame a função para exibir o preview
+        displayPreview(compositeImage, backgroundWidth, backgroundHeight, windowName);
+
+      } catch (error) {
+        console.error('Error creating the image:', error);
+      }
+    })
+    .catch(function (error) {
+      console.error('Error loading images:', error);
+    });
 }

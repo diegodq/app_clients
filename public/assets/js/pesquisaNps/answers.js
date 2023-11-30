@@ -574,7 +574,7 @@ async function populateTable(dataResearch) {
                 title: 'LOJA',
                 render: function (data) {
                     if (data === null) {
-                        return `GRUPO`;
+                        return `-`;
                     } else {
                         return `LOJA ${data}`;
                     }
@@ -645,16 +645,31 @@ function formatDateToUS(date) {
     return `${year}-${month}-${day}`;
 }
 
+// $(document).ready(function () {
+
+//     $(document).on('draw.dt', function () {
+
+//         const paginationButtons = $('.paginate_button')
+
+//         paginationButtons.removeClass('paginate_button item previous disabled my-pagination-style')
+//             .addClass('my-pagination-style')
+//     })
+
+// });
+
 $(document).ready(function () {
-
     $(document).on('draw.dt', function () {
-
-        const paginationButtons = $('.paginate_button')
+        const paginationButtons = $('.paginate_button');
 
         paginationButtons.removeClass('paginate_button item previous disabled my-pagination-style')
-            .addClass('my-pagination-style')
-    })
+            .addClass('my-pagination-style');
 
+        paginationButtons.each(function () {
+            if ($(this).attr('id') === 'table_researchs_ellipsis') {
+                $(this).off('click').addClass('not-clickable');
+            }
+        });
+    });
 });
 
 async function getProductNps() {

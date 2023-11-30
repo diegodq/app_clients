@@ -429,6 +429,10 @@ async function listenClickDeleteIcon() {
   })
 }
 
+document.getElementById('number').addEventListener('input', function() {
+  this.value = this.value.replace(/[^0-9]/g, '');
+});
+
 function deleteStores(id) {
 
   const idStore = { 'id_store': id }
