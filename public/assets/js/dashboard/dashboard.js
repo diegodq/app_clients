@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const allowMultiStore = await multiStoreAvailable()
 
   if (allowMultiStore) {
+
     await fillStoresSelect()
     
     let selectedIndex = selectStore.selectedIndex
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const dateIntervalInitial = await getDatesForLast7Days()
 
     reloadAllCharts(dateIntervalInitial)
+
   
   }
   
@@ -62,11 +64,9 @@ async function fillStoresSelect() {
   })
     .then(response => response.json())
     .then(async data => {
-
-      if(data.message != 'no-store') {
-        createOptionsSelect(data.message)
         
-      }
+        createOptionsSelect(data.message)
+      
 
     })
 
@@ -770,7 +770,6 @@ async function getEmployeeDataChart(date, tree, storeNumber) {
 
 async function getPositiveAndNegativeResearchesDataChart(date, storeNumber) {
 
-
   if (storeNumber && storeNumber != 0) {
 
     const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/dashboard/research/${date[0]}/${date[1]}/${storeNumber}`, {
@@ -971,7 +970,7 @@ $(document).ready(function () {
   })
 })
 
-async function reloadAllCharts(dateInterval, storeNumber) {
+async function reloadAllCharts(dateInterval, storeNumber) { 
 
   // DEPARTAMENT CHARTS
 
@@ -1066,6 +1065,10 @@ async function reloadAllCharts(dateInterval, storeNumber) {
     await chartNPSIndicator([getDataResearches[0], getDataResearches[1], getDataResearches[2]])
 
   }, 1000)
+
+  // BINARY CHART
+
+  generateChartsForBinaryQuestions(dateInterval, storeNumber)
 
 }
 
@@ -1192,16 +1195,6 @@ function clickFilterButton() {
 
 }
 
-
-const tempData = [
-  { id: 1, number: 1, name: 'CAIQUE', address: 'EQNO 5/7 CEILANDIA' },
-  { id: 2, number: 4, name: 'CAIQUE', address: 'QN208 SAMAMBAIA NORTE' },
-  { id: 3, number: 5, name: 'CAIQUE', address: 'RF14 RIACHO FUNDO' },
-  { id: 4, number: 6, name: 'SEMPRE BEM', address: 'CL20 SOBRADINHO' },
-  { id: 5, number: 7, name: 'SEMPRE BEM 2', address: 'QS111 SAMAMBAIA SUL' },
-  { id: 6, number: 8, name: 'LOGISTICA SUL', address: 'QS610 SAMAMBAIA NORTE' },
-]
-
 function createOptionsSelect (data) {
   
   const storeSelect = document.getElementById("storeSelect")
@@ -1211,18 +1204,21 @@ function createOptionsSelect (data) {
   option.textContent = 'CONSOLIDADO - TODAS AS LOJAS'; 
   storeSelect.appendChild(option)
 
+  if (data != 'no-store') {
 
-  data.forEach(item => {
+    data.forEach(item => {
+  
+      if (item.active === 1) {
+        
+        const option = document.createElement("option")
+        option.value = item.store_number
+        option.text = 'LJ '+item.store_number + " - " + item.name + " - " + item.address
+        storeSelect.appendChild(option)
+  
+      }
+    })
 
-    if (item.active === 1) {
-      
-      const option = document.createElement("option")
-      option.value = item.store_number
-      option.text = 'LJ '+item.store_number + " - " + item.name + " - " + item.address
-      storeSelect.appendChild(option)
-
-    }
-  })
+  }
 
 }
 
@@ -1326,6 +1322,221 @@ document.addEventListener("DOMContentLoaded", function () {
     button.classList.add("active")
   }
 
-  //last7DaysButton.click()
-
 })
+
+function getRateTextAndIcon(tree) {
+  if (tree === 1) {
+    return 'Positiva <i class="bi bi-hand-thumbs-up text-success"></i>';
+  } else {
+    return 'Negativa <i class="bi bi-hand-thumbs-down text-danger"></i>';
+  }
+}
+
+let chartsPizza = [];
+
+
+function createPizzaCharts(data) {
+  console.log('data de dentro do chart pizza', data);
+
+  const colors = [
+    'rgb(187, 187, 187)',
+    'rgba(252, 41, 18, 0.7)',
+    'rgba(76, 175, 80, 0.7)',
+  ];
+
+  const containerAllCharts = document.getElementById('container-all-charts');
+
+  const chartDivs = containerAllCharts.querySelectorAll('.pizzaCharts');
+  chartDivs.forEach(div => {
+    div.remove();
+  });
+  chartsPizza.forEach(chart => {
+    chart.destroy();
+  });
+  chartsPizza = [];
+
+  if (data.message === 'no-results') {
+    return;
+  }
+
+  data.forEach((item, index) => {
+    const question = item.pergunta;
+    const options = Object.keys(item).slice(2);
+
+    const lastTwoValues = options.slice(-2).map(option => item[option]);
+
+    if (lastTwoValues.every(value => value === '0')) {
+      return; 
+    }
+
+    const total = options.reduce((acc, key) => Number(acc) + Number(item[key]), 0);
+
+    const dataPoints = options.map((option, i) => ({
+      label: `${option} - ${((item[option] / total) * 100).toFixed(2)}%`,
+      data: item[option],
+      backgroundColor: colors[(i + index) % colors.length],
+    }));
+
+    const cardDiv = document.createElement('div');
+    cardDiv.classList.add('card');
+    cardDiv.classList.add('pizzaCharts');
+
+    const cardBodyDiv = document.createElement('div');
+    cardBodyDiv.classList.add('card-body', 'd-flex', 'flex-wrap', 'align-items-center', 'justify-content-center');
+
+    const arvoreDiv = document.createElement('div');
+    arvoreDiv.classList.add('text-center', 'text-muted', 'm-2');
+    arvoreDiv.innerHTML = `Os clientes que avaliaram a loja de forma ${getRateTextAndIcon(item.arvore)} responderam: `;
+    cardBodyDiv.appendChild(arvoreDiv);
+
+    const titleDiv = document.createElement('div');
+    titleDiv.classList.add('text-center', 'text-muted', 'fw-bolder', 'm-5');
+    titleDiv.style.fontSize = '24px';
+    titleDiv.innerHTML = `<div class="mx-auto">${question}</div>`;
+    cardBodyDiv.appendChild(titleDiv);
+
+    const colDiv = document.createElement('div');
+    colDiv.classList.add('col-lg-8');
+
+    const canvas = document.createElement('canvas');
+    canvas.id = `chart-canvas-${index}`;
+    colDiv.appendChild(canvas);
+
+    const labelInfo = document.createElement('div');
+    labelInfo.classList.add('text-center', 'text-muted', 'align-items-center');
+
+    options.forEach(option => {
+      const customerMessage = Number(item[option]) > 1 ? 'clientes responderam' : 'cliente respondeu';
+      labelInfo.innerHTML += `${Number(item[option])} ${customerMessage} <strong>${option}</strong> - (${((Number(item[option]) / total) * 100).toFixed(2)}%)<br>`;
+    });
+
+    labelInfo.innerHTML += `<strong>Total de Respostas:</strong> ${total}`;
+
+    cardBodyDiv.appendChild(colDiv);
+    cardBodyDiv.appendChild(labelInfo);
+
+    cardDiv.appendChild(cardBodyDiv);
+
+    containerAllCharts.appendChild(cardDiv);
+
+    const ctx = canvas.getContext('2d');
+    const chartInstance = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: dataPoints.map(data => data.label),
+        datasets: [{
+          data: dataPoints.map(data => data.data),
+          backgroundColor: dataPoints.map(data => data.backgroundColor),
+        }]
+      },
+      options: {
+        plugins: {
+          title: {
+            display: false,
+            text: question,
+            fontSize: 16,
+          },
+        },
+        legend: {
+          display: false,
+        },
+      }
+    });
+
+    chartsPizza.push(chartInstance);
+  });
+}
+
+async function questionsRequest() {
+
+  const response = await fetch(
+    configEnv.app_mode === 'production'
+      ? configEnv.web_address + '/company-questions'
+      : configEnv.local_address + '/company-questions',
+    {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + tokenCustomer,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  const data = await response.json();
+  
+  if (data.message != 'no-questions') {
+    
+    const filteredData = data.filter(item => item.status === 1);
+    return filteredData
+
+  }
+
+  return data
+
+}
+
+async function generateChartsForBinaryQuestions(date, storeNumber) {
+  const questions = await questionsRequest();
+
+  if (questions.message != 'no-questions') {
+
+    const hasBinaryQuestion = questions.some(question => {
+      return question.type_question === 'binary'; 
+    });
+    
+    if (hasBinaryQuestion) {
+  
+      const dataCharts = await getBinaryDataCharts(date, storeNumber)
+  
+      createPizzaCharts(dataCharts)
+  
+  
+    }
+
+  }
+
+
+}
+
+async function getBinaryDataCharts(dateInterval, storeNumber) {
+
+  if (storeNumber && storeNumber != 0) {
+  
+  const response = await fetch(
+    configEnv.app_mode === 'production'
+      ? configEnv.web_address + `/questions/binary/${dateInterval[0]}/${dateInterval[1]}/${storeNumber}`
+      : configEnv.local_address + `/questions/binary/${dateInterval[0]}/${dateInterval[1]}/${storeNumber}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + tokenCustomer,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  const data = await response.json();
+  return data
+
+  } else {
+
+    const response = await fetch(
+      configEnv.app_mode === 'production'
+        ? configEnv.web_address + `/questions/binary/${dateInterval[0]}/${dateInterval[1]}`
+        : configEnv.local_address + `/questions/binary/${dateInterval[0]}/${dateInterval[1]}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + tokenCustomer,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  
+    const data = await response.json();
+    return data;
+
+  }
+
+}
+

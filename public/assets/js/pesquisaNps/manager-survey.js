@@ -831,7 +831,7 @@ async function getQrCode(storeID) {
 
   } else {
 
-    const response = await fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/qrcode' : configEnv.local_address + `/qrcode/${storeID}`, {
+    const response = await fetch(configEnv.app_mode == 'production' ? configEnv.web_address + `/qrcode/${storeID}` : configEnv.local_address + `/qrcode/${storeID}`, {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + tokenCustomer,

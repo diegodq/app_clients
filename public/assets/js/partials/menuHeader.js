@@ -258,7 +258,7 @@ async function multiStoreAvailable() {
   })
 
   const data = await response.json()
-
+  console.log(data)
   return data
 
 }
