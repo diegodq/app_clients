@@ -48,6 +48,7 @@ async function questionsRequest() {
 
     const data = await response.json()
 
+
     return data
 
 }
@@ -77,6 +78,20 @@ async function getProduct() {
 
 }
 
+async function getDataCompany() {
+
+    const response = await fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/details' : configEnv.local_address + '/details', {
+        headers: {
+            'Authorization': `Bearer ${tokenCustomer}`
+        }
+    })
+
+    const data = await response.json()
+
+    return data[0]
+
+}
+
 async function getNowDateFormatEUA() {
     const date = new Date()
     const day = String(date.getDate()).padStart(2, '0')
@@ -86,26 +101,124 @@ async function getNowDateFormatEUA() {
     return `${year}-${month}-${day}`
 }
 
+async function getTreeByAnswer(questionID) {
+
+    const questions = await getQuestions()
+
+    const treeQuestion = questions.allQuestions.reduce((tree, question) => {
+        if (question.id === questionID) {
+            return question.tree_question
+        }
+        return tree
+    }, null)
+
+    return treeQuestion
+}
+
 async function getDataQuestionAndAnswersByResearchID(IdResearch) {
 
     const dataAnswer = await getAnswers()
 
-    const respostasFiltradas = dataAnswer.filter((resposta) => {
-        return resposta.research_name === IdResearch;
+    const answerOfTheResearch = dataAnswer.filter((resposta) => {
+        return resposta.research_name === IdResearch
     })
 
-    const resultado = []
+    console.log('answers com filtro de pesquisa', answerOfTheResearch)
 
-    const questions = await getQuestions()
+    const answerRepeatFiltred = await mergeDuplicateAnswers(answerOfTheResearch)
 
-    respostasFiltradas.forEach((resposta) => {
-        const perguntaCorrespondente = questions.allQuestions.find((pergunta) => pergunta.id === resposta.question_id);
+    console.log('tirando duplicados e mesclando repetidos', answerRepeatFiltred)
 
-        resultado.push(perguntaCorrespondente);
-        resultado.push(resposta);
-    });
+    const questionsAndAnswersOderdened = []
 
-    return resultado
+
+
+    if (answerRepeatFiltred.length <= 1) {
+
+        const treeQuestion = await getTreeByAnswer(answerRepeatFiltred[0].question_id)
+        answerRepeatFiltred[0].tree_question = treeQuestion
+
+        questionsAndAnswersOderdened.push(answerRepeatFiltred)
+
+
+        return questionsAndAnswersOderdened
+
+
+    } else {
+
+        const questions = await getQuestions()
+
+        answerRepeatFiltred.forEach((resposta) => {
+            const perguntaCorrespondente = questions.allQuestions.find((pergunta) => pergunta.id === resposta.question_id);
+
+            if (perguntaCorrespondente && perguntaCorrespondente.type_question !== 'finish') {
+                questionsAndAnswersOderdened.push(perguntaCorrespondente);
+                questionsAndAnswersOderdened.push(resposta);
+            }
+        });
+
+        const finalData = await removeDuplicateQuestions(questionsAndAnswersOderdened)
+
+        return finalData
+
+    }
+
+
+
+    async function removeDuplicateQuestions(array) {
+        const ids = new Set();
+        const resultado = [];
+
+        array.forEach(item => {
+            if (!ids.has(item.id)) {
+                resultado.push(item);
+                ids.add(item.id);
+            }
+        });
+
+        return resultado;
+    }
+
+    async function mergeDuplicateAnswers(array) {
+
+        if (array.length === 0) {
+            return [];
+        }
+
+        array.forEach(answer => {
+            if (answer.other_answer.trim() !== '') {
+                answer.answer = ` \n\n${answer.answer}\n -> ${answer.other_answer}`;
+            }
+        });
+
+        const groupedAnswers = {};  
+
+        console.log(array)
+
+        array.forEach((answer, index) => {
+            console.log(index)
+            const questionId = answer.question_id;
+        
+            if (!groupedAnswers[questionId]) {
+                groupedAnswers[questionId] = { ...answer };
+            } else {
+                groupedAnswers[questionId].answer = `${groupedAnswers[questionId].answer}\n${answer.answer}`;
+                if (answer.name_employee !== '') {
+                    if (groupedAnswers[questionId].name_employee !== '') {
+                        groupedAnswers[questionId].name_employee += ' |';
+                    }
+                    groupedAnswers[questionId].name_employee += ` ${answer.name_employee}`;
+                }
+            }
+        });
+
+        const sortedGroupedAnswers = Object.values(groupedAnswers)
+            .sort((a, b) => a.id - b.id);
+
+        return sortedGroupedAnswers;
+    }
+
+
 }
 
 async function makePreviewResearchs(researchData) {
@@ -113,17 +226,25 @@ async function makePreviewResearchs(researchData) {
     const contentContainer = $('<div></div>')
     let questionViewIndice = 1
 
-    for (let i = 0; i < researchData.length; i += 2) {
-        const perguntaContainer = $('<div></div>').addClass('container-pergunta-resposta');
-        const perguntaPara = $('<p></p>').html(`<strong>${questionViewIndice} - </strong> ${researchData[i].question_description}`);
-        perguntaContainer.append(perguntaPara)
-        questionViewIndice++
+    console.log('parâmetro de entrada', researchData)
 
-        const respostaContainer = $('<div></div>').addClass('container-pergunta-resposta');
-        const respostaPara = $('<p></p>').html(`<strong>Resposta:</strong> ${researchData[i + 1].answer}`)
-        respostaContainer.append(respostaPara)
+    async function createQuestionAndAnswersContainer(researchDataForQuestion) {
 
-        contentContainer.append(perguntaContainer).append(respostaContainer)
+        for (let i = 0; i < researchDataForQuestion.length; i += 2) {
+
+            const perguntaContainer = $('<div></div>').addClass('container-pergunta-resposta');
+            const perguntaPara = $('<p></p>').html(`<strong>${questionViewIndice} - </strong> ${researchDataForQuestion[i].question_description}`);
+            perguntaContainer.append(perguntaPara)
+            questionViewIndice++
+
+            const respostaContainer = $('<div></div>').addClass('container-pergunta-resposta');
+            console.log('resposta da pergunta', researchDataForQuestion[i + 1])
+            const respostaPara = $('<p></p>').html(`<strong>Resposta:</strong> ${researchDataForQuestion[i + 1].answer === '' ? '## Não houve resposta. ##' : researchDataForQuestion[i + 1].answer.replace(/\n/g, "<br>")}`);
+            respostaContainer.append(respostaPara);
+
+            contentContainer.append(perguntaContainer).append(respostaContainer)
+        }
+
     }
 
     const dataResearch = researchData.find(element => {
@@ -132,23 +253,55 @@ async function makePreviewResearchs(researchData) {
         }
     })
 
+    console.log('dataResearch', dataResearch)
+
     const paramsProductNps = await getProductNps()
 
-    const idResearch = dataResearch.id_research.split('.')[0].replace(/[^\w\s]/gi, '')
-    const timeResearch = dataResearch.created_at
-    const npsAnswer = await getRateTextAndIcon(dataResearch.nps_answer, paramsProductNps.passing_tree)
-    const employeeIndicate = `<strong> Colaborador: </strong> ${dataResearch.name_employee === null ? "---" : dataResearch.name_employee}`
+    console.log(researchData[0].nps_answer)
 
-    if (researchData[0].title_question === 'FINA. PESQUISA') {
+    const idResearch = dataResearch && dataResearch.research_name ? dataResearch.research_name : researchData[0][0].research_name
+    const timeResearch = dataResearch && dataResearch.created_at ? dataResearch.created_at : researchData[0][0].created_at
+    const npsAnswer = dataResearch ? await getRateTextAndIcon(dataResearch.nps_answer, paramsProductNps.passing_tree) : await getRateTextAndIcon(researchData[0][0].nps_answer, paramsProductNps.passing_tree)
+    const npsAnswerNumber = dataResearch && dataResearch.nps_answer !== null ? dataResearch.nps_answer : researchData[0][0].nps_answer
+    const employeeIndicate = dataResearch
+        ? `<strong>Colaborador(es):</strong> ${verifyStringForEmptyData(dataResearch.name_employee) ? "Não houve indicação." : dataResearch.name_employee}`
+        : `<strong>Colaborador(es):</strong> ${verifyStringForEmptyData(researchData[0][0].name_employee) ? "Não houve indicação." : researchData[0][0].name_employee}`
+
+    if (researchData[0].type_question === 'finish' && researchData.length <= 2 || researchData.length <= 2) {
+
         const newContent = '<p class="modal-title text-center fw-5">O cliente optou por não prosseguir respondendo a pesquisa.</p>'
-        return { result: npsAnswer, time: timeResearch, title: idResearch, content: newContent }
+        return { result: npsAnswer, time: timeResearch, title: idResearch, content: newContent, nps_answer: npsAnswerNumber }
+
+    } else {
+
+        await createQuestionAndAnswersContainer(researchData)
 
     }
 
-    return { result: npsAnswer, time: timeResearch, title: idResearch, content: contentContainer, employee: employeeIndicate }
+    return { result: npsAnswer, time: timeResearch, title: idResearch, content: contentContainer, employee: employeeIndicate, nps_answer: npsAnswerNumber }
+}
+
+async function npsScoreFromLabel(npsScore) {
+
+    switch (npsScore) {
+        case 0:
+            return "PÉSSIMO";
+        case 1:
+            return "RUIM";
+        case 2:
+            return "INDIFERENTE";
+        case 3:
+            return "BOM"
+        case 4:
+            return "EXCELENTE"
+        default:
+            return "Opção inválida";
+    }
 }
 
 async function viewResearchsListenClicks() {
+   
+   
     const spans = $('.btn-outline-light.rounded-pill.view')
 
     spans.each(async (index, span) => {
@@ -156,7 +309,9 @@ async function viewResearchsListenClicks() {
         $(span).on('click', async (event) => {
 
             const researchData = await getDataQuestionAndAnswersByResearchID($(span).data('id'));
-            const { result, time, title, content, employee } = await makePreviewResearchs(researchData)
+            const { result, time, title, content, employee, nps_answer } = await makePreviewResearchs(researchData)
+
+            let newNotaNps = nps_answer + 1
 
             const modalTitle = $('#modal-view-researchs .modal-title')
             modalTitle.empty().text(`Pesquisa - ${title}`)
@@ -167,7 +322,11 @@ async function viewResearchsListenClicks() {
             const modalResult = $('#modal-view-researchs .modal-result')
             modalResult.empty().append(result)
 
+            const modalNpsAnswer = $('#modal-npsAnswer')
+            modalNpsAnswer.empty().append(` Nota NPS: ${newNotaNps} (${await npsScoreFromLabel(Number(nps_answer))})`)
+
             const modalEmployee = $('#modal-view-researchs .modal-employee')
+
             modalEmployee.empty().append(employee)
 
             const modalBody = $('#modal-view-researchs .modal-body')
@@ -205,12 +364,18 @@ async function contactResearchsListenClicks() {
         const modalTitle = $('#modal-view-researchs .modal-title');
         modalTitle.empty().text(`Pesquisa - ${researchFromContactIcon.research_name}`);
 
+        const modalTime = $('#modal-view-researchs .modal-time')
+        modalTime.empty()
+
         const modalEmployee = $('#modal-view-researchs .modal-employee')
         modalEmployee.empty()
 
         const modalResult = $('#modal-view-researchs .modal-result')
         const moreInformationFromResearch = `<p class="fw-bold fs-4"> Contato deixado pelo cliente na pesquisa. </p>`
         modalResult.empty().append(moreInformationFromResearch)
+
+        const modalNpsAnswer = $('#modal-npsAnswer')
+        modalNpsAnswer.empty()
 
         const modalBody = $('#modal-view-researchs .modal-body')
 
@@ -234,11 +399,53 @@ async function contactResearchsListenClicks() {
     });
 }
 
+async function checkAnyCheckbox(checkboxes) {
+
+    let anyChecked = false
+
+    if (checkboxes) {
+
+        checkboxes.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                anyChecked = true;
+            }
+        });
+
+        if (anyChecked) {
+            buttonPrintResearch.disabled = false;
+        } else {
+            buttonPrintResearch.disabled = true;
+        }
+
+    } else {
+
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]')
+
+        checkboxes.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                anyChecked = true;
+            }
+        });
+
+        if (anyChecked) {
+            buttonPrintResearch.disabled = false;
+        } else {
+            buttonPrintResearch.disabled = true;
+        }
+
+    }
+
+}
+
 async function checkBoxListenClicks() {
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]')
 
     checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener('click', (event) => {
+        checkbox.addEventListener('click', async (event) => {
+
+            checkAnyCheckbox(checkboxes)
+
             const rowID = event.target.value
 
             if (rowID === '1') {
@@ -250,20 +457,316 @@ async function checkBoxListenClicks() {
 
 }
 
+async function getDateFromServer () {
+
+    const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/new/date`, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+
+    const dataServer = await response.json()
+    console.log(dataServer)
+    return dataServer
+
+}
+
+async function formateDataServer(dataString) {
+
+    console.log(dataString, 'dataString dentro da função')
+
+    const data = new Date(dataString);
+
+    console.log(data, 'date dentro da função')
+
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const ano = data.getFullYear();
+    const hora = String(data.getHours()).padStart(2, '0');
+    const minutos = String(data.getMinutes()).padStart(2, '0');
+    const segundos = String(data.getSeconds()).padStart(2, '0');
+    return `${dia}/${mes}/${ano} - ${hora}:${minutos}:${segundos}`;
+}
+
+async function makePrintResearchData(checkedCheckBoxes) {
+
+    const dataForRequestPrint = []
+    const dataCompany = await getDataCompany()
+    const dataServer = await getDateFromServer()
+    const dataServerFormated = await formateDataServer(dataServer)
+
+    for (const idResearch of checkedCheckBoxes) {
+
+        const questionsAndAnswerComplete = await getDataQuestionAndAnswersByResearchID(idResearch)
+
+        console.log('perguntas e respostas completo', questionsAndAnswerComplete)
+
+        if (questionsAndAnswerComplete.length <= 1) {
+
+            const storeDataForPDF = await getStoreData(questionsAndAnswerComplete[0][0].store_id) 
+
+            const makeDataStoreForPrint = storeDataForPDF.length != 0 ? `${storeDataForPDF[0].store_number} - ${storeDataForPDF[0].name}` : 'MATRIZ'
+
+            const dataEachResearch = {
+                "company": dataCompany.fantasy_name,
+                "period": dataAndHourFormat(questionsAndAnswerComplete[0][0].created_at),
+                "hour_report": dataServerFormated,
+                "store_id": makeDataStoreForPrint,
+                "logo": `${dataCompany.logo_company === '' ? 'blank.png' : dataCompany.logo_company}`,
+                "employee": `${questionsAndAnswerComplete[0][0].name_employee}`,
+                "nps_score": `Nota NPS: ${questionsAndAnswerComplete[0][0].nps_answer} - ${await npsScoreFromLabel(Number(questionsAndAnswerComplete[0][0].nps_answer))}`,
+                "header": `Pesquisa - ${idResearch}`,
+                "tree": questionsAndAnswerComplete[0][0].tree_question,
+                "questionAndResponses": ['O cliente optou por não prosseguir respondendo a pesquisa.']
+            }
+
+            dataForRequestPrint.push(dataEachResearch)
+
+        } else {
+
+            const questionAndAnswerOnlyImportantText = questionsAndAnswerComplete.filter((object, index, array) => {
+
+                if (object.type_question === 'finish' && array[index + 1] && array[index + 1].answer === '') {
+                    return false;
+                }
+
+                if (object.type_question === 'finish' && !array[index + 1]) {
+                    return false;
+                }
+
+                return true;
+            }).map(object => {
+                return object.question_description || object.answer;
+            });
+
+            //console.log('question and answers filtrando finish e etc', questionAndAnswerOnlyImportantText)
+
+            const notaNps = questionsAndAnswerComplete[1].nps_answer + 1
+
+            //console.log(await getStoreData(questionsAndAnswerComplete[1].store_id))
+            const storeDataForPDF = await getStoreData(questionsAndAnswerComplete[1].store_id) 
+
+            const makeDataStoreForPrint = storeDataForPDF.length != 0 ? `${storeDataForPDF[0].store_number} - ${storeDataForPDF[0].name}` : 'MATRIZ'
+
+
+            const dataEachResearch = {
+                "company": dataCompany.fantasy_name,
+                "period": dataAndHourFormat(questionsAndAnswerComplete[1].created_at),
+                "hour_report": dataServerFormated,
+                "store_id": makeDataStoreForPrint,
+                "logo": dataCompany.logo_company === '' ? 'blank.png' : dataCompany.logo_company,
+                "employee": questionsAndAnswerComplete[1].name_employee,
+                "nps_score": `Nota NPS: ${notaNps} - ${await npsScoreFromLabel(Number(questionsAndAnswerComplete[1].nps_answer))}`,
+                "header": `Pesquisas - ${idResearch}`,
+                "tree": questionsAndAnswerComplete[0].tree_question,
+                "questionAndResponses": questionAndAnswerOnlyImportantText
+            }
+            dataForRequestPrint.push(dataEachResearch)
+            console.log(dataEachResearch)
+
+        }
+
+
+    }
+
+    return dataForRequestPrint
+
+}
+
+const buttonPrintResearch = document.getElementById('print-research-button')
+
+
+buttonPrintResearch.addEventListener('click', async () => {
+    
+    spinner.classList.add('d-flex');
+
+    setTimeout(async () => {
+
+        spinner.classList.remove('d-flex');
+
+        const checkedCheckBoxes = await getCheckedRowIDs()
+
+        // const underLimitDonwloads = checkedCheckBoxes.length < 11
+
+        // if (underLimitDonwloads) {
+
+            const dataResearch = await makePrintResearchData(checkedCheckBoxes);
+            const dataForRequest = await formatDataResearchForRequest(dataResearch);
+            const pdfUrls = await requestForPDFDownload(dataForRequest);
+
+            notifyDownloadSuccessPDF()
+
+            await Promise.all(pdfUrls.map(async (url, index) => {
+                const fileName = checkedCheckBoxes[index]
+                await downloadFileFromURL(url, fileName);
+            }))
+
+        // } else {
+
+        //     await notiftyLimitDownloadPDF()
+
+        // }
+
+
+    }, 1000)
+
+})
+
+async function downloadFileFromURL(fileURL, idPesquisa) {
+
+    const response = await fetch(fileURL)
+    const blob = await response.blob()
+    const downloadUrl = URL.createObjectURL(blob)
+
+    const downloadLink = document.createElement('a')
+
+    downloadLink.href = downloadUrl
+    downloadLink.setAttribute('download', `PESQUISA-NPS_${idPesquisa ?? 'no-file'}.pdf`);
+
+    downloadLink.click()
+
+    URL.revokeObjectURL(downloadUrl)
+
+}
+
+
+async function formatDataResearchForRequest(oldData) {
+    const newDataForRequest = [];
+
+    for (let research of oldData) {
+        const arrayTemp = []
+
+        arrayTemp.push(
+            {
+                "text": research.company,
+                "style": "company"
+            },
+            {
+                "text": "Data da Pesquisa: " + research.period,
+                "style": "periodo"
+            },
+            {
+                "text": "Data da Impressão: " + research.hour_report,
+                "style": "horario_report"
+            },
+            {
+                "text": "Unidade/Loja: " + research.store_id,
+                "style": "store"
+            },
+            {
+                "text": research.header,
+                "style": "header"
+            },
+            {
+                "image": research.logo,
+                "width": 165,
+                "absolutePosition": { "x": 350, "y": 60 },
+                "style": "logo"
+            },
+            {
+                "text": "Avaliação " + (research.tree == 1 ? "Positiva" : "Negativa"),
+                "style": "tree",
+                "alignment": "center"
+            },
+            {
+                "image": research.tree == 1 ? "positive.png" : "negative.png",
+                "width": 20,
+                "absolutePosition": { "x": 280, "y": 220 },
+                "style": "negative"
+            },
+            {
+                "text": research.nps_score,
+                "style": "nps_score"
+            },
+            {
+                "text": verifyStringForEmptyData(research.employee) || research.employee == null ? "Colaborador Indicado: Não houve Indicação" : `Colaborador(es) Indicado(os): ${research.employee}`,
+                "style": "employee"
+            }
+        );
+
+        if (research.questionAndResponses && research.questionAndResponses.length > 1) {
+            let countQuestions = 1;
+
+            for (let i = 0; i < research.questionAndResponses.length; i += 2) {
+
+                arrayTemp.push(
+                    {
+                        "text": countQuestions + " - " + research.questionAndResponses[i],
+                        "style": "question"
+                    },
+                    {
+                        "text": `Resposta: ${research.questionAndResponses[i + 1] === '' ? ' ## Não houve resposta ##' : research.questionAndResponses[i + 1]}`,
+                        "style": "response"
+                    }
+                );
+                countQuestions++;
+         
+            }
+        } else {
+            arrayTemp.push(
+                {
+                    "text": "O cliente optou por não prosseguir respondendo a pesquisa!",
+                    "style": "noQuestionContainer"
+                }
+            );
+        }
+
+        newDataForRequest.push(arrayTemp);
+    }
+
+    return newDataForRequest;
+
+}
+
+function verifyStringForEmptyData(str) {
+
+    if (str) {
+
+        const cleanedStr = str.replace(/\|/g, '')
+        const trimmedStr = cleanedStr.trim()
+        return trimmedStr.length === 0
+
+    } else {
+
+        return true
+    }
+}
+
+async function requestForPDFDownload(dataForPDFRequest) {
+
+    const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/answer/report`, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + tokenCustomer,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataForPDFRequest)
+    })
+
+    const data = await response.json()
+    console.log(data)
+    return data
+
+}
+
 function markAllCheckboxes(checked) {
+
     const checkboxes = document.querySelectorAll('input[type="checkbox"]')
 
     checkboxes.forEach((checkbox) => {
         checkbox.checked = checked
     })
+
 }
 
-function getCheckedRowIDs() {
+async function getCheckedRowIDs() {
 
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     const checkedRowIDs = []
 
     checkboxes.forEach((checkbox) => {
+
+
         if (checkbox.checked) {
 
             if (checkbox.value === '1') {
@@ -272,10 +775,11 @@ function getCheckedRowIDs() {
 
             } else {
 
-                const rowID = checkbox.value
+                const rowID = checkbox.dataset.id
                 checkedRowIDs.push(rowID)
 
             }
+
         }
     });
 
@@ -295,70 +799,6 @@ function dataAndHourFormat(dataHora) {
     const [cleanedDataHourAndDate, trash] = dateAndHourFormated.split('.')
 
     return cleanedDataHourAndDate
-}
-
-function printTable(data) {
-
-    //window.print();
-
-}
-
-function exportTable() {
-
-    const table = document.getElementById('table_researchs');
-    if (!table) {
-        console.error("Tabela não encontrada.");
-        return;
-    }
-
-    const rows = Array.from(table.querySelectorAll('tr'));
-
-    // Remove a primeira coluna (coluna de input) dos dados
-    const data = rows.map((row) => {
-        const cells = Array.from(row.children);
-        return cells.map((cell, index) => (index !== 0 && cell.innerText ? cell.innerText : null)).filter((cellData) => cellData !== null);
-    });
-
-    // Encontra o índice da coluna "Opções"
-    const headerRow = rows[0];
-    if (!headerRow) {
-        console.error("Linha de cabeçalho não encontrada.");
-        return;
-    }
-    const headers = Array.from(headerRow.children).map((cell) => cell.innerText);
-    const opcoesColumnIndex = headers.indexOf('Opções');
-
-    // Obtém apenas a coluna "Opções" de cada linha
-    const opcoesColumn = rows.map((row) => {
-        const cell = row.children[opcoesColumnIndex];
-        return cell ? cell.innerText : null;
-    });
-
-    const workbook = XLSX.utils.book_new();
-
-    // Converte a coluna "Opções" para o formato da planilha
-    const opcoesSheet = XLSX.utils.aoa_to_sheet(opcoesColumn.map((opcao) => [opcao]));
-
-    // Converte o restante dos dados para o formato da planilha
-    const dataSheet = XLSX.utils.aoa_to_sheet(data);
-
-    // Anexa ambas as planilhas ao workbook
-    XLSX.utils.book_append_sheet(workbook, opcoesSheet, 'Opções');
-    XLSX.utils.book_append_sheet(workbook, dataSheet, 'Planilha XLS');
-
-    // Converte o workbook para um arquivo binário
-    const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-
-    // Cria um Blob e gera o arquivo
-    const blob = new Blob([wbout], { type: 'application/octet-stream' });
-    const url = URL.createObjectURL(blob);
-
-    // Cria um link invisível para download e simula o clique
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'Pesquisas_Respondidas.xlsx');
-    document.body.appendChild(link);
-    link.click();
 }
 
 async function getResearchList(date) {
@@ -400,7 +840,6 @@ async function getResearchList(date) {
     }
 
 }
-
 
 document.addEventListener("DOMContentLoaded", function () {
     const startDateInput = document.getElementById("startDate");
@@ -483,6 +922,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const spinnerAnswerTable = document.getElementById('spinner-overlay-answerTable')
 
         if (startDate && endDate) {
+
             const dateIntervalForRequest = [formatDateToUS(startDate.toLocaleDateString()), formatDateToUS(endDate.toLocaleDateString())]
 
             const dataResearchs = await getResearchList(dateIntervalForRequest)
@@ -516,7 +956,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 })
 
-
 async function getRateTextAndIcon(npsAnswer, passingTree) {
 
     if (npsAnswer >= passingTree) {
@@ -549,7 +988,7 @@ async function populateTable(dataResearch) {
         };
         return modifiedRow;
     }));
-    
+
 
     table.DataTable({
         data: modifiedDataArray,
@@ -562,15 +1001,15 @@ async function populateTable(dataResearch) {
                         <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
                             <input class="form-check-input" type="checkbox" data-kt-check="true"
                                 data-kt-check-target="#kt_datatable_example_1 .form-check-input"
-                                value="${data.id}" />
+                                value="${data.id}" data-id="${data.research_name}" />
                         </div>`;
                 }
             },
             { data: 'formatted_date' },
             { data: 'research_name', className: 'research-column' },
             { data: 'nps_answer', title: 'AVALIAÇÃO' },
-            { 
-                data: 'store_number', 
+            {
+                data: 'store_number',
                 title: 'LOJA',
                 render: function (data) {
                     if (data === null) {
@@ -578,7 +1017,7 @@ async function populateTable(dataResearch) {
                     } else {
                         return `LOJA ${data}`;
                     }
-                    
+
                 }
             },
             {
@@ -622,9 +1061,26 @@ async function populateTable(dataResearch) {
             checkBoxListenClicks();
             viewResearchsListenClicks();
             contactResearchsListenClicks();
+            checkAnyCheckbox();
         }
     });
-    
+
+    const spinnerAnswerTable = document.getElementById('spinner-overlay-answerTable')
+
+    table.on('page.dt', function () {
+        spinnerAnswerTable.classList.add('d-flex')
+        setTimeout(async () => {
+            spinnerAnswerTable.classList.remove('d-flex')
+        }, 800)
+    })
+
+    table.on('length.dt', function () {
+        spinnerAnswerTable.classList.add('d-flex')
+        setTimeout(async () => {
+            spinnerAnswerTable.classList.remove('d-flex')
+        }, 800)
+    })
+
 }
 
 async function disabledButtonsNoContact() {
@@ -645,18 +1101,6 @@ function formatDateToUS(date) {
     return `${year}-${month}-${day}`;
 }
 
-// $(document).ready(function () {
-
-//     $(document).on('draw.dt', function () {
-
-//         const paginationButtons = $('.paginate_button')
-
-//         paginationButtons.removeClass('paginate_button item previous disabled my-pagination-style')
-//             .addClass('my-pagination-style')
-//     })
-
-// });
-
 $(document).ready(function () {
     $(document).on('draw.dt', function () {
         const paginationButtons = $('.paginate_button');
@@ -670,7 +1114,7 @@ $(document).ready(function () {
             }
         });
     });
-});
+})
 
 async function getProductNps() {
 
@@ -684,5 +1128,60 @@ async function getProductNps() {
     const data = await response.json()
 
     return data.message[0]
+
+}
+
+async function notifyDownloadSuccessPDF() {
+
+    Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Os downloads iniciarão em breve!",
+        showConfirmButton: false,
+        timer: 1500
+    });
+
+
+}
+
+async function notiftyLimitDownloadPDF() {
+
+    Swal.fire({
+        title: 'Limite de Download.',
+        text: 'O download só é permitido para até 10 pesquisas simultâneas. Desmarque as pesquisa excedentes.',
+        icon: 'warning',
+        confirmButtonColor: '#F05742',
+        confirmButtonText: 'Ok, entendi.',
+        customClass: {
+            confirmButton: 'btn btn-primary-confirm',
+        }
+    })
+
+
+}
+
+async function getStoreList() {
+
+    const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/list/store`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + tokenCustomer,
+        'Content-Type': 'application/json'
+      }
+    })
+  
+    const data = await response.json()
+    console.log(data)
+    return data.message
+  
+}
+
+async function getStoreData (storeID) {
+
+    const storeList = await getStoreList()
+
+    const store = storeList.filter(store => store.id === storeID)
+
+    return store
 
 }

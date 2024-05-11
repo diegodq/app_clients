@@ -11,6 +11,7 @@ const editProfileOptionMenu = document.getElementById('edit-profile-menu')
 const billingOptionMenu = document.getElementById('billing-menu')
 const servicesOptionMenu = document.getElementById('choice-product')
 const paymentsFailLink = document.getElementById('alter-payments-data-overview')
+const usersOptionMenu = document.getElementById('users-menu')
 
 
 window.addEventListener('load', (event) => {
@@ -25,30 +26,30 @@ window.addEventListener('load', (event) => {
 
       // ATUALIZA OS DADOS DO HEADER MENU
 
-      nameCustomerHeader.innerText = data.first_name;
-      positionCustomerHeader.innerText = data.position;
+      nameCustomerHeader.innerText = data[0].first_name;
+      positionCustomerHeader.innerText = data[0].position;
 
       // HEADER PROFILE USER
 
-      nameAndSurnameFieldProfile.innerText = `${data.first_name} ${data.surname}`
-      emailFieldProfile.innerText = data.email
-      positionFieldProfile.innerText = data.position
-      fantasyNameCompanyFieldProfile.innerText = data.fantasy_name
+      nameAndSurnameFieldProfile.innerText = `${data[0].first_name} ${data[0].surname}`
+      emailFieldProfile.innerText = data[0].email
+      positionFieldProfile.innerText = data[0].position
+      fantasyNameCompanyFieldProfile.innerText = data[0].fantasy_name
 
       // FUNCIONALIDADES PÁGINA OVERVIEW
       // PREENCHENDO CAMPOS
 
-      for (let key in data) {
+      for (let key in data[0]) {
         if (key === 'first_name' || key === 'surname') {
           spansOverview.forEach((eachSpan) => {
             if (eachSpan.dataset.chave === 'name_and_surname') {
-              eachSpan.innerText += ` ${data[key]} `;
+              eachSpan.innerText += ` ${data[0][key]} `;
             }
           });
         } else {
           spansOverview.forEach((eachSpan) => {
             if (key === eachSpan.dataset.chave) {
-              eachSpan.innerText = data[key];
+              eachSpan.innerText = data[0][key];
             }
           });
         }
@@ -96,17 +97,17 @@ buttonEditProfile.addEventListener('click', (event) => {
 
 })
 
-paymentsFailLink.addEventListener('click', (event) => {
+// paymentsFailLink.addEventListener('click', (event) => {
 
-  spinner.classList.add('d-flex')
+//   spinner.classList.add('d-flex')
 
-  setTimeout(() => {
+//   setTimeout(() => {
 
-    window.location.href = '/billing'
+//     window.location.href = '/billing'
 
-  }, 1500)
+//   }, 1500)
 
-})
+// })
 
 
 // NAVEGAÇÃO MENU USER
@@ -160,3 +161,18 @@ overviewOptionMenu.addEventListener('click', (event) => {
   }, 1000)
 
 })
+
+function addClickEventUsersManager() {
+
+  spinner.classList.add('d-flex')
+  
+  setTimeout(() => {
+  
+      window.location.href = '/users'
+  
+  }, 1000)
+ 
+
+}
+
+usersOptionMenu.addEventListener('click', addClickEventUsersManager)

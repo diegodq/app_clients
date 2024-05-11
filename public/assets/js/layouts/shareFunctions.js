@@ -28,6 +28,8 @@ function alertNoCreatedYet () {
 
 }
 
+
+
 const titleModalConfirm = document.getElementById('title-modal-confirm')
 const textModalConfirm = document.getElementById('text-modal-confirm')
 const iconModalConfirm = document.getElementById('icon-modal-confirm')

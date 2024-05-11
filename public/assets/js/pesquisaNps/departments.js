@@ -106,7 +106,10 @@ async function registerDepartment() {
     uppercaseFormData[key] = value.toUpperCase().trim()
   }
 
+  uppercaseFormData.status = 1
   const dataDepartment = JSON.stringify(uppercaseFormData)
+
+  console.log(dataDepartment)
 
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/department' : configEnv.local_address + '/department', {
     method: 'POST',
@@ -118,7 +121,9 @@ async function registerDepartment() {
   })
     .then(response => response.json())
     .then(data => {
-  
+
+      console.log(data)
+
       if (data.status === 'success') {
 
         spinner.classList.add('d-flex')
@@ -211,7 +216,7 @@ async function registerDepartment() {
         setTimeout(() => {
 
           modalConfirm.hide()
-          location.reload()
+          //location.reload()
 
         }, 2500)
 
@@ -229,7 +234,7 @@ buttonModalCancelRegisterDepartment.addEventListener('click', event => {
   setTimeout(() => {
     location.reload()
   }, 600)
-  
+
 
 })
 
@@ -246,7 +251,7 @@ function fillDepartmentsTable() {
     .then(response => response.json())
     .then(data => {
 
-      
+
       if (data.message === 'no-departments') {
 
         fieldNoDepartments.innerText = 'Não há departamentos cadastrados.'
@@ -346,7 +351,7 @@ function updateDepartment() {
   })
     .then(response => response.json())
     .then(data => {
-   
+
       if (data.message === 'Departamento atualizado.') {
 
         spinner.classList.add('d-flex')
@@ -461,11 +466,13 @@ async function listenClickDeleteIcon() {
   })
 }
 
-function deleteDepartments(id) {
+async function deleteDepartments(id) {
+
 
   const idDepartment = { 'id': id }
 
-  fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/department' : configEnv.local_address + '/department', {
+
+  const response = await fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/department' : configEnv.local_address + '/department', {
     method: 'DELETE',
     headers: {
       'Authorization': 'Bearer ' + tokenCustomer,
@@ -473,20 +480,22 @@ function deleteDepartments(id) {
     },
     body: JSON.stringify(idDepartment)
   })
-    .then(response => response.json())
-    .then(data => {
 
-      if (data.status === 'success') {
+  const data = await response.json()
 
-        spinner.classList.add('d-flex')
-        setTimeout(() => {
+  console.log(data)
 
-          spinner.classList.remove('d-flex')
-          modalConfirm.show()
+  if (data.status === 'success') {
 
-          titleModalConfirm.innerText = `SUCESSO!`
-          textModalConfirm.innerText = `A exclusão do departamento foi realizada com sucesso!`
-          iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-success svg-icon-5hx "><svg
+    spinner.classList.add('d-flex')
+    setTimeout(() => {
+
+      spinner.classList.remove('d-flex')
+      modalConfirm.show()
+
+      titleModalConfirm.innerText = `SUCESSO!`
+      textModalConfirm.innerText = `A exclusão do departamento foi realizada com sucesso!`
+      iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-success svg-icon-5hx "><svg
             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
             viewBox="0 0 24 24" fill="none">
             <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10"
@@ -497,26 +506,26 @@ function deleteDepartments(id) {
             </svg>
             </span>`
 
-        }, 500);
+    }, 500);
 
-        setTimeout(() => {
+    setTimeout(() => {
 
-          modalConfirm.hide()
-          location.reload()
+      modalConfirm.hide()
+      location.reload()
 
-        }, 2000)
+    }, 2000)
 
-      } else {
+  } else {
 
-        spinner.classList.add('d-flex')
-        setTimeout(() => {
+    spinner.classList.add('d-flex')
+    setTimeout(() => {
 
-          spinner.classList.remove('d-flex')
-          modalConfirm.show()
+      spinner.classList.remove('d-flex')
+      modalConfirm.show()
 
-          titleModalConfirm.innerText = `FALHA`
-          textModalConfirm.innerText = `Algo deu errado e a exclusão não foi realizada conforme sua solicitação. Tente novamente!`
-          iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-warning svg-icon-5hx"><svg
+      titleModalConfirm.innerText = `FALHA`
+      textModalConfirm.innerText = `Algo deu errado e a exclusão não foi realizada conforme sua solicitação. Tente novamente!`
+      iconModalConfirm.innerHTML = `<span class="svg-icon svg-icon-warning svg-icon-5hx"><svg
                           xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                           viewBox="0 0 24 24" fill="none">
                           <path opacity="0.3"
@@ -528,18 +537,16 @@ function deleteDepartments(id) {
                       </svg></span>`
 
 
-        }, 500);
+    }, 500);
 
-        setTimeout(() => {
+    setTimeout(() => {
 
-          modalConfirm.hide()
-          location.reload()
+      modalConfirm.hide()
+      location.reload()
 
-        }, 2500)
+    }, 2500)
 
-      }
-
-    })
+  }
 
 }
 
@@ -560,7 +567,7 @@ function confirmarExclusao(id) {
       confirmButton: 'btn btn-primary-confirm',
       cancelButton: 'btn btn-light btn-active-light-primary'
     }
-  }).then((result) => {
+  }).then(async (result) => {
     if (result.isConfirmed) {
 
       deleteDepartments(id)

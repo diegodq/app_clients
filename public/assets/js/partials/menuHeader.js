@@ -54,6 +54,9 @@ window.addEventListener('load', () => {
   })
     .then(response => response.json())
     .then(data => {
+
+      //console.log(data)
+
       if (data.message === 'Acesso não autorizado.') {
         handleConnectionError();
       } else if (data.message === 'no-company') {
@@ -113,8 +116,8 @@ window.addEventListener('load', (event) => {
 
       // DADOS USER MENU HEADER
 
-      nameCustomerHeader.innerText = data.first_name
-      positionCustomerHeader.innerText = data.position
+      nameCustomerHeader.innerText = data[0].first_name
+      positionCustomerHeader.innerText = data[0].position
 
     })
 
@@ -247,7 +250,6 @@ function checkClickOutside(event) {
   }
 }
 
-
 async function multiStoreAvailable() {
 
   const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/multi-store`, {
@@ -258,7 +260,7 @@ async function multiStoreAvailable() {
   })
 
   const data = await response.json()
-  console.log(data)
+
   return data
 
 }

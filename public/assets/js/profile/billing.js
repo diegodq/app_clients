@@ -7,6 +7,7 @@ const overviewOptionMenu = document.getElementById('overview-menu')
 const editProfileOptionMenu = document.getElementById('edit-profile-menu')
 const billingOptionMenu = document.getElementById('billing-menu')
 const servicesOptionMenu = document.getElementById('choice-product')
+const usersOptionMenu = document.getElementById('users-menu')
 
 
 window.addEventListener('load', (event) => {
@@ -112,6 +113,18 @@ overviewOptionMenu.addEventListener('click', (event) => {
   setTimeout(() => {
 
       window.location.href = '/overview'
+
+  }, 1000)
+
+})
+
+usersOptionMenu.addEventListener('click', (event) => {
+
+  spinner.classList.add('d-flex')
+
+  setTimeout(() => {
+
+      window.location.href = '/users'
 
   }, 1000)
 

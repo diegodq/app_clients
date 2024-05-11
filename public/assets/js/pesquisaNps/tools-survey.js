@@ -5,7 +5,7 @@ const toolsTreeComponent = $('#tree-tools-component')
 const toolsAlertComponent = $('#alert-tools-component')
 const toolsFinishComponent = $('#finish-survey-component')
 const fieldNoQuestion = document.getElementById('field-no-questions')
-const questionsTable = document.getElementById('questions_table')
+const questionsTable = document.getElementById('tools_table')
 const typesTools = ['alert', 'contact', 'finish']
 const searchInput = document.getElementById('search-input')
 
@@ -260,7 +260,7 @@ async function registerQuestion(dataForm) {
         },
         body: JSON.stringify(dataForm)
     }).then(response => response.json()).then(data => {
-
+        console.log(data)
         modalRegisterTools.hide()
 
         if (data.status === 'success') {

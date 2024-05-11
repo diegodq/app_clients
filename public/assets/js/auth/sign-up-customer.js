@@ -46,9 +46,14 @@ async function registerCustomer(event) {
   }
 
   uppercaseFormData.accept_terms = 1
+  uppercaseFormData.role = 1
+
+  console.log(uppercaseFormData)
 
   // CONVERTENDO PARA JSON
   const dataCustomer = JSON.stringify(uppercaseFormData)
+
+  console.log(dataCustomer)
 
   // // VALIDANDO USUÁRIO ÚNICO, CADASTRANDO CUSTOMER E ENVIANDO PARA O CADASTRO DE COMPANY COM ID
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/customer' : configEnv.local_address + '/customer', {

@@ -55,7 +55,7 @@ window.addEventListener('load', async (event) => {
 
     menuAsideOptionsStores.addEventListener('click', (event) => {
       spinner.classList.add('d-flex');
-  
+
       setTimeout(() => {
         spinner.classList.remove('d-flex');
         window.location.href = '/stores';
@@ -65,21 +65,13 @@ window.addEventListener('load', async (event) => {
   } else {
 
     menuAsideOptionsStores.classList.add('disabled-option')
-  } 
+  }
 
   // OPÇÃO MENU GESTÃO DE PESQUISA
 
-  const menuAsideOptionsManagerSurvey = document.getElementById(
-    'menu-aside-manager-survey',
-  );
-  menuAsideOptionsManagerSurvey.addEventListener('click', (event) => {
-    spinner.classList.add('d-flex');
+  menuAsideOptionsManagerSurvey.addEventListener('click', addClickEventManagerSurvey)
 
-    setTimeout(() => {
-      spinner.classList.remove('d-flex');
-      window.location.href = '/manager-survey';
-    }, 1000);
-  });
+
 
   // OPÇÃO MENU PESQUISAS RESPONDIDAS
 
@@ -109,7 +101,24 @@ window.addEventListener('load', async (event) => {
     }, 1000);
   });
 
+
+  const typeCustomer = await verifyTypeUser()
+  await customerPermissionApply(typeCustomer)
+
 })
+
+const menuAsideOptionsManagerSurvey = document.getElementById('menu-aside-manager-survey');
+
+function addClickEventManagerSurvey() {
+
+  spinner.classList.add('d-flex');
+
+  setTimeout(() => {
+    spinner.classList.remove('d-flex');
+    window.location.href = '/manager-survey';
+  }, 1000);
+
+}
 
 // TRAVANDO O MENU LATERAL CLICK ROTATE E MOVIMENTANDO O BODY
 const chevronDoubleRight = document.querySelector('.bi-chevron-double-right');
@@ -152,8 +161,12 @@ asideMenu.addEventListener('mouseleave', () => {
 const subMenuRegister = document.getElementById('subMenuRegister');
 const subMenuSetData = document.getElementById('sub-menu-setData');
 
-subMenuRegister.addEventListener('click', () => {
+subMenuRegister.addEventListener('click', managerSubMenuOpening)
+
+function managerSubMenuOpening() {
+
   const isVisible = getComputedStyle(subMenuSetData).display != 'none';
+
   if (isVisible) {
     subMenuSetData.style.display = 'none';
     subMenuRegister.removeAttribute('set-open');
@@ -161,6 +174,91 @@ subMenuRegister.addEventListener('click', () => {
     subMenuSetData.style.display = 'block';
     subMenuRegister.setAttribute('set-open', 'on');
   }
-});
 
 
+}
+
+
+async function verifyTypeUser() {
+
+  const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/type/customer`, {
+    headers: {
+      'Authorization': `Bearer ${tokenCustomer}`
+    }
+  })
+
+  const data = await response.json()
+  console.log(data)
+  return data[0].name
+
+}
+
+
+async function customerPermissionApply(typeCustomer) {
+
+  if (typeCustomer === 'USUÁRIO') {
+
+    // DESABILITANDO OPÇÕES DE MENU
+    subMenuRegister.classList.add('disabled-option')
+    menuAsideOptionsManagerSurvey.classList.add('disabled-option')
+
+
+    subMenuRegister.removeEventListener('click', managerSubMenuOpening)
+    menuAsideOptionsManagerSurvey.removeEventListener('click', addClickEventManagerSurvey)
+
+    // DESABILITANDO OPÇÕES DE COMPANY NA EDIT-PROFILE-CUSTOMER
+
+    const formEditCompany = document.getElementById('edit-company-form')
+    if (formEditCompany) {
+
+      const inputs = formEditCompany.getElementsByTagName("input");
+      for (let i = 0; i < inputs.length; i++) {
+        inputs[i].disabled = true;
+      }
+
+    }
+
+    // DESABILITANDO ÁREA DE USUÁRIO
+    const usersMenu = document.getElementById('users-menu')
+
+    if (usersMenu) {
+
+      const verifyClassActiveUsers = usersMenu.classList.contains("active")
+      
+      if (usersMenu && !verifyClassActiveUsers) {
+  
+        console.log('tem user menu')
+        usersMenu.classList.add('disabled-option')
+  
+        usersMenu.removeEventListener('click', addClickEventUsersManager)
+  
+      }
+    }
+
+    const userPageComponent = document.getElementById('list_users')
+    const departmentComponent = document.getElementById('departments_table')
+    const questionComponent = document.getElementById('questions_table')
+    const storesComponent = document.getElementById('stores_table')
+    const toolsComponent = document.getElementById('tools_table')
+    const topicsComponent = document.getElementById('topics_table')
+    const managerSurveyComponent = document.getElementById('svg-container')
+
+
+    if (userPageComponent || departmentComponent || questionComponent || storesComponent || toolsComponent || topicsComponent || managerSurveyComponent) {
+
+      spinner.classList.add('d-flex')
+
+      setTimeout(() => {
+
+        window.location.href = '/'
+
+      }, 1000)
+
+    }
+
+  
+
+  }
+
+
+}

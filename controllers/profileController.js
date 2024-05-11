@@ -18,9 +18,15 @@ module.exports = {
   {
     return response.render('profile/overview', { title: 'PERFIL | AUTOMATIZA VAREJO'});
   },
+
+  async users(request, response)
+  {
+    return response.render('profile/users', { title: 'USUÁRIOS | AUTOMATIZA VAREJO'});
+  },
   
   async settings(request, response)
   {
     return response.render('profile/settings');
   },
+  
 }

@@ -45,6 +45,8 @@ async function makingLogin(event) {
 		.then(data => {
 			errorTextArea.innerText = ''
 
+			console.log(data)
+
 			setTimeout(() => {
 
 				loginOptions(data.status, data.message, data.token, dataCompany.email)

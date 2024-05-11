@@ -37,6 +37,7 @@ const buttonCancelModal = document.getElementById('button-cancel-delete-account'
 const modalDeleteAccount = new bootstrap.Modal(document.getElementById('cancelAccount'), {
   keyboard: true
 })
+const usersOptionMenu = document.getElementById('users-menu')
 
 
 // BUSCAR INFORMAÇÕES DO USUÁRIO NA API
@@ -60,34 +61,34 @@ window.addEventListener('load', (event) => {
     .then((data) => {
       // ATUALIZA OS DADOS DO HEADER MENU
 
-      nameCustomerHeader.innerText = data.first_name;
-      positionCustomerHeader.innerText = data.position;
+      nameCustomerHeader.innerText = data[0].first_name;
+      positionCustomerHeader.innerText = data[0].position;
 
       // HEADER PROFILE USER
 
-      nameAndSurnameFieldProfile.innerText = `${data.first_name} ${data.surname}`
-      emailFieldProfile.innerText = data.email
-      positionFieldProfile.innerText = data.position
-      fantasyNameCompanyFieldProfile.innerText = data.fantasy_name
+      nameAndSurnameFieldProfile.innerText = `${data[0].first_name} ${data[0].surname}`
+      emailFieldProfile.innerText = data[0].email
+      positionFieldProfile.innerText = data[0].position
+      fantasyNameCompanyFieldProfile.innerText = data[0].fantasy_name
 
       // E-MAIL DA SEÇÃO DE ALTERAR E-MAIL
 
-      emailAlterSection.innerText = data.email
+      emailAlterSection.innerText = data[0].email
 
       // CHECK DE PREFERÊNCIAS DE CONTATO
 
-      inputPayment.checked = data.info_payment === 1 ? true : false
-      inputNewsLetter.checked = data.accept_newsletter === 1 ? true : false
+      inputPayment.checked = data[0].info_payment === 1 ? true : false
+      inputNewsLetter.checked = data[0].accept_newsletter === 1 ? true : false
 
       // FUNCIONALIDADES PÁGINA EDIT-PROFILE
       // PREENCHENDO CAMPOS
 
-      for (let key in data) {
+      for (let key in data[0]) {
 
         inputsEditProfile.forEach(eachInput => {
 
           if (key === eachInput.dataset.chave) {
-            eachInput.value = data[key]
+            eachInput.value = data[0][key]
           }
 
         })
@@ -261,6 +262,8 @@ function editDataCustomer() {
   // CONVERTENDO PARA JSON
   const dataCustomer = JSON.stringify(uppercaseFormData);
 
+  console.log(uppercaseFormData)
+
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/customer' : configEnv.local_address + '/customer', {
     method: 'PUT',
     headers: {
@@ -271,6 +274,8 @@ function editDataCustomer() {
   })
     .then(response => response.json())
     .then(data => {
+
+      console.log(data)
 
       if (data.status === 'success') {
 
@@ -667,6 +672,7 @@ function deleteAvatar() {
   })
     .then((response) => response.json())
     .then((data) => {
+      
       const breakUrl = data.avatar.split('/files/')
       const avatarNameAndExtension = breakUrl[1]
 
@@ -738,8 +744,11 @@ buttonCancelModal.addEventListener('click', event => {
 // EXCLUIR CONTA
 
 function deleteAccount() {
+  
   fieldErrorDeleteAccount.innerText = ''
+  
   spinner.classList.add('d-flex')
+
   const dataCustomer = { 'email': emailFieldModalCancelAccount.value, 'password': passFieldModalCancelAccount.value }
 
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/customer' : configEnv.local_address + '/customer', {
@@ -751,8 +760,8 @@ function deleteAccount() {
     body: JSON.stringify(dataCustomer)
   }).then(response => response.json()).then(data => {
     setTimeout(() => {
-
-      if (data.message === 'Cliente removido.') {
+      console.log(data)
+      if (data.message === 'customer-removed') {
 
         spinner.classList.remove('d-flex')
         Swal.fire({
@@ -774,7 +783,7 @@ function deleteAccount() {
           }, 600)
         })
 
-      } else if (data.message === 'Senha ou email incorreto') {
+      } else if (data.message === 'incorrect-email-or-password') {
 
         spinner.classList.add('d-flex')
 
@@ -872,6 +881,22 @@ overviewOptionMenu.addEventListener('click', (event) => {
 })
 
 
+function addClickEventUsersManager() {
+
+  spinner.classList.add('d-flex')
+  
+  setTimeout(() => {
+  
+      window.location.href = '/users'
+  
+  }, 1000)
+ 
+
+}
+
+usersOptionMenu.addEventListener('click', addClickEventUsersManager)
+
+
 // NOTIFICAÇÕES PERSONALIZADAS
 
 function confirmarExclusao() {
@@ -904,3 +929,6 @@ async function getMoreInformationUser() {
     })
     .catch(error => console.log(error))
 }
+
+
+

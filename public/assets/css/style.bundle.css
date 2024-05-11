@@ -234,6 +234,49 @@ sup {
     vertical-align: baseline
 }
 
+   /* Estilos CSS */
+   .user-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease-in-out;
+  }
+
+  .user-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .user-avatar {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .user-details {
+    padding: 20px;
+    background-color: #f9f9f9;
+    display: none;
+  }
+
+  .user-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+    cursor: pointer;
+  }
+
+  .user-info {
+    margin-bottom: 10px;
+    color: #666;
+  }
+
+  .user-info span {
+    font-weight: bold;
+    color: #333;
+  }
+
 sub {
     bottom: -.25em
 }
@@ -2836,7 +2879,6 @@ textarea.form-control-lg {
 }
 
 .form-check-input {
-
     width: 1.75rem;
     height: 1.75rem;
     margin-top: -.125rem;
@@ -4316,14 +4358,23 @@ fieldset:disabled .btn {
     background-color: transparent
 }
 
+/* Sobrescreva as propriedades do CDN com suas próprias cores */
+.btn-check:checked+.btn,
+.btn.active,
+.btn.show,
+.btn:first-child:active,
+:not(.btn-check)+.btn:active {
+    color: #F05742;
+}
+
 .btn-link {
-    font-weight: 400;
-    color: #009ef7;
+    font-weight: 800;
+    color: #7E8299;
     text-decoration: none
 }
 
 .btn-link:hover {
-    color: #006dab;
+    color: #F05742;
     text-decoration: underline
 }
 
@@ -8088,6 +8139,11 @@ h2.accordion-header {
 .top-50 {
     top: 50% !important
 }
+
+.top-65 {
+    top: 65% !important
+}
+
 
 .top-75 {
     top: 75% !important

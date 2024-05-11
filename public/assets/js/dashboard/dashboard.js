@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (allowMultiStore) {
 
     await fillStoresSelect()
-    
+
     let selectedIndex = selectStore.selectedIndex
     changeSelectButtonState(selectedIndex)
 
@@ -23,9 +23,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const detailsCompany = await getDetailsCompany()
 
+    console.log(detailsCompany)
+
     const option = document.createElement("option")
     option.value = 0
-    option.textContent = `${detailsCompany.corporate_name}`
+    option.textContent = `${detailsCompany[0].corporate_name}`
     selectStore.appendChild(option)
 
     reloadStaticCharts()
@@ -33,12 +35,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     reloadAllCharts(dateIntervalInitial)
 
-  
+
   }
-  
+
 });
 
-async function getDetailsCompany () {
+async function getDetailsCompany() {
 
   const response = await fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/details' : configEnv.local_address + '/details', {
     headers: {
@@ -64,9 +66,9 @@ async function fillStoresSelect() {
   })
     .then(response => response.json())
     .then(async data => {
-        
-        createOptionsSelect(data.message)
-      
+
+      createOptionsSelect(data.message)
+
 
     })
 
@@ -437,9 +439,16 @@ async function chartBarsPositiveHall(data, idChart) {
       accessibility: {
         enabled: false,
       },
+      navigation: {
+        buttonOptions: {
+          enabled: false
+        }
+      }
     });
   }
 }
+
+
 
 
 const chartNegativeInstances = {};
@@ -520,10 +529,10 @@ async function chartBarsNegativeHall(data, idChart) {
         },
       },
       series: [{
-        name: 'Menções', // Nome da série
-        data: values.map(value => -value), // Inverter os valores para o efeito espelhado
-        color: 'rgba(235, 54, 98, 0.6)', // Cor das barras
-        showInLegend: false, // Não mostrar na legenda
+        name: 'Menções',
+        data: values.map(value => -value),
+        color: 'rgba(235, 54, 98, 0.6)',
+        showInLegend: false,
       }],
       credits: {
         enabled: false,
@@ -531,6 +540,11 @@ async function chartBarsNegativeHall(data, idChart) {
       accessibility: {
         enabled: false,
       },
+      navigation: {
+        buttonOptions: {
+          enabled: false
+        }
+      }
     });
   }
 }
@@ -663,9 +677,58 @@ async function chartNPSIndicator([promoter, passive, detractors]) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //////// DADOS PARA OS GRÁFICOS
 
-async function getDepartmentDataChart(date, tree, storeNumber) {
+async function getDepartmentDataChart(date, storeNumber) {
 
-  
+  if (storeNumber && storeNumber != 0) {
+
+    const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/topic/by/departments/${date[0]}/${date[1]}/${storeNumber}`, {
+      headers: {
+        'Authorization': 'Bearer ' + tokenCustomer,
+        'Content-Type': 'application/json'
+      },
+    })
+
+    const data = await response.json()
+    console.log(data)
+    if (data.message) {
+
+      return data.message
+
+    } else {
+
+      return data
+    }
+
+
+  } else {
+
+    const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/topic/by/departments/${date[0]}/${date[1]}`, {
+      headers: {
+        'Authorization': 'Bearer ' + tokenCustomer,
+        'Content-Type': 'application/json'
+      },
+    })
+
+    const data = await response.json()
+    console.log(data)
+    if (data.message) {
+
+      return data.message
+
+    } else {
+
+      return data
+    }
+
+  }
+
+
+}
+
+
+async function getDepartmentRankDataChart(date, tree, storeNumber) {
+
+
   if (storeNumber && storeNumber != 0) {
 
     const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/dashboard/department/${date[0]}/${date[1]}/${tree}/${storeNumber}`, {
@@ -674,9 +737,9 @@ async function getDepartmentDataChart(date, tree, storeNumber) {
         'Content-Type': 'application/json'
       },
     })
-  
+
     const data = await response.json()
-  
+
     return data.departments
 
   } else {
@@ -687,9 +750,9 @@ async function getDepartmentDataChart(date, tree, storeNumber) {
         'Content-Type': 'application/json'
       },
     })
-  
+
     const data = await response.json()
-  
+
     return data.departments
 
   }
@@ -708,9 +771,9 @@ async function getTopicDataChart(date, tree, storeNumber) {
         'Content-Type': 'application/json'
       },
     })
-  
+
     const data = await response.json()
-  
+
     return data.topics
 
   } else {
@@ -721,9 +784,9 @@ async function getTopicDataChart(date, tree, storeNumber) {
         'Content-Type': 'application/json'
       },
     })
-  
+
     const data = await response.json()
-  
+
     return data.topics
 
   }
@@ -742,12 +805,10 @@ async function getEmployeeDataChart(date, tree, storeNumber) {
         'Content-Type': 'application/json'
       },
     })
-  
+
     const data = await response.json()
-  
+    console.log(data.employees)
     return data.employees
-
-
 
   } else {
 
@@ -757,9 +818,10 @@ async function getEmployeeDataChart(date, tree, storeNumber) {
         'Content-Type': 'application/json'
       },
     })
-  
+
     const data = await response.json()
-  
+    console.log(data.employees)
+
     return data.employees
 
   }
@@ -778,7 +840,7 @@ async function getPositiveAndNegativeResearchesDataChart(date, storeNumber) {
         'Content-Type': 'application/json'
       },
     })
-  
+
     const data = await response.json()
 
     if (data) {
@@ -794,7 +856,7 @@ async function getPositiveAndNegativeResearchesDataChart(date, storeNumber) {
         'Content-Type': 'application/json'
       },
     })
-  
+
     const data = await response.json()
 
     if (data) {
@@ -815,10 +877,10 @@ async function getAmountMonthResearchesDataChart(storeNumber) {
         'Content-Type': 'application/json'
       },
     })
-  
-  
+
+
     const data = await response.json()
-  
+
     return data
 
   } else {
@@ -829,10 +891,10 @@ async function getAmountMonthResearchesDataChart(storeNumber) {
         'Content-Type': 'application/json'
       },
     })
-  
-  
+
+
     const data = await response.json()
-  
+
     return data
 
   }
@@ -849,24 +911,24 @@ async function getAmountDaysResearchesDataChart(storeNumber) {
         'Content-Type': 'application/json'
       },
     })
-  
+
     const data = await response.json()
-    
+
     return data
 
 
   } else {
 
-      const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/dashboard/amount/research/`, {
-        headers: {
-          'Authorization': 'Bearer ' + tokenCustomer,
-          'Content-Type': 'application/json'
-        },
-      })
-    
-      const data = await response.json()
-    
-      return data
+    const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/dashboard/amount/research/`, {
+      headers: {
+        'Authorization': 'Bearer ' + tokenCustomer,
+        'Content-Type': 'application/json'
+      },
+    })
+
+    const data = await response.json()
+
+    return data
 
   }
 
@@ -882,9 +944,9 @@ async function getNpsDataChart(date, storeNumber) {
         'Content-Type': 'application/json'
       },
     })
-  
+
     const data = await response.json()
-  
+
     return data
 
 
@@ -896,9 +958,9 @@ async function getNpsDataChart(date, storeNumber) {
         'Content-Type': 'application/json'
       },
     })
-  
+
     const data = await response.json()
-  
+
     return data
 
 
@@ -970,70 +1032,115 @@ $(document).ready(function () {
   })
 })
 
-async function reloadAllCharts(dateInterval, storeNumber) { 
+async function reloadAllCharts(dateInterval, storeNumber) {
 
-  // DEPARTAMENT CHARTS
+  // RANKING DEPARTAMENT CHARTS
 
-  const cardDepartment = document.getElementById('card-department-chart')
-  const spinnerDepartment = document.getElementById('spinner-overlay-department')
+  const getDataPositiveDepartaments = await getDepartmentRankDataChart(dateInterval, 1, storeNumber)
+  const getDataNegativeDepartaments = await getDepartmentRankDataChart(dateInterval, 0, storeNumber)
 
-  spinnerDepartment.style.display = "flex"
+  const isEmptyObjectDepartamentsPositive = Object.keys(getDataPositiveDepartaments).length === 0;
+  const isEmptyObjectDepartamentsNegative = Object.keys(getDataNegativeDepartaments).length === 0;
 
-  setTimeout(async () => {
+  if (isEmptyObjectDepartamentsPositive && isEmptyObjectDepartamentsNegative) {
 
-    spinnerDepartment.style.display = "none"
+    const cardRankingDepartment = document.getElementById('card-ranking-department-chart')
 
-    const getDataPositiveDepartaments = await getDepartmentDataChart(dateInterval, 1, storeNumber)
+    cardRankingDepartment.style.display = "none"
 
-    const getDataNegativeDepartaments = await getDepartmentDataChart(dateInterval, 0, storeNumber)
+  } else {
 
-    await chartBarsPositiveHall(getDataPositiveDepartaments, 'departmentBarChartPositive')
-    await chartBarsNegativeHall(getDataNegativeDepartaments, 'departmentBarChartNegative')
+    const cardRankingDepartment = document.getElementById('card-ranking-department-chart')
+    cardRankingDepartment.style.display = "flex"
 
-    // console.log('Departamentos Positivos:', getDataPositiveDepartaments)
-    // console.log('Departamentos Negativos:', getDataNegativeDepartaments)
+    const spinnerRankingDepartment = document.getElementById('spinner-overlay-ranking-department')
 
-  }, 1000)
+    spinnerRankingDepartment.style.display = "flex"
+
+    setTimeout(async () => {
+
+      spinnerRankingDepartment.style.display = "none"
+
+
+
+      await chartBarsPositiveHall(getDataPositiveDepartaments, 'departmentBarChartPositive')
+      await chartBarsNegativeHall(getDataNegativeDepartaments, 'departmentBarChartNegative')
+
+
+
+    }, 1000)
+
+  }
 
   // TOPIC CHARTS
 
-  const spinnerTopic = document.getElementById('spinner-overlay-topic')
+  const getDataPositiveTopics = await getTopicDataChart(dateInterval, 1, storeNumber)
+  const getDataNegativeTopics = await getTopicDataChart(dateInterval, 0, storeNumber)
 
-  spinnerTopic.style.display = "flex"
+  const isEmptyObjectTopicsPositive = Object.keys(getDataPositiveTopics).length === 0;
+  const isEmptyObjectTopicsNegative = Object.keys(getDataNegativeTopics).length === 0;
 
-  setTimeout(async () => {
+  if (isEmptyObjectTopicsPositive && isEmptyObjectTopicsNegative) {
 
-    spinnerTopic.style.display = "none"
+    const cardRankingTopic = document.getElementById('card-topic-chart')
 
-    const getDataPositiveTopics = await getTopicDataChart(dateInterval, 1, storeNumber)
+    cardRankingTopic.style.display = "none"
 
-    const getDataNegativeTopics = await getTopicDataChart(dateInterval, 0, storeNumber)
+  } else {
 
-    await chartBarsPositiveHall(getDataPositiveTopics, 'topicBarChartPositive')
-    await chartBarsNegativeHall(getDataNegativeTopics, 'topicBarChartNegative')
+    const cardRankingTopic = document.getElementById('card-topic-chart')
+    cardRankingTopic.style.display = "flex"
 
-  }, 1000)
+    const spinnerTopic = document.getElementById('spinner-overlay-topic')
+
+    spinnerTopic.style.display = "flex"
+
+    setTimeout(async () => {
+
+      spinnerTopic.style.display = "none"
+
+
+      await chartBarsPositiveHall(getDataPositiveTopics, 'topicBarChartPositive')
+      await chartBarsNegativeHall(getDataNegativeTopics, 'topicBarChartNegative')
+
+    }, 1000)
+
+  }
 
   // EMPLOYEE CHARTS
 
-  const spinnerEmployee = document.getElementById('spinner-overlay-employee')
+  const getDataPositiveEmployee = await getEmployeeDataChart(dateInterval, 1, storeNumber);
+  const getDataNegativeEmployee = await getEmployeeDataChart(dateInterval, 0, storeNumber);
 
-  spinnerEmployee.style.display = "flex"
+  const isEmptyObjectEmployeePositive = Object.keys(getDataPositiveEmployee).length === 0;
+  const isEmptyObjectEmployeeNegative = Object.keys(getDataNegativeEmployee).length === 0;
 
-  setTimeout(async () => {
+  if (isEmptyObjectEmployeePositive && isEmptyObjectEmployeeNegative) {
 
-    spinnerEmployee.style.display = "none"
+    const containerRankingTopicChart = document.getElementById('card-employee-chart')
 
-    const getDataPositiveEmployee = await getEmployeeDataChart(dateInterval, 1, storeNumber)
-    const getDataNegativeEmployee = await getEmployeeDataChart(dateInterval, 0, storeNumber)
+    containerRankingTopicChart.style.display = "none"
 
-    await chartBarsPositiveHall(getDataPositiveEmployee, 'employeeBarChartPositive')
-    await chartBarsNegativeHall(getDataNegativeEmployee, 'employeeBarChartNegative')
+  } else {
 
-    // console.log('Employee Positivos:', getDataPositiveEmployee)
-    // console.log('Employee Negativos:', getDataNegativeEmployee)
+    const containerRankingTopicChart = document.getElementById('card-employee-chart')
 
-  }, 1000)
+    containerRankingTopicChart.style.display = "flex"
+
+    const spinnerEmployee = document.getElementById('spinner-overlay-employee')
+
+    spinnerEmployee.style.display = "flex"
+
+    setTimeout(async () => {
+
+      spinnerEmployee.style.display = "none"
+
+      await chartBarsPositiveHall(getDataPositiveEmployee, 'employeeBarChartPositive')
+      await chartBarsNegativeHall(getDataNegativeEmployee, 'employeeBarChartNegative')
+
+    }, 1000)
+
+  }
 
   // POSITIVE AND NEGATIVE COUNT CHART
 
@@ -1066,9 +1173,63 @@ async function reloadAllCharts(dateInterval, storeNumber) {
 
   }, 1000)
 
-  // BINARY CHART
+  // DEPARTAMENT CHART
 
-  generateChartsForBinaryQuestions(dateInterval, storeNumber)
+  const getDataTopicsByDepartments = await getDepartmentDataChart(dateInterval, storeNumber)
+
+  if (getDataTopicsByDepartments != 'no-data') {
+
+    const spinnerDepartment = document.getElementById('spinner-overlay-department')
+
+    spinnerDepartment.style.display = "flex"
+
+    setTimeout(async () => {
+
+      spinnerDepartment.style.display = "none"
+
+      await updateSelects(getDataTopicsByDepartments);
+      await updateChartDepartments(getDataTopicsByDepartments);
+
+      avaliacaoSelect.addEventListener('change', async () => {
+
+
+        spinnerDepartment.style.display = "flex"
+
+
+        setTimeout(async () => {
+
+          await updateChartDepartments(getDataTopicsByDepartments);
+          spinnerDepartment.style.display = "none"
+
+
+        }, 500)
+
+
+      });
+
+      departamentoSelect.addEventListener('change', async () => {
+
+        spinnerDepartment.style.display = "flex"
+
+        setTimeout(async () => {
+
+          await updateChartDepartments(getDataTopicsByDepartments);
+          spinnerDepartment.style.display = "none"
+
+        }, 500);
+      });
+
+    }, 1000)
+
+
+  } else {
+    const divDepartmentChart = document.getElementById('card-department-chart')
+    divDepartmentChart.style.display = 'none'
+  }
+
+  // GRÁFICO BINÁRIO DINÂMICO
+
+  generateDynamicCharts(dateInterval, storeNumber)
 
 }
 
@@ -1084,7 +1245,7 @@ async function reloadStaticCharts(storeNumber) {
 
     const researchForAMonth = await getAmountMonthResearchesDataChart(storeNumber)
     await chartBarsVolumeResearchMonth(researchForAMonth)
-    
+
   }, 1000)
 
   const spinnerDays = document.getElementById('spinner-overlay-days')
@@ -1094,9 +1255,9 @@ async function reloadStaticCharts(storeNumber) {
   setTimeout(async () => {
 
     spinnerDays.style.display = "none"
-  
-  const researchForADay = await getAmountDaysResearchesDataChart(storeNumber)
-  await chartLinesVolumResearch(researchForADay.newDate, researchForADay.oldDate)
+
+    const researchForADay = await getAmountDaysResearchesDataChart(storeNumber)
+    await chartLinesVolumResearch(researchForADay.newDate, researchForADay.oldDate)
 
   }, 1000)
 
@@ -1174,19 +1335,19 @@ backOrNextButton.forEach(button => {
 
   button.addEventListener('click', (event) => {
 
-      choiceSelectStoreButtons(button.id)
-      clickFilterButton()
+    choiceSelectStoreButtons(button.id)
+    clickFilterButton()
 
- 
+
   })
 
 })
 
 selectStore.addEventListener('change', async (event) => {
 
-    changeSelectButtonState(selectStore.selectedIndex)
-    clickFilterButton()
-   
+  changeSelectButtonState(selectStore.selectedIndex)
+  clickFilterButton()
+
 })
 
 const filterButton = document.getElementById("filterButton");
@@ -1195,26 +1356,26 @@ function clickFilterButton() {
 
 }
 
-function createOptionsSelect (data) {
-  
+function createOptionsSelect(data) {
+
   const storeSelect = document.getElementById("storeSelect")
 
   const option = document.createElement("option")
   option.value = 0;
-  option.textContent = 'CONSOLIDADO - TODAS AS LOJAS'; 
+  option.textContent = 'CONSOLIDADO - TODAS AS LOJAS';
   storeSelect.appendChild(option)
 
   if (data != 'no-store') {
 
     data.forEach(item => {
-  
+
       if (item.active === 1) {
-        
+
         const option = document.createElement("option")
         option.value = item.store_number
-        option.text = 'LJ '+item.store_number + " - " + item.name + " - " + item.address
+        option.text = 'LJ ' + item.store_number + " - " + item.name + " - " + item.address
         storeSelect.appendChild(option)
-  
+
       }
     })
 
@@ -1300,14 +1461,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const startDate = startDatePicker.selectedDates[0];
     const endDate = endDatePicker.selectedDates[0];
     //const spinnerAnswerTable = document.getElementById('spinner-overlay-answerTable')
-    
+
 
     if (startDate && endDate) {
-      
+
       const dateIntervalForRequest = [formatDateToUS(startDate.toLocaleDateString()), formatDateToUS(endDate.toLocaleDateString())]
 
       let selectedStoreNumber = selectStore.options[selectStore.selectedIndex].value
-    
+
       await reloadStaticCharts(selectedStoreNumber)
       await reloadAllCharts(dateIntervalForRequest, selectedStoreNumber)
 
@@ -1336,7 +1497,7 @@ let chartsPizza = [];
 
 
 function createPizzaCharts(data) {
-  console.log('data de dentro do chart pizza', data);
+
 
   const colors = [
     'rgb(187, 187, 187)',
@@ -1366,7 +1527,7 @@ function createPizzaCharts(data) {
     const lastTwoValues = options.slice(-2).map(option => item[option]);
 
     if (lastTwoValues.every(value => value === '0')) {
-      return; 
+      return;
     }
 
     const total = options.reduce((acc, key) => Number(acc) + Number(item[key]), 0);
@@ -1386,7 +1547,7 @@ function createPizzaCharts(data) {
 
     const arvoreDiv = document.createElement('div');
     arvoreDiv.classList.add('text-center', 'text-muted', 'm-2');
-    arvoreDiv.innerHTML = `Os clientes que avaliaram a loja de forma ${getRateTextAndIcon(item.arvore)} responderam: `;
+    arvoreDiv.innerHTML = `Os clientes que avaliaram de forma ${getRateTextAndIcon(item.arvore)} responderam: `;
     cardBodyDiv.appendChild(arvoreDiv);
 
     const titleDiv = document.createElement('div');
@@ -1463,60 +1624,80 @@ async function questionsRequest() {
   );
 
   const data = await response.json();
-  
-  if (data.message != 'no-questions') {
-    
-    const filteredData = data.filter(item => item.status === 1);
-    return filteredData
 
-  }
+  // if (data.message != 'no-questions') {
+
+  //   const filteredData = data.filter(item => item.status === 1);
+  //   return filteredData
+
+  // }
 
   return data
 
 }
 
-async function generateChartsForBinaryQuestions(date, storeNumber) {
+async function generateDynamicCharts(date, storeNumber) {
+
   const questions = await questionsRequest();
 
   if (questions.message != 'no-questions') {
 
     const hasBinaryQuestion = questions.some(question => {
-      return question.type_question === 'binary'; 
+      return question.type_question === 'binary';
     });
-    
+
     if (hasBinaryQuestion) {
-  
+
       const dataCharts = await getBinaryDataCharts(date, storeNumber)
-  
+
+      console.log('data enviado pro chart pizza', dataCharts);
+
       createPizzaCharts(dataCharts)
-  
-  
+
+
     }
 
   }
 
+  if (questions.message != 'no-questions') {
+
+    const hasFlexQuestion = questions.some(question => {
+      return question.type_question === 'flex';
+    });
+
+    if (hasFlexQuestion) {
+      
+      const dataCharts = await getFlexDataCharts(date, storeNumber)
+
+      await makeChartForFlexQuestions(dataCharts)
+
+
+    }
+
+  }
 
 }
 
 async function getBinaryDataCharts(dateInterval, storeNumber) {
 
   if (storeNumber && storeNumber != 0) {
-  
-  const response = await fetch(
-    configEnv.app_mode === 'production'
-      ? configEnv.web_address + `/questions/binary/${dateInterval[0]}/${dateInterval[1]}/${storeNumber}`
-      : configEnv.local_address + `/questions/binary/${dateInterval[0]}/${dateInterval[1]}/${storeNumber}`,
-    {
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer ' + tokenCustomer,
-        'Content-Type': 'application/json',
-      },
-    }
-  );
 
-  const data = await response.json();
-  return data
+    const response = await fetch(
+      configEnv.app_mode === 'production'
+        ? configEnv.web_address + `/questions/binary/${dateInterval[0]}/${dateInterval[1]}/${storeNumber}`
+        : configEnv.local_address + `/questions/binary/${dateInterval[0]}/${dateInterval[1]}/${storeNumber}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + tokenCustomer,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    return data
 
   } else {
 
@@ -1532,11 +1713,316 @@ async function getBinaryDataCharts(dateInterval, storeNumber) {
         },
       }
     );
-  
+
     const data = await response.json();
+
     return data;
 
   }
 
 }
+
+async function getFlexDataCharts(dateInterval, storeNumber) {
+
+  if (storeNumber && storeNumber != 0) {
+
+    const response = await fetch(
+      configEnv.app_mode === 'production'
+        ? configEnv.web_address + `/questions/flex/${dateInterval[0]}/${dateInterval[1]}/${storeNumber}`
+        : configEnv.local_address + `/questions/flex/${dateInterval[0]}/${dateInterval[1]}/${storeNumber}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + tokenCustomer,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const data = await response.json();
+    console.log(data)
+    return data
+
+  } else {
+
+    const response = await fetch(
+      configEnv.app_mode === 'production'
+        ? configEnv.web_address + `/questions/flex/${dateInterval[0]}/${dateInterval[1]}`
+        : configEnv.local_address + `/questions/flex/${dateInterval[0]}/${dateInterval[1]}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + tokenCustomer,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const data = await response.json();
+    console.log(data)
+    return data;
+
+  }
+
+}
+
+
+
+const avaliacaoSelect = document.getElementById('avaliacao')
+const departamentoSelect = document.getElementById('departamento')
+
+// Verifica se os elementos foram encontrados antes de prosseguir
+
+
+// Função para organizar os dados da maior para a menor
+function organizeData(data) {
+  return Object.entries(data).sort((a, b) => {
+    const sumA = Object.values(a[1]).reduce((acc, cur) => acc + cur, 0);
+    const sumB = Object.values(b[1]).reduce((acc, cur) => acc + cur, 0);
+    return sumB - sumA;
+  });
+}
+
+
+async function updateSelects(data) {
+  avaliacaoSelect.innerHTML = '';
+  departamentoSelect.innerHTML = '';
+
+  Object.keys(data).forEach(avaliacao => {
+    const optionAvaliacao = document.createElement('option');
+    optionAvaliacao.value = avaliacao;
+    optionAvaliacao.textContent = avaliacao;
+    avaliacaoSelect.appendChild(optionAvaliacao);
+  });
+
+  avaliacaoSelect.selectedIndex = 0;
+  const primeiroAvaliacao = avaliacaoSelect.value;
+
+  Object.keys(data[primeiroAvaliacao]).forEach(departamento => {
+    const optionDepartamento = document.createElement('option');
+    optionDepartamento.value = departamento;
+    optionDepartamento.textContent = departamento;
+    departamentoSelect.appendChild(optionDepartamento);
+  });
+}
+
+async function updateChartDepartments(data) {
+  const avaliacao = avaliacaoSelect.value;
+  const departamento = departamentoSelect.value;
+  const dados = data[avaliacao][departamento];
+
+  if (Object.keys(dados).length === 0) {
+    document.getElementById('body-department-chart').innerHTML = '<div class="text-center text-muted" style="margin-top: 50%;">Não há dado a ser mostrado para o filtro selecionado.</div>';
+    return;
+  }
+
+  const sortedData = organizeData(dados);
+  const categorias = sortedData.map(([categoria]) => categoria);
+  const valores = sortedData.map(([_, valor]) => valor);
+
+  let corBarras;
+  if (avaliacao === 'POSITIVA') {
+    corBarras = 'rgba(54, 235, 83, 0.6)';
+  } else if (avaliacao === 'NEGATIVA') {
+    corBarras = 'rgba(235, 54, 98, 0.6)';
+  }
+
+  const options = {
+    chart: {
+      type: 'bar',
+      borderRadius: 5,
+      style: {
+        fontFamily: 'Arial, sans-serif',
+      },
+    },
+    accessibility: {
+      enabled: false
+    },
+    title: {
+      text: '',
+      style: {
+        color: '#333',
+        fontWeight: 'bold',
+        fontSize: '24px',
+      },
+    },
+    xAxis: {
+      categories: categorias,
+      labels: {
+        style: {
+          color: '#333',
+          fontSize: '10px',
+          fontFamily: 'Arial, sans-serif', // Defina aqui a fonte desejada
+        },
+      },
+    },
+    yAxis: {
+      visible: false, // Desabilita o eixo y
+    },
+    series: [{
+      name: 'Menções',
+      data: valores,
+      color: corBarras, // Cor das barras baseada na avaliação selecionada
+    }],
+    legend: {
+      enabled: false,
+    },
+    plotOptions: {
+      series: {
+        borderRadius: 4,
+        borderWidth: 0,
+      },
+    },
+    exporting: {
+      enabled: false,
+    },
+    credits: {
+      enabled: false,
+    },
+  };
+
+  // Atualizar o gráfico
+  Highcharts.chart('body-department-chart', options);
+}
+
+
+
+
+// const dataTeste = [
+//   {
+//     "question_id": 55,
+//     "pergunta": "Nossos colaboradores costumam ser solícitos quando precisa de ajuda em nossa loja?",
+//     "arvore": 1,
+//     "answer": { "SEMPRE": 3, "QUASE NUNCA": 2, "NUNCA": 3 }
+//   },
+//   {
+//     "question_id": 56,
+//     "pergunta": "Em uma escala de 1 a 5 (1 para péssimo e 5 para ótimo) como você avalia a estrutura de nossas lojas?",
+//     "arvore": 0,
+//     "answer": { "1": 3, "2": 5, "3": 1, "4": 1, "5": 6 }
+//   },
+//   {
+//     "question_id": 57,
+//     "pergunta": "Por qual meio de comunicação você costuma receber nossas ofertas?",
+//     "arvore": 1,
+//     "answer": { "WHATSAPP": 2, "E-MAIL": 6, "IMPRESSO": 2, "INSTAGRAM": 15 }
+//   },
+// ]
+
+let chartsFlexPie = [];
+
+async function makeChartForFlexQuestions(data) {
+
+  const cores = [
+    'rgba(76, 175, 80, 0.7)',
+    'rgba(252, 41, 18, 0.7)',
+    'rgba(240, 87, 66, 1)',
+    'rgba(54, 235, 83, 0.6)',
+    'rgba(235, 54, 98, 0.6)',
+    'rgba(231, 242, 249, 1)',
+    'rgb(187, 187, 187)',
+    'rgba(249, 168, 37, 0.8)', 
+    'rgba(203, 117, 112, 0.65)',
+    'rgba(146, 146, 146, 1)'
+  ]
+
+  const containerAllCharts = document.getElementById('container-all-charts');
+
+  const chartDivs = containerAllCharts.querySelectorAll('.chart-flex');
+  chartDivs.forEach(div => {
+    div.remove();
+  });
+  chartsFlexPie.forEach(chart => {
+    chart.destroy();
+  });
+  chartsFlexPie = [];
+
+  if (data.message === 'no-results') {
+    return;
+  }
+
+  data.forEach(function (item) {
+    var chartData = [];
+    var total = 0; 
+  
+    Object.values(item.answer).forEach(function (value) {
+      total += value;
+    });
+
+    const coresCopy = [...cores];
+  
+    Object.keys(item.answer).forEach(function (key, index) {
+      var percentage = ((item.answer[key] / total) * 100).toFixed(2); 
+      var label = `${key} - ${percentage}%`; // Alteração do label
+      var randomIndex = Math.floor(Math.random() * coresCopy.length); 
+      var backgroundColor = coresCopy[randomIndex];
+      chartData.push({ name: label, y: item.answer[key], color: backgroundColor });
+      coresCopy.splice(randomIndex, 1);
+    });
+
+    var containerId = 'container-chart-' + item.question_id;
+    var container = document.createElement('div');
+    container.classList.add('chart-flex')
+    container.setAttribute('id', containerId);
+    containerAllCharts.appendChild(container);
+
+    const divsChartFlex = document.querySelectorAll('.chart-flex');
+    console.log(divsChartFlex)
+
+    Highcharts.chart(containerId, {
+      chart: {
+        type: 'pie',
+        options3d: {
+          enabled: true,
+          alpha: 45,
+          beta: 0
+        },
+        events: {
+          load: function () {
+            var renderer = this.renderer;
+            renderer.text('Total de Respostas: ' + total, 10, this.chartHeight - 20).attr({
+              zIndex: 6
+            }).add();
+          }
+        }
+      },
+      title: {
+        text: `<div class="text-center text-muted m-5"> Os clientes que avaliaram de forma ${getRateTextAndIcon(item.arvore)} responderam: </div>`,
+        style: {
+          color: '#666', 
+          fontSize: '14px',
+          fontWeight: 'normal' 
+        },
+        useHTML: true
+      },
+      subtitle: {
+        text: `<div class="mx-auto"><h5 class="text-center text-muted fw-bolder m-2" style="font-size: 18px">${item.pergunta}</h5></div>`,
+        useHTML: true
+      },
+      plotOptions: {
+        pie: {
+          innerSize: 100,
+          depth: 45
+        }
+      },
+      series: [{
+        name: 'Respostas',
+        data: chartData
+      }],
+      credits: {
+        enabled: false 
+      },
+      accessibility: {
+        enabled: false,
+      },
+      navigation: {
+        buttonOptions: {
+          enabled: false
+        }
+      }
+    });
+  });
+}
+
+
 

@@ -33,6 +33,7 @@ router.get('/choice-product', profileController.choiceProduct);
 router.get('/edit-profile-customer', profileController.editProfileCustomer);
 router.get('/overview', profileController.overview);
 router.get('/settings', profileController.settings);
+router.get('/users', profileController.users);
 
 /**
  * dashboard

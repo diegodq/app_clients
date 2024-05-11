@@ -3,6 +3,7 @@ const componentNameQuestion = $('#name-question-component')
 const componentTextQuestion = $('#text-question-component')
 const componentTypeQuestion = $('#question-type-component')
 const componentBinaryQuestion = $('#question-binary-type')
+const componentFlexQuestion = $('#question-flex-type')
 const componentImportQuestion = $('#question-import')
 const componentReviewQuestion = $('#question-review')
 const componentTreeQuestion = $('#tree-question-component')
@@ -11,12 +12,14 @@ const buttonAdvanceTextQuestion = $('#button-advance-text-question')
 const buttonAdvanceTreeQuestion = $('#button-advance-tree-question')
 const buttonAdvanceImportQuestion = $('#button-advance-import-question')
 const buttonAdvanceBinaryQuestion = $('#button-advance-binary-question')
+const buttonAdvanceFlexQuestion = $('#button-advance-flex-question')
 const buttonAdvanceReviewQuestion = $('#button-advance-review-question')
 const buttonBackTextQuestion = $('#button-back-text-question')
 const buttonBackTreeQuestion = $('#button-back-tree-question')
 const buttonBackTypeQuestion = $('#button-back-type-question')
 const buttonBackImportQuestion = $('#button-back-import-question')
 const buttonBackBinaryQuestion = $('#button-back-binary-question')
+const buttonBackFlexQuestion = $('#button-back-flex-question')
 const buttonBackReviewQuestion = $('#button-back-review-question')
 const buttonRegisterAnchorQuestion = $('#button-add-anchor-question')
 const buttonCancelAnchorQuestion = $('#button-cancel-anchor-question')
@@ -54,25 +57,25 @@ async function fillFieldsPage() {
 
     if (dataQuestions == '') {
 
-        fieldNoQuestion.innerText = 'Não há ferramentas cadastradas.'
+      fieldNoQuestion.innerText = 'Não há perguntas cadastradas.'
 
     }
 
     await createRows(dataQuestions)
     await listenClickActive()
-    await listenClickUpdate()
+    await listenClickEnableMultiply()
     await listenClickDeleteIcon()
 
-    
+
 
   }
   await getDataAnchorQuestion()
 }
- 
+
 
 async function questionsRequest() {
 
-  const response = await fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/company-questions' : configEnv.local_address + '/company-questions', {
+  const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/company-questions`, {
     method: 'GET',
     headers: {
       'Authorization': 'Bearer ' + tokenCustomer,
@@ -86,84 +89,92 @@ async function questionsRequest() {
 
 }
 
-async function listenClickUpdate() {
+async function makeRowQuestion(question) {
+  const deleteIcon = `<i class="fas fa-trash-alt fa-1x" style="color: #F05742; cursor: pointer;" onclick="handleDeleteClick(event, ${question.id})" title="Excluir"></i>`;
+  const activeFieldCheckedOrEmpty = question.status === 0 ? '' : 'checked';
+  const multipleQuestionsFieldCheckedOrEmpty = question.multiply_questions === 0 || question.research_title === null ? '' : 'checked';
 
-  const spansUpdate = document.querySelectorAll('.btn-outline-light.rounded-pill.update')
+  const positiveOrNegative = await getRateTextAndIcon(question.tree_question)
 
-  spansUpdate.forEach(span => {
+  return `
+    <div class="card border rounded mb-3">
+      <div class="card-header cursor-pointer d-flex align-items-center" id="heading${question.id}" data-toggle="collapse" data-target="#collapse${question.id}" aria-expanded="true" aria-controls="collapse${question.id}" style="font-size: 24px; position: relative;">
+        
+        <button class="btn btn-link text-decoration-none">
+          <span style="font-size: 20px;"> - ${question.title_question}</span>
+        </button>
+        
+        <div class="d-flex align-items-center">
+          <span style="font-size: 13px;">${positiveOrNegative}</span>
+          <label class="form-check form-switch form-check-custom activeReg form-check-solid m-5"> 
+            <span class="m-3" style="font-size: 13px;"> Status </span>     
+            <input class="form-check-input" data-active="${question.status}" data-id="${question.id}" type="checkbox" ${activeFieldCheckedOrEmpty ? 'checked' : ''} onclick="handleCheckboxClick(event)" />
+          </label>
+          ${deleteIcon}
+        </div>
+      </div>
+      <div class="collapse" id="collapse${question.id}" aria-labelledby="heading${question.id}">
+        <div class="card-body" style="font-size: 20px; position: relative;">
+          <p class="text-muted" style="font-size: 14px; max-width: 600px;"><strong>Árvore:</strong> ${positiveOrNegative}</p>
+          <p class="text-muted" style="font-size: 14px; max-width: 500px;"><strong>Descrição da Pergunta:</strong> ${question.question_description}</p>
+          <p class="text-muted" style="font-size: 14px; max-width: 600px;"><strong>Tipo da Pergunta:</strong> ${await labelChangeTypeQuestion(question.type_question)}</p>
 
-    span.addEventListener('click', async (event) => {
+          ${question.type_question === 'import' && (await getParamQuestion(question.id)).import_type === 'department'
+      ? `<label class="form-check form-switch form-check-custom activeReg form-check-solid mb-5"; font-size: 8px; display: flex; flex-direction: column; align-items: flex-end;">
+            <input class="form-check-input" data-active-multiply="${question.id}" data-id="${question.id}" type="checkbox" ${multipleQuestionsFieldCheckedOrEmpty ? 'checked' : ''}/>
+              <span class="text-muted m-2" style="font-size: 14px;"> Habilitar perguntas Múltiplas </span>
+              <span class="info-icon d-flex align-items-center justify-content-center"
+								data-toggle="tooltip" data-placement="top"
+								title="Se habilitado, para cada departamento escolhido na resposta o sistema criará uma nova pergunta importando os Tópicos cadastrados para
+                coletar avaliação específica para cada um dos departamentos.">
+								<i class="bi bi-info-circle"></i>
+					    </span>
+            </label>` : ``
 
-      await alertNoCreatedYet()
-
-    })
-  })
+    }
+        </div>
+       
+      </div>
+    </div>
+  `;
 }
 
-async function createRows(data) {
-
-  const windowWidth = window.innerWidth
-
-  const fillFieldsTableQuestion = await data.map(async (item, index) => {
-    const row = questionsTable.insertRow()
-    const cells = []
-
-    //const idQuestion = document.createElement('td')
-    const nameQuestion = document.createElement('td')
-    const typeQuestion = document.createElement('td')
-    const treeQuestion = document.createElement('td')
-    const statusQuestion = document.createElement('td')
-    const optionsRow = document.createElement('td')
-    cells.push(nameQuestion, typeQuestion, treeQuestion, statusQuestion, optionsRow)
-
-    //idQuestion.innerHTML = item.id
-    nameQuestion.innerHTML = item.title_question
-    treeQuestion.innerHTML = item.tree_question === 1 ? await getRateTextAndIcon('POSITIVA') : await getRateTextAndIcon('NEGATIVA')
-    typeQuestion.innerHTML = await labelChangeTypeQuestion(item.type_question)
-    const checkedOrEmpty = item.status === 0 ? '' : 'checked'
-    statusQuestion.innerHTML = `<label class="form-check form-switch form-check-custom activeReg form-check-solid">
-      <input class="form-check-input" data-active=${item.status} data-id=${item.id} type="checkbox" ${checkedOrEmpty ? 'checked' : ''} />
-    </label>`;
-    optionsRow.innerHTML = `
-      <span class="btn btn-sm btn-outline-light rounded-pill delete" data-id="${item.id}">
-        <a>
-          <i class="bi bi-trash bi-lg cursor-pointer" data-id="${item.id}"></i>
-        </a>
-      </span>
-    </div>`;
-
-    row.classList.add('text-gray-800', 'text-center')
 
 
-    cells.forEach((cell) => {
-      cell.style.display = 'none'
-    })
-    Array.from(questionsTable.querySelectorAll('th')).forEach((titleCell) => {
-      titleCell.style.display = 'none'
-    });
+function handleCheckboxClick(event) {
+  event.stopPropagation();
+}
 
+async function createRows(dataArray) {
 
-    if (windowWidth < 600) {
-      const columnsToShow = [nameQuestion, statusQuestion, optionsRow]
-      const columnIndicesToShow = [0, 1, 4, 5];
+  console.log(dataArray)
+  const accordionContainer = document.getElementById('accordionContainer');
 
-      columnsToShow.forEach((cell, i) => {
-        cell.style.display = 'table-cell'
-        row.appendChild(cell)
-        questionsTable.querySelector('th:nth-child(' + (columnIndicesToShow[i] + 1) + ')').style.display = 'table-cell'
-      });
-    } else {
-      cells.forEach((cell) => {
-        cell.style.display = 'table-cell'
-        row.appendChild(cell)
-      });
-      Array.from(questionsTable.querySelectorAll('th')).forEach((titleCell) => {
-        titleCell.style.display = 'table-cell'
-      })
+  accordionContainer.innerHTML = '';
+
+  if (dataArray.length === 0) {
+    const noQuestionsMessage = document.createElement('div');
+    noQuestionsMessage.textContent = 'Não há perguntas disponíveis.';
+    accordionContainer.appendChild(noQuestionsMessage);
+  } else {
+    for (const data of dataArray) {
+      const cardHTML = await makeRowQuestion(data);
+      accordionContainer.innerHTML += cardHTML;
     }
+    $(document).ready(function () {
+      $('[data-toggle="tooltip"]').tooltip({
+        trigger: 'hover'
+      })
+    })
+  }
+}
 
-    return row
-  })
+
+async function handleDeleteClick(event, questionID) {
+  event.stopPropagation();
+  console.log('Question excluir:', questionID);
+
+  deleteConfirm(questionID)
 
 }
 
@@ -203,20 +214,54 @@ async function listenClickActive() {
 
 }
 
-// async function listenClickDeleteIcon() {
+async function listenClickEnableMultiply() {
 
-//   const spansDelete = document.querySelectorAll('.btn-outline-light.rounded-pill.delete')
+  const inputs = document.querySelectorAll('[data-active-multiply]')
 
-//   spansDelete.forEach(span => {
+  inputs.forEach(async input => {
 
-//     span.addEventListener('click', async (event) => {
+    input.addEventListener('click', async (event) => {
 
-//       await alertNoCreatedYet()
+      if (event.target.checked) {
 
-//     })
-//   })
+        notifyActiveMultiplyQuestions()
 
-// }
+      }
+
+      const idInputClicked = event.target.dataset.id
+      const newStatus = input.checked ? '1' : '0'
+
+      const ableAndDisableMultiplyQuestions = { 'id_question': idInputClicked, 'multiply_questions': newStatus }
+
+      try {
+        const response = await fetch(
+          configEnv.app_mode === 'production'
+            ? configEnv.web_address + '/update/multiply/questions'
+            : configEnv.local_address + '/update/multiply/questions',
+          {
+            method: 'PATCH',
+            headers: {
+              'Authorization': `Bearer ${tokenCustomer}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ableAndDisableMultiplyQuestions)
+          }
+        )
+
+        const data = await response.json()
+
+        console.log(data)
+
+      } catch (error) {
+        console.error(error)
+      }
+
+
+    })
+  })
+
+}
+
 
 // MOVIMENTANDO AS PERGUNTAS
 
@@ -334,6 +379,8 @@ async function labelChangeTypeQuestion(type) {
       return 'CAMPO LIVRE'
     case 'binary':
       return 'BINÁRIA'
+    case 'flex':
+      return 'FLEX'
     default:
       return 'Opção inválida'
   }
@@ -457,6 +504,65 @@ async function choiceWayQuestion(typeInput) {
     })
 
 
+  } else if (typeInput.dataset.radio === 'flex') {
+
+    // COMPONENTE DE TYPE QUESTION PARA FLEX QUESTION
+    componentTypeQuestion.fadeOut(600, function () {
+      componentTypeQuestion.addClass('d-none')
+      componentFlexQuestion.removeClass('d-none')
+      componentFlexQuestion.fadeIn(600)
+    })
+
+    // VOLTAR DO FLEX QUESTION PARA O TYPE QUESTION
+    buttonBackFlexQuestion.click(function () {
+      componentFlexQuestion.fadeOut(600, async function () {
+        componentFlexQuestion.addClass('d-none')
+        componentTypeQuestion.removeClass('d-none')
+        componentTypeQuestion.fadeIn(600)
+        await turnOnButtonTypes()
+      })
+    })
+
+    buttonAdvanceFlexQuestion.click(async function () {
+      componentFlexQuestion.fadeOut(600, async function () {
+        componentFlexQuestion.addClass('d-none')
+        componentReviewQuestion.removeClass('d-none')
+        componentReviewQuestion.fadeIn(600)
+
+
+        const dataQuestion = await getDataQuestion()
+        console.log(dataQuestion)
+
+        const answersFlexQuestion = await getPossibleAnswerFlexQuestion()
+        console.log(answersFlexQuestion)
+
+        const dataFlexAnswers = await transformPossibleAnswersInComponent(answersFlexQuestion)
+
+        contentAreaReviewQuestion.empty()
+        contentAreaReviewQuestion.append(`<span class="fw-bolder">Nome da Pergunta: </span> ${dataQuestion.title_question}<br>`)
+        contentAreaReviewQuestion.append(`<strong>Pergunta:</strong> ${dataQuestion.question_description}<br>`)
+        contentAreaReviewQuestion.append(`<strong>Tipo da Pergunta:</strong> ${await labelChangeTypeQuestion(dataQuestion.type_question)}<br>`)
+        contentAreaReviewQuestion.append(`<strong>Possíveis Respostas:</strong> ${dataFlexAnswers}`)
+
+      })
+
+    })
+
+    buttonAdvanceReviewQuestion.off('click')
+    buttonAdvanceReviewQuestion.click(async function () {
+      componentReviewQuestion.addClass('d-none')
+      componentReviewQuestion.fadeOut(500)
+      await registerQuestion(JSON.stringify(await getDataQuestion()), await getPossibleAnswerFlexQuestion())
+
+    })
+
+    console.log(typeInput)
+    buttonBackReviewQuestion.off('click')
+    buttonBackReviewQuestion.click(async function () {
+      await manageButtonBackReview(typeInput)
+    })
+
+
   } else {
 
     componentTypeQuestion.fadeOut(600, function () {
@@ -477,9 +583,6 @@ async function choiceWayQuestion(typeInput) {
       componentReviewQuestion.addClass('d-none')
       componentReviewQuestion.fadeOut(500)
       await registerQuestion(JSON.stringify(await getDataQuestion()))
-
-
-
     })
 
     const dataQuestion = await getDataQuestion()
@@ -510,6 +613,15 @@ async function manageButtonBackReview(typeInput) {
       componentImportQuestion.fadeIn(600)
     })
 
+  } else if (typeInput.dataset.radio === 'flex') {
+
+    componentReviewQuestion.fadeOut(600, function () {
+      componentReviewQuestion.addClass('d-none')
+      componentFlexQuestion.removeClass('d-none')
+      componentFlexQuestion.fadeIn(600)
+    })
+
+  
   } else {
 
     componentReviewQuestion.fadeOut(600, async function () {
@@ -547,7 +659,9 @@ async function wichInputIsSelected(inputs) {
 
 }
 
-async function registerQuestion(dataForm) {
+async function registerQuestion(dataForm, arrayAnswersFlexQuestion) {
+
+  console.log(dataForm)
 
   const paramsQuestion = await getDataParamsQuestion()
 
@@ -560,13 +674,31 @@ async function registerQuestion(dataForm) {
     body: dataForm
   }).then(response => response.json()).then(async data => {
 
+    console.log(data)
+
+
     if (data.status === 'success') {
 
       const registerParmsQuestionsIsOk = await registerParamsQuestion(paramsQuestion, data.questionCreated.questionId)
 
       if (registerParmsQuestionsIsOk) {
 
-        await notifyRegisterQuestion(data)
+        if (typeof arrayAnswersFlexQuestion != 'undefined') {
+
+          console.log('chegou dentro do if de undefined')
+
+          const dataRegisterAnswersFlexQuestion = { question_id: data.questionCreated.questionId, answers: arrayAnswersFlexQuestion }
+          console.log(JSON.stringify(dataRegisterAnswersFlexQuestion))
+          await registerAnswersFlexQuestion(dataRegisterAnswersFlexQuestion)
+
+          await notifyRegisterQuestion(data)
+
+
+        } else {
+
+          await notifyRegisterQuestion(data)
+
+        }
 
       } else {
 
@@ -598,6 +730,26 @@ async function registerParamsQuestion(dataForm, idQuestion) {
   const trueOrFalse = data.status === 'success' ? true : false
 
   return trueOrFalse
+
+}
+
+
+async function registerAnswersFlexQuestion(arrayAnswersFlexQuestion) {
+
+  const response = await fetch(`${configEnv.app_mode == 'production' ? configEnv.web_address : configEnv.local_address}/add/possible/answers`, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + tokenCustomer,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(arrayAnswersFlexQuestion)
+  });
+
+  const data = await response.json()
+
+  console.log('resposta do register answer', data)
+
+  return data
 
 }
 
@@ -744,7 +896,11 @@ async function getParamQuestion(IdQuestion) {
       'Authorization': 'Bearer ' + tokenCustomer,
       'Content-Type': 'application/json'
     }
-  }).then(response => response.json())
+  })
+
+  const data = await response.json()
+
+  return data.listParams[0]
 
 }
 
@@ -916,30 +1072,10 @@ async function binaryCoponentToReview() {
 
 }
 
-// CAMPO DE BUSCA DA PÁGINA
-
-searchInput.addEventListener('keyup', function (event) {
-  const searchValue = event.target.value.toLowerCase();
-  const rows = Array.from(questionsTable.getElementsByTagName('tr'));
-
-  rows.forEach((row, index) => {
-
-    if (index === 0) return
-
-    const found = Array.from(row.getElementsByTagName('td')).some((cell) => {
-      const text = cell.textContent.toLowerCase()
-      return text.includes(searchValue)
-    })
-
-    row.style.display = found ? '' : 'none'
-
-  })
-})
-
 
 async function getRateTextAndIcon(label) {
 
-  if (label === 'POSITIVA') {
+  if (label === 1) {
     return 'Positiva <i class="bi bi-hand-thumbs-up text-success"></i>';
   } else {
     return 'Negativa <i class="bi bi-hand-thumbs-down text-danger"></i>';
@@ -971,6 +1107,8 @@ async function deleteQuestion(questionId) {
     },
     body: JSON.stringify(dataQuestionDelete)
   }).then(response => response.json()).then(data => {
+
+    console.log(data)
 
     if (data.status === 'success') {
 
@@ -1062,4 +1200,203 @@ function deleteConfirm(idQuestion) {
       deleteQuestion(idQuestion)
     }
   });
+}
+
+function obterInformacoes() {
+  // Obtém o formulário pelo ID
+  var formulario = document.getElementById("form-flex-question-componente");
+  
+  // Obtém todos os elementos de input dentro do formulário
+  var inputs = formulario.getElementsByTagName("input");
+  
+  // Array para armazenar as informações
+  var informacoes = [];
+  
+  // Itera sobre os inputs e armazena as informações no array
+  for (var i = 0; i < inputs.length; i++) {
+    var input = inputs[i];
+    var info = {
+      nome: input.name,
+      valor: input.value
+    };
+    informacoes.push(info);
+  }
+  
+  // Exibe o array no console (você pode fazer o que quiser com ele)
+  console.log(informacoes);
+  
+  // Retorna o array se necessário
+  return informacoes;
+}
+
+async function getPossibleAnswerFlexQuestion() {
+  
+  const formFlexQuestion = document.getElementById('form-flex-question-componente')
+  const inputs = formFlexQuestion.getElementsByTagName("input")
+  const flexAnswers = []
+  
+  for (let i = 0; i < inputs.length; i++) {
+    let input = inputs[i]
+    flexAnswers.push(input.value)
+  }
+  
+  return flexAnswers
+}
+
+//////////////////////////////////// GERENCIANDO INPUTS DINAMICOS, BOTÕES E VALIDAÇÕES /////////////////////////////////////////////////////////
+
+const buttonAdvance = document.getElementById('button-advance-flex-question');
+let inputsFlex = document.querySelectorAll('input[name="inputFlex"]');
+let buttonAddInput = document.getElementById('buttonAddInput');
+let buttonAddAnswer = document.getElementById('button-add-answer');
+let inputContainer = document.getElementById('input-container'); 
+
+buttonAddInput.addEventListener('click', () => {
+
+  addInputField()
+  buttonAddInput.style.display = 'none'
+
+})
+
+
+function checkInputs() {
+
+  const isEmpty = Array.from(inputsFlex).some(input => input.value.trim() === '');
+
+  if (isEmpty) {
+    buttonAdvance.classList.add('disabled');
+  } else {
+    buttonAdvance.classList.remove('disabled');
+  }
+}
+
+inputsFlex.forEach(input => {
+  input.addEventListener('input', checkInputs);
+});
+
+function addInputField() {
+
+  let inputModel = `
+      <div class="input-group mb-2">
+          <div class="d-flex flex-fill">
+              <input type="text" class="form-control w-100" name="inputFlex" aria-describedby="basic-addon3" />
+              <div class="input-group-append">
+                  <button type="button" onclick="addInputField()" style="color: #F05742; border: none; background: none; font-weight: bold; font-size: 1.2em;">+</button>
+                  <button type="button" onclick="removeInputField(this)" style="color: black; border: none; background: none; font-weight: bold; font-size: 1.2em;">-</button>
+              </div>
+          </div>
+      </div>
+  `;
+
+  inputContainer.insertAdjacentHTML('beforeend', inputModel);
+
+  inputsFlex = document.querySelectorAll('input[name="inputFlex"]');
+  inputsFlex.forEach(input => {
+    input.addEventListener('input', checkInputs);
+  });
+
+  checkInputs();
+
+  updateAddRemoveButtons();
+}
+
+function removeInputField(button) {
+
+  let inputGroup = button.parentNode.parentNode.parentNode;
+  inputContainer.removeChild(inputGroup);
+
+  inputsFlex = document.querySelectorAll('input[name="inputFlex"]');
+
+  checkInputs();
+
+  updateAddRemoveButtons();
+
+  if (inputContainer.children.length === 0) {
+    buttonAddInput.style.display = 'inline-block';
+    buttonAdvance.classList.add('disabled'); 
+  }
+}
+
+function updateAddRemoveButtons() {
+
+  var allAddButtons = document.querySelectorAll('.input-group-append button:first-child');
+  allAddButtons.forEach(function (button) {
+    button.style.display = 'none';
+  });
+
+  var lastInputGroup = inputContainer.lastElementChild;
+  if (lastInputGroup) {
+    var addButton = lastInputGroup.querySelector('.input-group-append button:first-child');
+    addButton.style.display = 'inline-block';
+  } else {
+    buttonAddInput.style.display = 'inline-block';
+  }
+}
+
+function toggleAddAnswerButton() {
+  let answerInputs = inputContainer.querySelectorAll('input[name="inputAnswer"]');
+  let lastAnswerInput = answerInputs[answerInputs.length - 1];
+
+  if (lastAnswerInput.value.trim() === '') {
+    buttonAddAnswer.style.display = 'none';
+  } else {
+    buttonAddAnswer.style.display = 'inline-block';
+  }
+}
+
+function addAnswerInput() {
+  let inputModel = `
+      <div class="input-group mb-2">
+          <span class="input-group-text" id="basic-addon3">Resposta</span>
+          <div class="d-flex flex-fill">
+              <input type="text" class="form-control w-100" name="inputAnswer" aria-describedby="basic-addon3" />
+          </div>
+      </div>
+  `;
+
+  let answerContainer = document.getElementById('answer-container');
+  answerContainer.insertAdjacentHTML('beforeend', inputModel);
+
+  buttonAddAnswer.style.display = 'none';
+}
+
+let answerInputs = document.querySelectorAll('input[name="inputAnswer"]');
+answerInputs.forEach(input => {
+  input.addEventListener('input', toggleAddAnswerButton);
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+async function transformPossibleAnswersInComponent(array) {
+  
+  if (!Array.isArray(array)) {
+    return null;
+  }
+  
+  const htmlString = array.map(item => `<span> ${item} </span>`).join('|');
+  return `<div> ${htmlString} </div>`;
+  
+}
+
+
+async function notifyActiveMultiplyQuestions () {
+
+  Swal.fire({
+    title: 'Tem certeza?',
+    text: 'Ativar esta opção pode aumentar consideravelmente o número de perguntas feitas ao cliente na pesquisa.',
+    icon: 'warning',
+    confirmButtonColor: '#F05742',
+    confirmButtonText: 'Ok, entendi.',
+    customClass: {
+      confirmButton: 'btn btn-primary-confirm',
+    }
+  })
+  
+  // .then((result) => {
+
+  //   location.reload()
+
+  // })
+
+
 }
