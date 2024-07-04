@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="111.34293"
+   zoomAndPan="magnify"
+   viewBox="0 0 83.5072 92.826077"
+   height="123.7681"
+   preserveAspectRatio="xMidYMid"
+   version="1.0"
+   id="svg63"
+   sodipodi:docname="favicon.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview63"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.626"
+     inkscape:cx="240.4674"
+     inkscape:cy="3.99754"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="1592"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg63"
+     showgrid="false" />
+  <defs
+     id="defs9">
+    <g
+       id="g1" />
+    <clipPath
+       id="69baac4e0c">
+      <path
+         d="M 45.269531,193 H 102 v 38.84766 H 45.269531 Z m 0,0"
+         clip-rule="nonzero"
+         id="path1" />
+    </clipPath>
+    <clipPath
+       id="5385faad27">
+      <path
+         d="M 47,168.84766 H 83 V 228 H 47 Z m 0,0"
+         clip-rule="nonzero"
+         id="path2" />
+    </clipPath>
+    <clipPath
+       id="41a058f4bc">
+      <path
+         d="m 201.17578,240.97266 h 96 V 272 h -96 z m 0,0"
+         clip-rule="nonzero"
+         id="path3" />
+    </clipPath>
+    <clipPath
+       id="ed6039e217">
+      <path
+         d="M 129.87109,241.69531 H 270 v 50.25 H 129.87109 Z m 0,0"
+         clip-rule="nonzero"
+         id="path4" />
+    </clipPath>
+    <clipPath
+       id="6aad06526b">
+      <path
+         d="m 130.625,115.41016 h 55.5 v 91.5 h -55.5 z m 0,0"
+         clip-rule="nonzero"
+         id="path5" />
+    </clipPath>
+    <clipPath
+       id="da1f8b908a">
+      <path
+         d="m 185.71484,156.44141 h 111.10938 v 49.5 H 185.71484 Z m 0,0"
+         clip-rule="nonzero"
+         id="path6" />
+    </clipPath>
+    <clipPath
+       id="6493bc4e9b">
+      <path
+         d="M 111,75.621094 H 217 V 106 H 111 Z m 0,0"
+         clip-rule="nonzero"
+         id="path7" />
+    </clipPath>
+    <clipPath
+       id="4413e8b130">
+      <path
+         d="m 126,96 h 77 v 23.87109 h -77 z m 0,0"
+         clip-rule="nonzero"
+         id="path8" />
+    </clipPath>
+    <clipPath
+       id="1956538415">
+      <path
+         d="m 140,117 h 48 v 2.87109 h -48 z m 0,0"
+         clip-rule="nonzero"
+         id="path9" />
+    </clipPath>
+  </defs>
+  <g
+     clip-path="url(#69baac4e0c)"
+     id="g10"
+     transform="matrix(1.473521,0,0,1.473521,-66.705608,-248.80632)">
+    <path
+       fill="#3d194f"
+       d="m 90.03125,205.47656 11.91016,26.6836 h -9.265629 l -8.5625,-19.1875 c -7.0625,7.5039 -16.328125,13.0039 -28.265625,16.59765 l -1.152344,2.58985 H 45.4375 l 0.02344,-0.0508 -0.191407,0.0391 c 21.992188,-9.02735 35.777344,-23.06641 39.570313,-38.32032 z m 0,0"
+       fill-opacity="1"
+       fill-rule="nonzero"
+       id="path10" />
+  </g>
+  <g
+     clip-path="url(#5385faad27)"
+     id="g11"
+     transform="matrix(1.473521,0,0,1.473521,-66.705608,-248.80632)">
+    <path
+       fill="#1f2020"
+       d="M 47.324219,227.93359 69.816406,177.5 l 3.863282,-8.64844 3.875,8.64844 5.257812,11.78906 -0.949219,3.80469 c -0.695312,2.81641 -1.734375,5.5 -3.035156,8.02344 l -5.148437,-11.50782 -14.109376,31.62891 c -3.957031,2.59766 -8.117187,4.83594 -12.246093,6.69531 z m 0,0"
+       fill-opacity="1"
+       fill-rule="nonzero"
+       id="path11" />
+  </g>
+  <g
+     fill="#1f2020"
+     fill-opacity="1"
+     id="g43"
+     transform="translate(-6.9853973,-110.85869)">
+    <g
+       transform="translate(256.35371,232.52081)"
+       id="g42">
+      <g
+         id="g41" />
+    </g>
+  </g>
+</svg>

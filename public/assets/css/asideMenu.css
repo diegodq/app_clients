@@ -107,7 +107,7 @@
 
 .asideMenu .imgIconLockMenu svg
 {
-  fill: #F05742;
+  fill: #3D194F;
   cursor: pointer;
   transition: .2s;
 }
@@ -116,8 +116,8 @@
 .asideMenu .titleProduct 
 {
   font-size: 0.85rem;
-  color: #F05742;
-  margin: 30px 0 10px 0;
+  color: #3D194F;
+  margin: 0 0 10px 0;
   display: none;
   text-align: center;
 }
@@ -131,7 +131,7 @@
 {
   position: absolute;
   left: 0;
-  top: 140px;
+  top: 170px;
   padding: 0;
   width: 100%;
 }
@@ -157,7 +157,7 @@
 
 .asideMenu ul li .spacingLeft
 {
-  fill: #F05742;
+  fill: #3D194F;
   height: 10px;
   margin-left: 35px;
   font-size: 5px;

@@ -90,7 +90,7 @@ async function questionsRequest() {
 }
 
 async function makeRowQuestion(question) {
-  const deleteIcon = `<i class="fas fa-trash-alt fa-1x" style="color: #F05742; cursor: pointer;" onclick="handleDeleteClick(event, ${question.id})" title="Excluir"></i>`;
+  const deleteIcon = `<i class="fas fa-trash-alt fa-1x" style="color: #3D194F; cursor: pointer;" onclick="handleDeleteClick(event, ${question.id})" title="Excluir"></i>`;
   const activeFieldCheckedOrEmpty = question.status === 0 ? '' : 'checked';
   const multipleQuestionsFieldCheckedOrEmpty = question.multiply_questions === 0 || question.research_title === null ? '' : 'checked';
 
