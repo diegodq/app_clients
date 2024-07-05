@@ -38,6 +38,8 @@
 	<link href="/assets/css/menuHeader.css" rel="stylesheet" type="text/css" />
 	<link href="/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
 	<link href="/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="/assets/css/main.css" rel="stylesheet" type="text/css" />
+
 	{{!--
 	<link rel="stylesheet" type="text/css"
 		href="https://cdn.jsdelivr.net/gh/diegodq/app_clients@master/public/assets/css/style.bundle.min.css"> --}}
@@ -46,29 +48,45 @@
 <!--end::Head-->
 <!--begin::Body-->
 
-<body id="kt_body"
-	class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed aside-enabled aside-fixed"
-	style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px" data-kt-aside-minimize="on">
+<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled toolbar-fixed aside-enabled aside-fixed"
+style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px" data-kt-aside-minimize="on">
 
 	{{{ body }}}
 
+	{{!-- </div>
 	</div>
-	</div>
-	</div>
+	</div> --}}
 
 	{{!--
 	<script src="/assets/js/layouts/moment.js"></script> --}}
-	<script
-		src="https://cdn.jsdelivr.net/gh/diegodq/app_clients@master/public/assets/js/layouts/moment.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/diegodq/app_clients@master/public/assets/js/layouts/moment.min.js"></script>
 	{{!--
 	<script src="/assets/js/layouts/platform.js"></script> --}}
-	<script
-		src="https://cdn.jsdelivr.net/gh/diegodq/app_clients@master/public/assets/js/layouts/platform.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/diegodq/app_clients@master/public/assets/js/layouts/platform.min.js"></script>
 
 	<script src="/assets/js/layouts/shareFunctions.js"></script>
-	{{!-- <script
-		src="https://cdn.jsdelivr.net/gh/diegodq/app_clients@master/public/assets/js/layouts/shareFunctions.min.js"></script> --}}
+	{{!-- <script src="https://cdn.jsdelivr.net/gh/diegodq/app_clients@master/public/assets/js/layouts/shareFunctions.min.js"></script> --}}
 	<script src="/assets/js/env.js"></script>
-</body>
 
+	<div class="background-modal">
+			<input type="text" name="doubt" class="input-doubt" placeholder="O que você deseja saber?">
+	</div>
+
+	<script>
+		document.addEventListener('keydown', (event) => {
+			const modal = document.getElementsByClassName('background-modal')[0];
+
+			if (event.ctrlKey && event.keyCode === 32) {
+				event.preventDefault();
+				modal.classList.add('activeModal');
+				document.body.style.overflow = 'hidden';
+			}
+
+			if (event.code === 'Escape') {
+				modal.classList.remove('activeModal');
+				document.body.style.overflow = '';
+			}
+		});
+	</script>
+</body>
 </html>

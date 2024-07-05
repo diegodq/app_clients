@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+.background-modal {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.4);
+	z-index: 4;
+	display: none;
+}
+
+.background-modal.activeModal {
+	display: block;
+}
+
+.background-modal .input-doubt {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 5;
+	width: 35%;
+	height: 60px;
+	max-width: 35%;
+	padding-left: 5px;
+	outline: none;
+	font: 1.3rem Arial, sans-serif;
+}
