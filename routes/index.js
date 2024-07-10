@@ -4,6 +4,7 @@ const profileController = require('../controllers/profileController')
 const notificationsController = require('../controllers/notificationsController');
 const dashboardController = require('../controllers/dashboardController');
 const npsController = require('../controllers/npsController');
+const helpCenterController = require('../controllers/helpCenterController');
 
 const router  = express.Router();
 
@@ -16,6 +17,7 @@ router.get('/password-reset', authController.passwordReset);
 router.get('/sign-up-company', authController.signUpCompany);
 router.get('/sign-up-customer', authController.signUpCustomer);
 router.get('/active-customer', authController.activeCustomer);
+router.get('/help-center', );
 
 /**
  * notifications tests
@@ -55,6 +57,9 @@ router.get('/tools-survey', npsController.toolsSurvey)
 router.get('/manager-survey', npsController.managerSurvey)
 router.get('/answers', npsController.answers)
 
-
+/**
+ * Help Center
+ */
+router.get('/hep-center', helpCenterController.helpCenter)
 
 module.exports = router;

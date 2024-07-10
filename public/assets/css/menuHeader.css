@@ -15,6 +15,33 @@
   box-shadow: 0 0 1px #9c9c9c;
 }
 
+.help-right-menu {
+	display: flex;
+	align-items: center;
+}
+.help-right-menu a {
+	position: relative;
+	border: none;
+	background: none;
+}
+
+.help-right-menu a div {
+	position: absolute;
+	top: 52px;
+	right: 10px;
+	font: 1.1rem Arial, sans-serif;
+	background-color: white;
+	padding: 8px 15px;
+	border-radius: 8px;
+	width: 140px;
+	box-shadow: 0 0 1px black;
+	display: none;
+}
+
+.help-right-menu a:hover div {
+	display: block;
+}
+
 @media (min-width: 992px)
 {
   .newHeader .menuLeft
