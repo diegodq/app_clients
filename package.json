@@ -9,6 +9,7 @@
   "dependencies": {
     "bootstrap-icons": "^1.11.1",
     "canvas-gauges": "^2.1.7",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-handlebars": "^6.0.7",

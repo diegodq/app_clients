@@ -3,6 +3,7 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const routes = require('./routes');
 const app = express();
+const cors = require('cors');
 
 const hbs = handlebars.create({
   partialsDir: ['views/partials'],
@@ -10,6 +11,12 @@ const hbs = handlebars.create({
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
+
+app.use(cors({
+	origin: '*',
+	credentials: true,
+	methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
+}));
 
 app.use(express.static(__dirname+'/public'));
 
