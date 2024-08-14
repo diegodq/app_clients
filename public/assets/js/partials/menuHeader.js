@@ -1,13 +1,15 @@
-const tokenCustomer = localStorage.getItem('tokenCustomer')
-const spinner = document.getElementById('spinner-overlay')
+const tokenCustomer = localStorage.getItem('tokenCustomer');
+const spinner = document.getElementById('spinner-overlay');
+const menuUserOptions = document.getElementById('menu-user');
+const menuRight = document.getElementById('menuRight');
+const menuHidden = document.getElementById('menuHidden');
 
-const menuUserOptions = document.getElementById('menu-user')
 const modalConfirm = new bootstrap.Modal(document.getElementById('alertModal'), {
   keyboard: true
 })
 
-
 window.addEventListener('load', () => {
+	this.showHideMenu();
 
   function handleConnectionError() {
     Swal.fire({
@@ -54,9 +56,6 @@ window.addEventListener('load', () => {
   })
     .then(response => response.json())
     .then(data => {
-
-      //console.log(data)
-
       if (data.message === 'Acesso não autorizado.') {
         handleConnectionError();
       } else if (data.message === 'no-company') {
@@ -83,6 +82,16 @@ window.addEventListener('load', () => {
     });
 })
 
+function showHideMenu() {
+	menuRight.addEventListener('mouseover', () => {
+		menuHidden.classList.add('showMenuHidden');
+	});
+
+	menuHidden.addEventListener('mouseout', () => {
+		menuHidden.classList.remove('showMenuHidden');
+	})
+}
+
 // MUDAR PRODUTO / APLICAÇÃO
 const changeProductMenu = document.getElementById('change-product-menu')
 changeProductMenu.addEventListener('click', (event) => {
@@ -99,52 +108,36 @@ changeProductMenu.addEventListener('click', (event) => {
 })
 
 // SETANDO NOME E AVATAR
-const nameCustomerHeader = document.getElementById('userName')
-const positionCustomerHeader = document.getElementById('position_customer_head')
+const nameCustomerHeader = document.getElementById('userName');
+const positionCustomerHeader = document.getElementById('position_customer_head');
 
 window.addEventListener('load', (event) => {
-
   // PREENCHENDO DADOS DE USUÁRIO NO SUB-MENU
-
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/details' : configEnv.local_address + '/details', {
     headers: {
       'Authorization': `Bearer ${tokenCustomer}`
     }
   })
-    .then((response) => response.json())
-    .then((data) => {
-
-      // DADOS USER MENU HEADER
-
-      nameCustomerHeader.innerText = data[0].first_name
-      positionCustomerHeader.innerText = data[0].position
-
-    })
-
+  .then((response) => response.json())
+  .then((data) => {
+  	// DADOS USER MENU HEADER
+    nameCustomerHeader.innerText = data[0].first_name
+    positionCustomerHeader.innerText = data[0].position
+  });
 
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/avatar' : configEnv.local_address + '/avatar', {
     headers: {
       'Authorization': `Bearer ${tokenCustomer}`
     }
   })
-    .then((response) => response.json())
-    .then((data) => {
-
-
-      if (data.avatar) {
-        menuUserOptions.setAttribute('src', data.avatar)
-
-
-      } else {
-
-        menuUserOptions.setAttribute('src', '/assets/media/avatars/blank.png')
-
-
-      }
-
-    }).catch(error => console.log(error))
-
-
+  .then((response) => response.json())
+  .then((data) => {
+    if (data.avatar) {
+      menuUserOptions.setAttribute('src', data.avatar);
+    } else {
+      menuUserOptions.setAttribute('src', '/assets/media/avatars/blank.png');
+    }
+  }).catch(error => console.log(error));
 })
 
 // MENU DE USUÁRIO
@@ -196,21 +189,16 @@ subMenuOptionsOverview.addEventListener('click', (event) => {
 
 const logoutOption = document.getElementById('submenu-logout')
 logoutOption.addEventListener('click', (event) => {
-
   spinner.classList.add('d-flex')
 
   setTimeout(() => {
-
-    spinner.classList.remove('d-flex')
-    window.location.href = '/'
-    localStorage.clear()
-
-  }, 1500)
-
-})
+    spinner.classList.remove('d-flex');
+    window.location.href = '/';
+    localStorage.clear();
+  }, 1500);
+});
 
 // GERENCIANDO ABERTURA DE MENU ASIDE NO MOBILE
-
 const menuAsideMobileStart = document.getElementById('menu-aside-mobile-start')
 
 menuAsideMobileStart.addEventListener('click', (event) => {

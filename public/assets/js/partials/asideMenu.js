@@ -188,7 +188,7 @@ async function verifyTypeUser() {
   })
 
   const data = await response.json()
-  console.log(data)
+  //console.log(data)
   return data[0].name
 
 }
@@ -224,14 +224,14 @@ async function customerPermissionApply(typeCustomer) {
     if (usersMenu) {
 
       const verifyClassActiveUsers = usersMenu.classList.contains("active")
-      
+
       if (usersMenu && !verifyClassActiveUsers) {
-  
+
         console.log('tem user menu')
         usersMenu.classList.add('disabled-option')
-  
+
         usersMenu.removeEventListener('click', addClickEventUsersManager)
-  
+
       }
     }
 
@@ -256,7 +256,7 @@ async function customerPermissionApply(typeCustomer) {
 
     }
 
-  
+
 
   }
 

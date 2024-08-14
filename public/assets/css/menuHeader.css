@@ -11,7 +11,7 @@
   z-index: 1;
   display: flex;
   justify-content: space-between;
-  padding: 0 8px;
+  padding: 0 16px;
   box-shadow: 0 0 1px #9c9c9c;
 }
 
@@ -107,11 +107,6 @@
   color: #F05742;
 }
 
-.newHeader .menuRight:hover .menuHidden
-{
-  display: block;
-}
-
 .newHeader .menuRight img
 {
   margin-left: 15px;
@@ -146,9 +141,9 @@
   border-radius: 6px;
   padding: 15px 25px;
   top: 60px;
-  left: 29px;
+  left: -20px;
   box-shadow: 0 0 2px rgb(83, 83, 83);
-  display: none;
+	display: none;
 }
 
 .newHeader .menuRight .menuHidden ul
@@ -175,3 +170,7 @@
   margin-top: 14px;
 }
 
+.newHeader .menuRight .menuHidden.showMenuHidden
+{
+  display: block;
+}

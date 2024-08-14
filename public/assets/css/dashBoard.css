@@ -40,11 +40,15 @@
   }
 }
 
+.custom-border {
+	background-color: #FFFFFF;
+}
+
 .selectStore
 {
-  background-color: white; 
-	box-shadow: 0 0 1px rgb(73, 73, 73); 
-	border-radius: 8px; 
+  background-color: white;
+	box-shadow: 0 0 1px rgb(73, 73, 73);
+	border-radius: 8px;
 	display: flex;
 	flex-direction: column;
 	padding: 20px 30px;
@@ -73,15 +77,15 @@
 
 .selectStore span
 {
-  font-size: 1.4rem; 
+  font-size: 1.4rem;
   color: #A1A5B7;
   font-weight: bold;
 }
 
 .selectStore select
 {
-  border: 1px solid #A1A5B7; 
-  background-color: white; 
-  outline:none; 
+  border: 1px solid #A1A5B7;
+  background-color: white;
+  outline:none;
 	font-size: 1.3rem;
 }

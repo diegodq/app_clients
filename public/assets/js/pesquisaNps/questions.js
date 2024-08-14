@@ -99,15 +99,15 @@ async function makeRowQuestion(question) {
   return `
     <div class="card border rounded mb-3">
       <div class="card-header cursor-pointer d-flex align-items-center" id="heading${question.id}" data-toggle="collapse" data-target="#collapse${question.id}" aria-expanded="true" aria-controls="collapse${question.id}" style="font-size: 24px; position: relative;">
-        
+
         <button class="btn btn-link text-decoration-none">
           <span style="font-size: 20px;"> - ${question.title_question}</span>
         </button>
-        
+
         <div class="d-flex align-items-center">
           <span style="font-size: 13px;">${positiveOrNegative}</span>
-          <label class="form-check form-switch form-check-custom activeReg form-check-solid m-5"> 
-            <span class="m-3" style="font-size: 13px;"> Status </span>     
+          <label class="form-check form-switch form-check-custom activeReg form-check-solid m-5">
+            <span class="m-3" style="font-size: 13px;"> Status </span>
             <input class="form-check-input" data-active="${question.status}" data-id="${question.id}" type="checkbox" ${activeFieldCheckedOrEmpty ? 'checked' : ''} onclick="handleCheckboxClick(event)" />
           </label>
           ${deleteIcon}
@@ -133,7 +133,7 @@ async function makeRowQuestion(question) {
 
     }
         </div>
-       
+
       </div>
     </div>
   `;
@@ -146,8 +146,6 @@ function handleCheckboxClick(event) {
 }
 
 async function createRows(dataArray) {
-
-  console.log(dataArray)
   const accordionContainer = document.getElementById('accordionContainer');
 
   accordionContainer.innerHTML = '';
@@ -172,10 +170,7 @@ async function createRows(dataArray) {
 
 async function handleDeleteClick(event, questionID) {
   event.stopPropagation();
-  console.log('Question excluir:', questionID);
-
   deleteConfirm(questionID)
-
 }
 
 async function listenClickActive() {
@@ -248,10 +243,7 @@ async function listenClickEnableMultiply() {
           }
         )
 
-        const data = await response.json()
-
-        console.log(data)
-
+        const data = await response.json();
       } catch (error) {
         console.error(error)
       }
@@ -531,10 +523,9 @@ async function choiceWayQuestion(typeInput) {
 
 
         const dataQuestion = await getDataQuestion()
-        console.log(dataQuestion)
 
         const answersFlexQuestion = await getPossibleAnswerFlexQuestion()
-        console.log(answersFlexQuestion)
+
 
         const dataFlexAnswers = await transformPossibleAnswersInComponent(answersFlexQuestion)
 
@@ -556,7 +547,6 @@ async function choiceWayQuestion(typeInput) {
 
     })
 
-    console.log(typeInput)
     buttonBackReviewQuestion.off('click')
     buttonBackReviewQuestion.click(async function () {
       await manageButtonBackReview(typeInput)
@@ -621,7 +611,7 @@ async function manageButtonBackReview(typeInput) {
       componentFlexQuestion.fadeIn(600)
     })
 
-  
+
   } else {
 
     componentReviewQuestion.fadeOut(600, async function () {
@@ -660,9 +650,6 @@ async function wichInputIsSelected(inputs) {
 }
 
 async function registerQuestion(dataForm, arrayAnswersFlexQuestion) {
-
-  console.log(dataForm)
-
   const paramsQuestion = await getDataParamsQuestion()
 
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/question' : configEnv.local_address + '/question', {
@@ -673,10 +660,6 @@ async function registerQuestion(dataForm, arrayAnswersFlexQuestion) {
     },
     body: dataForm
   }).then(response => response.json()).then(async data => {
-
-    console.log(data)
-
-
     if (data.status === 'success') {
 
       const registerParmsQuestionsIsOk = await registerParamsQuestion(paramsQuestion, data.questionCreated.questionId)
@@ -684,11 +667,7 @@ async function registerQuestion(dataForm, arrayAnswersFlexQuestion) {
       if (registerParmsQuestionsIsOk) {
 
         if (typeof arrayAnswersFlexQuestion != 'undefined') {
-
-          console.log('chegou dentro do if de undefined')
-
           const dataRegisterAnswersFlexQuestion = { question_id: data.questionCreated.questionId, answers: arrayAnswersFlexQuestion }
-          console.log(JSON.stringify(dataRegisterAnswersFlexQuestion))
           await registerAnswersFlexQuestion(dataRegisterAnswersFlexQuestion)
 
           await notifyRegisterQuestion(data)
@@ -745,12 +724,8 @@ async function registerAnswersFlexQuestion(arrayAnswersFlexQuestion) {
     body: JSON.stringify(arrayAnswersFlexQuestion)
   });
 
-  const data = await response.json()
-
-  console.log('resposta do register answer', data)
-
-  return data
-
+  const data = await response.json();
+  return data;
 }
 
 async function notifyRegisterQuestion(data) {
@@ -1107,9 +1082,6 @@ async function deleteQuestion(questionId) {
     },
     body: JSON.stringify(dataQuestionDelete)
   }).then(response => response.json()).then(data => {
-
-    console.log(data)
-
     if (data.status === 'success') {
 
       spinner.classList.add('d-flex')
@@ -1205,13 +1177,13 @@ function deleteConfirm(idQuestion) {
 function obterInformacoes() {
   // Obtém o formulário pelo ID
   var formulario = document.getElementById("form-flex-question-componente");
-  
+
   // Obtém todos os elementos de input dentro do formulário
   var inputs = formulario.getElementsByTagName("input");
-  
+
   // Array para armazenar as informações
   var informacoes = [];
-  
+
   // Itera sobre os inputs e armazena as informações no array
   for (var i = 0; i < inputs.length; i++) {
     var input = inputs[i];
@@ -1221,25 +1193,21 @@ function obterInformacoes() {
     };
     informacoes.push(info);
   }
-  
-  // Exibe o array no console (você pode fazer o que quiser com ele)
-  console.log(informacoes);
-  
-  // Retorna o array se necessário
+
   return informacoes;
 }
 
 async function getPossibleAnswerFlexQuestion() {
-  
+
   const formFlexQuestion = document.getElementById('form-flex-question-componente')
   const inputs = formFlexQuestion.getElementsByTagName("input")
   const flexAnswers = []
-  
+
   for (let i = 0; i < inputs.length; i++) {
     let input = inputs[i]
     flexAnswers.push(input.value)
   }
-  
+
   return flexAnswers
 }
 
@@ -1249,7 +1217,7 @@ const buttonAdvance = document.getElementById('button-advance-flex-question');
 let inputsFlex = document.querySelectorAll('input[name="inputFlex"]');
 let buttonAddInput = document.getElementById('buttonAddInput');
 let buttonAddAnswer = document.getElementById('button-add-answer');
-let inputContainer = document.getElementById('input-container'); 
+let inputContainer = document.getElementById('input-container');
 
 buttonAddInput.addEventListener('click', () => {
 
@@ -1313,7 +1281,7 @@ function removeInputField(button) {
 
   if (inputContainer.children.length === 0) {
     buttonAddInput.style.display = 'inline-block';
-    buttonAdvance.classList.add('disabled'); 
+    buttonAdvance.classList.add('disabled');
   }
 }
 
@@ -1368,14 +1336,14 @@ answerInputs.forEach(input => {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function transformPossibleAnswersInComponent(array) {
-  
+
   if (!Array.isArray(array)) {
     return null;
   }
-  
+
   const htmlString = array.map(item => `<span> ${item} </span>`).join('|');
   return `<div> ${htmlString} </div>`;
-  
+
 }
 
 
@@ -1391,7 +1359,7 @@ async function notifyActiveMultiplyQuestions () {
       confirmButton: 'btn btn-primary-confirm',
     }
   })
-  
+
   // .then((result) => {
 
   //   location.reload()

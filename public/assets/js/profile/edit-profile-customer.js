@@ -103,10 +103,7 @@ window.addEventListener('load', (event) => {
   })
     .then((response) => response.json())
     .then((data) => {
-
-      console.log(data)
       if (data.avatar) {
-
         deleteAvatarIcon.style.display = 'block'
         menuUserOptions.setAttribute('src', data.avatar)
         avatarCustomer.setAttribute('src', data.avatar)
@@ -119,7 +116,7 @@ window.addEventListener('load', (event) => {
 
       }
 
-    
+
   }).catch(error => console.log(error))
 
 })
@@ -262,8 +259,6 @@ function editDataCustomer() {
   // CONVERTENDO PARA JSON
   const dataCustomer = JSON.stringify(uppercaseFormData);
 
-  console.log(uppercaseFormData)
-
   fetch(configEnv.app_mode == 'production' ? configEnv.web_address + '/customer' : configEnv.local_address + '/customer', {
     method: 'PUT',
     headers: {
@@ -274,8 +269,6 @@ function editDataCustomer() {
   })
     .then(response => response.json())
     .then(data => {
-
-      console.log(data)
 
       if (data.status === 'success') {
 
@@ -672,7 +665,7 @@ function deleteAvatar() {
   })
     .then((response) => response.json())
     .then((data) => {
-      
+
       const breakUrl = data.avatar.split('/files/')
       const avatarNameAndExtension = breakUrl[1]
 
@@ -744,9 +737,9 @@ buttonCancelModal.addEventListener('click', event => {
 // EXCLUIR CONTA
 
 function deleteAccount() {
-  
+
   fieldErrorDeleteAccount.innerText = ''
-  
+
   spinner.classList.add('d-flex')
 
   const dataCustomer = { 'email': emailFieldModalCancelAccount.value, 'password': passFieldModalCancelAccount.value }
@@ -760,7 +753,6 @@ function deleteAccount() {
     body: JSON.stringify(dataCustomer)
   }).then(response => response.json()).then(data => {
     setTimeout(() => {
-      console.log(data)
       if (data.message === 'customer-removed') {
 
         spinner.classList.remove('d-flex')
@@ -884,13 +876,13 @@ overviewOptionMenu.addEventListener('click', (event) => {
 function addClickEventUsersManager() {
 
   spinner.classList.add('d-flex')
-  
+
   setTimeout(() => {
-  
+
       window.location.href = '/users'
-  
+
   }, 1000)
- 
+
 
 }
 

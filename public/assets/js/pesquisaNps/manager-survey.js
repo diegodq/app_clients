@@ -55,7 +55,6 @@ window.addEventListener('load', async (event) => {
   const selectStore = document.getElementById("storeSelect")
 
   const allowMultiStore = await multiStoreAvailable()
-  console.log(allowMultiStore)
   if (allowMultiStore) {
 
     let selectedIndex = selectStore.selectedIndex
@@ -85,7 +84,6 @@ window.addEventListener('load', async (event) => {
     changeSelectButtonState('disabled')
 
     const detailsCompany = await getDetailsCompany()
-    console.log(detailsCompany)
 
     const option = document.createElement("option")
     option.value = 0
@@ -218,7 +216,6 @@ async function createRows(data) {
     buttonElement.addEventListener("click", () => {
       accordionCollapse.classList.toggle("show")
       buttonElement.classList.toggle("collapsed")
-      //console.log("Clicou no acordeão com ID:", accordionItem.id);
     });
     updateButtonNumbers(negativeQuestionsList)
     updateButtonNumbers(positiveQuestionsList)
@@ -387,7 +384,6 @@ async function initializeSortable(container) {
     animation: 600,
     onEnd: (evt) => {
       updateButtonNumbers(container);
-      //console.log("Acordeão movido para a posição:", evt.newIndex);
       printQuestionList();
     },
   });
@@ -411,7 +407,6 @@ async function initializeSortable(container) {
     animation: 600,
     onEnd: (evt) => {
       updateButtonNumbers(container);
-      //console.log("Acordeão movido para a posição:", evt.newIndex);
       printQuestionList();
     },
   });
@@ -520,7 +515,6 @@ async function getDataAnchorQuestion() {
     },
   })
   const data = await response.json()
-  console.log(data)
   return data
 
 }
@@ -547,9 +541,6 @@ async function updateBrandCustomer() {
     })
       .then(response => response.json()
         .then(data => {
-
-          console.log(data)
-
           if (data.status === 'success') {
 
             spinner.classList.add('d-flex')
@@ -743,11 +734,7 @@ async function setJustOneTreeMessage() {
 }
 
 async function setQrCode(storeID) {
-
-  console.log('storeID dentro da setQRCode:', storeID)
   if (storeID) {
-
-    console.log('entrou no if')
     const qrCodeAddress = await getQrCode(storeID);
     const htmlIMG = `<img src="${qrCodeAddress}" alt="QR Code" style="max-width: 100%; max-height: 100%; display: block; margin: 0 auto;">`;
     areaQrCodeCustomer.innerHTML = htmlIMG;
@@ -757,7 +744,6 @@ async function setQrCode(storeID) {
   } else {
 
     const qrCodeAddress = await getQrCode();
-    console.log('else setando o qrcode', qrCodeAddress)
     const htmlIMG = `<img src="${qrCodeAddress}" alt="QR Code" style="max-width: 100%; max-height: 100%; display: block; margin: 0 auto;">`;
     areaQrCodeCustomer.innerHTML = htmlIMG;
 
@@ -798,8 +784,6 @@ async function registerStore() {
     .then(response => response.json())
     .then(data => {
 
-      console.log('console do register', data)
-
     })
 
 }
@@ -822,19 +806,11 @@ async function getQrCode(storeID) {
       downloadQrCode(event, data.address);
     })
 
-    console.log('console do get', data.message)
-
     if (data.message === 'empty-directory' || data.message === 'unregistered-qrcode-for-head-office') {
-
-      console.log('to dentro do empty directory')
       registerStore()
       location.reload()
-
     } else {
-
-      console.log(data)
       return data.address
-
     }
 
   } else {
@@ -859,11 +835,9 @@ async function getQrCode(storeID) {
 async function downloadQrCode(event, qrCodeAdress) {
 
   event.preventDefault()
- 
+
 
   const qrCodeAddress = qrCodeAdress
-
-  console.log(qrCodeAddress)
 
   const store = await getAdressIdentify()
 
@@ -901,15 +875,12 @@ async function openPreviewWindow() {
 
   const allowMultiStore = await multiStoreAvailable()
 
-  console.log(allowMultiStore)
-
   if (allowMultiStore) {
 
     const CNPJ = await getCNPJCompany();
     const cleanCNPJ = CNPJ.replace(/[^\d]/g, '');
 
     const allStores = await getStoreList()
-    console.log(allStores)
 
     if (allStores === 'no-store') {
 
@@ -1124,8 +1095,6 @@ async function choiceSelectStoreButtons(wichButtonClicked) {
 
       selectStore.selectedIndex = selectedIndex - 1
       changeSelectButtonState(selectStore.selectedIndex)
-      // console.log(selectStore.options[selectStore.selectedIndex].text)
-      // console.log('ID do item selecionado:', selectStore.options[selectStore.selectedIndex].value)
 
       const qrCodeAdress = await setQrCode(selectStore.options[selectStore.selectedIndex].value)
 
@@ -1192,8 +1161,6 @@ selectStore.addEventListener('change', (event) => {
   setTimeout(async () => {
 
     spinnerQrCodeSection.style.display = "none"
-    //console.log(event.target.options[event.target.selectedIndex].text)
-    //console.log('ID do item selecionado:', event.target.value)
     changeSelectButtonState(selectStore.selectedIndex)
 
     const qrCodeAdress = await setQrCode(event.target.value)
@@ -1253,7 +1220,7 @@ buttonDownloadFolder.addEventListener('click', async function (event) {
     }, 1000)
     return
   } else if (selectedValue === 'A5') {
-    
+
     spinnerQrCodeSection.style.display = "flex"
 
     setTimeout(async () => {
@@ -1262,8 +1229,8 @@ buttonDownloadFolder.addEventListener('click', async function (event) {
       createAndDownloadFolderA5(qrCodeAddress, logoClient.logo, anchorQuestion.message, store);
     }, 1000)
     return
-  
-  
+
+
   } else {
 
     spinnerQrCodeSection.style.display = "flex"
@@ -1283,8 +1250,6 @@ buttonDownloadFolder.addEventListener('click', async function (event) {
 async function getAdressIdentify() {
 
   const storeID = selectStore.value
-
-  console.log(storeID)
 
   const response = await fetch(configEnv.app_mode == 'production' ? configEnv.web_address + `/info/store/${storeID}` : configEnv.local_address + `/info/store/${storeID}`, {
     headers: {
@@ -1370,7 +1335,6 @@ function createAndDownloadFolderA3(qrCodePath, logoClient, anchorQuestion, textI
     qrCodePath,
     logoClient === undefined ? 'assets/media/bg/no-logo.png' : logoClient
   ];
-  console.log(logoClient)
 
   const loadImagePromises = imagePaths.map(function (url) {
     return new Promise(function (resolve) {
@@ -1465,7 +1429,7 @@ function createAndDownloadFolderA3(qrCodePath, logoClient, anchorQuestion, textI
 
           downloadLink.download = `Automatiza_Cartaz_A3.${textIdentifyStore.name}_${textIdentifyStore.address}.png`;
           downloadLink.style.display = 'none';
-          
+
 
         } else {
 
@@ -1577,9 +1541,9 @@ function createAndDownloadFolderA2(qrCodePath, logoClient, anchorQuestion, textI
       const imageY = startY + (maxHeightImage - newHeight) / 2;
 
       context.drawImage(loadedImages[2], imageX, imageY, newWidth, newHeight);
-      
+
       if (textIdentifyStore != 'store-do-not-exists') {
-        
+
         context.fillStyle = 'black';
         context.font = 'bold 25px Arial';
         context.textAlign = 'center';
@@ -1699,7 +1663,6 @@ function createAndDownloadFolderA4(qrCodePath, logoClient, anchorQuestion, textI
 
       context.drawImage(loadedImages[2], imageX, imageY, newWidth, newHeight);
 
-      console.log(textIdentifyStore)
       if (textIdentifyStore != 'store-do-not-exists') {
         context.fillStyle = 'black';
         context.font = 'bold 16px Arial';
@@ -1817,8 +1780,6 @@ function createAndDownloadFolderA5(qrCodePath, logoClient, anchorQuestion, textI
       const imageY = startY + (maxHeightImage - newHeight) / 2;
 
       context.drawImage(loadedImages[2], imageX, imageY, newWidth, newHeight);
-
-      console.log(textIdentifyStore)
       if (textIdentifyStore != 'store-do-not-exists') {
         context.fillStyle = 'black';
         context.font = 'bold 16px Arial';

@@ -23,8 +23,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const detailsCompany = await getDetailsCompany()
 
-    console.log(detailsCompany)
-
     const option = document.createElement("option")
     option.value = 0
     option.textContent = `${detailsCompany[0].corporate_name}`
@@ -689,7 +687,6 @@ async function getDepartmentDataChart(date, storeNumber) {
     })
 
     const data = await response.json()
-    console.log(data)
     if (data.message) {
 
       return data.message
@@ -710,7 +707,6 @@ async function getDepartmentDataChart(date, storeNumber) {
     })
 
     const data = await response.json()
-    console.log(data)
     if (data.message) {
 
       return data.message
@@ -807,7 +803,6 @@ async function getEmployeeDataChart(date, tree, storeNumber) {
     })
 
     const data = await response.json()
-    console.log(data.employees)
     return data.employees
 
   } else {
@@ -820,7 +815,6 @@ async function getEmployeeDataChart(date, tree, storeNumber) {
     })
 
     const data = await response.json()
-    console.log(data.employees)
 
     return data.employees
 
@@ -1283,8 +1277,6 @@ function choiceSelectStoreButtons(wichButtonClicked) {
 
       selectStore.selectedIndex = selectedIndex + 1
       changeSelectButtonState(selectStore.selectedIndex)
-      //console.log(selectStore.options[selectStore.selectedIndex].text)
-      //console.log('ID do item selecionado:', selectStore.options[selectStore.selectedIndex].value)
 
     }
 
@@ -1294,8 +1286,6 @@ function choiceSelectStoreButtons(wichButtonClicked) {
 
       selectStore.selectedIndex = selectedIndex - 1
       changeSelectButtonState(selectStore.selectedIndex)
-      //console.log(selectStore.options[selectStore.selectedIndex].text)
-      //console.log('ID do item selecionado:', selectStore.options[selectStore.selectedIndex].value)
 
     }
 
@@ -1650,8 +1640,6 @@ async function generateDynamicCharts(date, storeNumber) {
 
       const dataCharts = await getBinaryDataCharts(date, storeNumber)
 
-      console.log('data enviado pro chart pizza', dataCharts);
-
       createPizzaCharts(dataCharts)
 
 
@@ -1666,7 +1654,7 @@ async function generateDynamicCharts(date, storeNumber) {
     });
 
     if (hasFlexQuestion) {
-      
+
       const dataCharts = await getFlexDataCharts(date, storeNumber)
 
       await makeChartForFlexQuestions(dataCharts)
@@ -1740,7 +1728,6 @@ async function getFlexDataCharts(dateInterval, storeNumber) {
     );
 
     const data = await response.json();
-    console.log(data)
     return data
 
   } else {
@@ -1759,7 +1746,6 @@ async function getFlexDataCharts(dateInterval, storeNumber) {
     );
 
     const data = await response.json();
-    console.log(data)
     return data;
 
   }
@@ -1921,7 +1907,7 @@ async function makeChartForFlexQuestions(data) {
     'rgba(235, 54, 98, 0.6)',
     'rgba(231, 242, 249, 1)',
     'rgb(187, 187, 187)',
-    'rgba(249, 168, 37, 0.8)', 
+    'rgba(249, 168, 37, 0.8)',
     'rgba(203, 117, 112, 0.65)',
     'rgba(146, 146, 146, 1)'
   ]
@@ -1943,18 +1929,18 @@ async function makeChartForFlexQuestions(data) {
 
   data.forEach(function (item) {
     var chartData = [];
-    var total = 0; 
-  
+    var total = 0;
+
     Object.values(item.answer).forEach(function (value) {
       total += value;
     });
 
     const coresCopy = [...cores];
-  
+
     Object.keys(item.answer).forEach(function (key, index) {
-      var percentage = ((item.answer[key] / total) * 100).toFixed(2); 
+      var percentage = ((item.answer[key] / total) * 100).toFixed(2);
       var label = `${key} - ${percentage}%`; // Alteração do label
-      var randomIndex = Math.floor(Math.random() * coresCopy.length); 
+      var randomIndex = Math.floor(Math.random() * coresCopy.length);
       var backgroundColor = coresCopy[randomIndex];
       chartData.push({ name: label, y: item.answer[key], color: backgroundColor });
       coresCopy.splice(randomIndex, 1);
@@ -1967,7 +1953,6 @@ async function makeChartForFlexQuestions(data) {
     containerAllCharts.appendChild(container);
 
     const divsChartFlex = document.querySelectorAll('.chart-flex');
-    console.log(divsChartFlex)
 
     Highcharts.chart(containerId, {
       chart: {
@@ -1989,9 +1974,9 @@ async function makeChartForFlexQuestions(data) {
       title: {
         text: `<div class="text-center text-muted m-5"> Os clientes que avaliaram de forma ${getRateTextAndIcon(item.arvore)} responderam: </div>`,
         style: {
-          color: '#666', 
+          color: '#666',
           fontSize: '14px',
-          fontWeight: 'normal' 
+          fontWeight: 'normal'
         },
         useHTML: true
       },
@@ -2010,7 +1995,7 @@ async function makeChartForFlexQuestions(data) {
         data: chartData
       }],
       credits: {
-        enabled: false 
+        enabled: false
       },
       accessibility: {
         enabled: false,
